@@ -448,6 +448,50 @@ static int runWitness(StringRef ConfigName, StringRef UniversePath,
   return rule_dump::witness(S, ConfigName, Lines, Budget, Parse, Out);
 }
 
+static int runFilter(StringRef ConfigName, StringRef InPath, StringRef OutPath,
+                     StringRef DropPath, const StringMap<Sigma *> &Sigmas) {
+  auto It = Sigmas.find(ConfigName);
+  if (It == Sigmas.end()) {
+    errs() << "unknown config " << ConfigName << "\n";
+    return 2;
+  }
+  Sigma &S = *It->second;
+  std::ifstream In(InPath.str());
+  if (!In) {
+    errs() << "cannot open " << InPath << "\n";
+    return 2;
+  }
+  std::vector<std::string> Lines;
+  std::string Line;
+  while (std::getline(In, Line))
+    if (!Line.empty())
+      Lines.push_back(Line);
+
+  unsigned PtrBits = S.STI->isTarget64BitLP64() ? 64 : 32;
+  auto Parse = [PtrBits](StringRef Text, rule_dump::ParsedQuery &P) {
+    Expected<json::Value> Parsed = json::parse(Text);
+    if (!Parsed)
+      return 2;
+    json::Object *Obj = Parsed->getAsObject();
+    if (!Obj)
+      return 2;
+    std::string Name;
+    if (!parseBody(*Obj, PtrBits, Name, P))
+      return 2;
+    return isKnownUnanswerable(Name, P.Types) ? 1 : 0;
+
+  };
+
+  std::error_code EC1, EC2;
+  raw_fd_ostream Kept(OutPath, EC1);
+  raw_fd_ostream Dropped(DropPath, EC2);
+  if (EC1 || EC2) {
+    errs() << "cannot write " << (EC1 ? OutPath : DropPath) << "\n";
+    return 2;
+  }
+  return rule_dump::filterAnswerable(S, Lines, Parse, Kept, Dropped);
+}
+
 } // namespace
 
 static const char *opcodeName(unsigned Op);
@@ -528,6 +572,9 @@ int main(int Argc, char **Argv) {
   StringRef WitnessConfig;
   StringRef UniversePath;
   StringRef WitnessOut;
+  StringRef FilterIn;
+  StringRef FilterOut;
+  StringRef FilterDrop;
   unsigned Budget = 20000;
   for (int I = 1; I < Argc; ++I) {
     StringRef A(Argv[I]);
@@ -545,12 +592,20 @@ int main(int Argc, char **Argv) {
       UniversePath = Argv[++I];
     else if (A == "--out" && I + 1 < Argc)
       WitnessOut = Argv[++I];
+    else if (A == "--filter-in" && I + 1 < Argc)
+      FilterIn = Argv[++I];
+    else if (A == "--filter-out" && I + 1 < Argc)
+      FilterOut = Argv[++I];
+    else if (A == "--filter-drop" && I + 1 < Argc)
+      FilterDrop = Argv[++I];
     else if (A == "--budget" && I + 1 < Argc)
       Budget = (unsigned)std::strtoul(Argv[++I], nullptr, 10);
     else if (A == "-h" || A == "--help") {
       outs() << "usage: runner --queries FILE | --dump-rules FILE | "
                 "--dump-arity FILE | --dump-hits FILE | "
-                "--witness CONFIG --universe FILE --out FILE [--budget N]\n";
+                "--witness CONFIG --universe FILE --out FILE [--budget N] | "
+                "--witness CONFIG --filter-in FILE --filter-out FILE "
+                "--filter-drop FILE\n";
       return 0;
     } else {
       errs() << "unknown argument " << A << "\n";
@@ -601,6 +656,15 @@ int main(int Argc, char **Argv) {
       rule_dump::rules(*Sigmas[C.ID], C.ID, Out);
     Out.flush();
     return 0;
+  }
+
+  if (!FilterIn.empty()) {
+    if (WitnessConfig.empty() || FilterOut.empty() || FilterDrop.empty()) {
+      errs() << "--filter needs --witness CONFIG --filter-out FILE "
+                "--filter-drop FILE\n";
+      return 2;
+    }
+    return runFilter(WitnessConfig, FilterIn, FilterOut, FilterDrop, Sigmas);
   }
 
   if (!WitnessConfig.empty()) {

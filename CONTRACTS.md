@@ -63,6 +63,20 @@ schema v1，一行一个 JSON 对象：
 - 候选宇宙不得读取 `.gisel` 规则字面量；gisel 产物只可作为 seed，并标注来源。
 - 同一 seed 两遍生成，文件 SHA 必须相同。
 
+## 3.1 可答性过滤（`gen-u.sh` 的产物）
+
+`gen-u.sh` 先写 `queries.raw.jsonl`，再按 `config` 逐条确认上游能给出答案，
+最后写 `queries.jsonl`（保留）与 `queries.dropped.jsonl`（丢弃）。
+
+- 判据是“上游 runner 为这条查询返回一个动作”，不是“上游有规则匹配”。
+  规则匹配但求值时断言/解析失败的形状同样丢弃。
+- 丢弃行保留原查询，并加 `reason ∈ {known-unanswerable, parse-error, asserted}`；
+  这些查询两边都不作答，所以不进入对拍分母，也不计入 `unanswerable`。
+- `unanswerable` 因此只表示“对拍时新出现的异常”，而不是每次都被已知的上游
+  断言淹没。
+- `FREEZE.json` 的 `counts` 同时记录 raw / kept / dropped，三者的关系由
+  生成脚本校验，不接受手工数字。
+
 ## 4 规则清单（oracle 输出）
 
 `rules.json`（草案，WP3 定稿）：
@@ -160,12 +174,8 @@ schema v1，一行一个 JSON 对象：
 ## 6 冻结
 
 `FREEZE.json` 引用：工具 commit、`pin/PIN.json` 的 base commit 与 patch 列表、
-任务树 HEAD、各产物 sha256。由 `gen-u.sh` 生成；不接受手工编辑的数字。
-
-## 6 冻结
-
-`FREEZE.json` 引用：工具 tag/commit、pin commit、patch sha256、各产物 sha256。
-由 `verify-freeze.sh` 复现；不接受手工编辑的数字。
+任务树 HEAD、各产物 sha256 与 raw/kept/dropped 计数。由 `gen-u.sh` 生成，
+由 `ab/verify-evidence.sh` 复核；不接受手工编辑的数字。
 
 ## 7 版本演进
 

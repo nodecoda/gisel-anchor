@@ -296,22 +296,20 @@ void emitAsserted(const SigmaT &S, StringRef ConfigName, unsigned Opcode,
   }
 }
 
-/// Coverage-guided witness search for one configuration.
+/// Prepare a forked child for expected upstream aborts.
 ///
-/// `Lines` are candidate queries (universe order is preserved); `Parse` fills a
-/// ParsedQuery for one line.  For each opcode we stop as soon as every rule has
-/// a first match, or after `BudgetPerOpcode` candidates (0 = unlimited).
-///
-/// One row per rule:
-///   status = witnessed | shadowed | unexercised | asserted
-///   first_hits = times this rule was the first match
-///   match_hits = times this rule matched at all (first or shadowed)
-///
-/// Each opcode runs in a forked child.  An upstream assertion (scalable size,
-/// bad LLT index) costs only the offending candidates: the child crash is
-/// bisected down to individual queries, those are dropped, and the surviving
-/// set is evaluated again.  Only when even that cannot produce rows does the
-/// opcode become `asserted`.
+/// The parent reports them as dropped candidates, so the child's message is
+/// noise.  RLIMIT_CORE=0 is not enough: a core_pattern pipe (apport here)
+/// ignores it, so turn SIGABRT into an immediate `_exit` as well.  Without
+/// this every crashed child costs ~170 ms and bisection dominates the run.
+inline void quietChild() {
+  struct rlimit NoCore = {0, 0};
+  setrlimit(RLIMIT_CORE, &NoCore);
+  std::signal(SIGABRT, [](int) { _exit(3); });
+  if (FILE *Null = fopen("/dev/null", "w"))
+    dup2(fileno(Null), STDERR_FILENO);
+}
+
 /// Run one candidate range in a child.  `true` means the child exited cleanly.
 template <typename SigmaT>
 bool runWitnessChild(const SigmaT &S, StringRef ConfigName, unsigned Opcode,
@@ -319,18 +317,7 @@ bool runWitnessChild(const SigmaT &S, StringRef ConfigName, unsigned Opcode,
                      unsigned Budget, const char *Path) {
   pid_t Pid = fork();
   if (Pid == 0) {
-    // Expected crashes are reported by the parent as dropped candidates; keep
-    // the child's abort message out of the run log.  RLIMIT_CORE=0 also keeps
-    // the kernel from piping each SIGABRT through apport, which dominates the
-    // bisection cost otherwise.
-    // `abort()` runs the kernel's core_pattern pipe, and on this host that is
-    // apport: ~170 ms per crashed child.  A pipe handler ignores RLIMIT_CORE,
-    // so turn the abort into an immediate _exit instead.
-    struct rlimit NoCore = {0, 0};
-    setrlimit(RLIMIT_CORE, &NoCore);
-    std::signal(SIGABRT, [](int) { _exit(3); });
-    if (FILE *Null = fopen("/dev/null", "w"))
-      dup2(fileno(Null), STDERR_FILENO);
+    quietChild();
     std::error_code EC;
     raw_fd_ostream Child(Path, EC, sys::fs::OF_Text);
     if (!EC)
@@ -366,6 +353,16 @@ void findCrashers(const SigmaT &S, StringRef ConfigName, unsigned Opcode,
   findCrashers(S, ConfigName, Opcode, Group, Budget, Path, Mid, End, Bad);
 }
 
+/// Coverage-guided witness search for one configuration.
+///
+/// Each opcode runs in a forked child.  An upstream assertion (scalable size,
+/// bad LLT index) costs only the offending candidates: the child crash is
+/// bisected down to individual queries, those are dropped, and the surviving
+/// set is evaluated again.  Only when even that cannot produce rows does the
+/// opcode become `asserted`.
+///
+/// One row per rule:
+///   status = witnessed | shadowed | unexercised | asserted
 template <typename SigmaT, typename ParseT>
 int witness(const SigmaT &S, StringRef ConfigName, ArrayRef<std::string> Lines,
             unsigned BudgetPerOpcode, ParseT Parse, raw_ostream &Out) {
@@ -425,6 +422,89 @@ int witness(const SigmaT &S, StringRef ConfigName, ArrayRef<std::string> Lines,
       emitAsserted(S, ConfigName, Opcode, Group.second.size(), Out);
     }
     unlink(Path);
+  }
+  return 0;
+}
+
+/// Evaluate one slice of queries in a child; `true` when nothing aborted.
+template <typename SigmaT, typename ParseT>
+bool actionSliceOk(const SigmaT &S, ArrayRef<std::string> Lines, ParseT Parse) {
+  pid_t Pid = fork();
+  if (Pid == 0) {
+    quietChild();
+    for (const std::string &Line : Lines) {
+      ParsedQuery P;
+      if (Parse(Line, P) != 0)
+        continue;
+      (void)S.L->getAction(P.query());
+    }
+    _exit(0);
+  }
+  int Status = 0;
+  waitpid(Pid, &Status, 0);
+  return WIFEXITED(Status) && WEXITSTATUS(Status) == 0;
+}
+
+/// Mark every single query that aborts the child (same bisection as witness).
+template <typename SigmaT, typename ParseT>
+void classifyQueryCrashers(const SigmaT &S, ArrayRef<std::string> Lines,
+                           ParseT Parse, size_t Begin, size_t End,
+                           std::vector<unsigned char> &Why) {
+  if (Begin >= End)
+    return;
+  if (actionSliceOk(S, Lines.slice(Begin, End - Begin), Parse))
+    return;
+  if (End - Begin == 1) {
+    Why[Begin] = 3;  // asserted
+    return;
+  }
+  size_t Mid = Begin + (End - Begin) / 2;
+  classifyQueryCrashers(S, Lines, Parse, Begin, Mid, Why);
+  classifyQueryCrashers(S, Lines, Parse, Mid, End, Why);
+}
+
+/// Keep only the queries the pinned build can answer.
+///
+/// The U query set asks "what does upstream do?", so a query upstream cannot
+/// answer is a harness artifact, not a rule gap -- and the A/B runners abort
+/// independently on malformed shapes, which would surface as a fake
+/// disagreement.  Kept lines are byte-for-byte the input; dropped lines keep
+/// the reason so the loss is visible.
+template <typename SigmaT, typename ParseT>
+int filterAnswerable(const SigmaT &S, ArrayRef<std::string> Lines, ParseT Parse,
+                     raw_ostream &Kept, raw_ostream &Dropped) {
+  std::vector<unsigned char> Why(Lines.size(), 0);
+  std::vector<std::string> Candidates;
+  std::vector<size_t> Index;
+  for (size_t I = 0; I != Lines.size(); ++I) {
+    ParsedQuery P;
+    int Rc = Parse(Lines[I], P);
+    if (Rc == 1) {
+      Why[I] = 1;  // known-unanswerable by construction
+      continue;
+    }
+    if (Rc != 0) {
+      Why[I] = 2;  // unparseable
+      continue;
+    }
+    Candidates.push_back(Lines[I]);
+    Index.push_back(I);
+  }
+  std::vector<unsigned char> Bad(Candidates.size(), 0);
+  classifyQueryCrashers(S, Candidates, Parse, 0, Candidates.size(), Bad);
+  for (size_t I = 0; I != Candidates.size(); ++I)
+    if (Bad[I])
+      Why[Index[I]] = 3;
+
+  static const char *Names[] = {"", "known-unanswerable", "parse-error",
+                                "asserted"};
+  for (size_t I = 0; I != Lines.size(); ++I) {
+    if (Why[I] == 0) {
+      Kept << Lines[I] << '\n';
+    } else {
+      Dropped << "{\"reason\":" << jsonString(Names[Why[I]])
+              << ",\"query\":" << Lines[I] << "}\n";
+    }
   }
   return 0;
 }

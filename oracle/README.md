@@ -120,7 +120,8 @@ RISC-V `0645f9a4…`）。
 
 产物：`OUT/arity.jsonl`、`universe.jsonl`（+ `universe.safe.jsonl`）、
 `cov/<config>.main.jsonl`、`cov/<config>.safe.jsonl`、`coverage.json`、
-`queries.jsonl`、`FREEZE.json`。流程分六步：
+`queries.raw.jsonl`、`queries.jsonl`、`queries.dropped.jsonl`、`FREEZE.json`。
+流程分七步：
 
 1. `--dump-arity` 取每个 opcode 的类型槽/立即数槽；
 2. `python3 -m oracle universe --target T` 造规则无关的候选宇宙；
@@ -129,7 +130,11 @@ RISC-V `0645f9a4…`）。
 5. `python3 -m oracle coverage --gate --known-gaps oracle/known-gaps/T.json`
    合并两遍并按跨配置口径判门禁；
 6. `python3 -m oracle emit` 合成 U 题面：每条被 witness 的规则一条查询
-   （带 `ruleset`/`rule` 标注），再给每个 `(config, opcode)` 补固定采样。
+   （带 `ruleset`/`rule` 标注），再给每个 `(config, opcode)` 补固定采样；
+7. 逐 config 过滤上游自己不能作答的查询（runner `--filter-in/out/drop`），
+   保留的写 `queries.jsonl`，丢弃的写 `queries.dropped.jsonl` 并带
+   `reason ∈ {known-unanswerable, parse-error, asserted}`。契约见
+   `CONTRACTS.md` §3.1。
 
 细节：
 
@@ -137,14 +142,15 @@ RISC-V `0645f9a4…`）。
   继续评估；只有整组重跑仍失败才把 opcode 记为 `asserted`。
 - `asserted` 的 opcode 不进入 U 题面（问它只会崩，不会给出可比答案）。
 - `queries.jsonl` 同 seed 两遍 SHA 相同。
+- `FREEZE.json` 的 `counts` 同时记录 raw / kept / dropped，三者对不上即失败。
 
 2026-11-10 实测（pin `9bfc850b` + 5 patches，树 `57587b0`，budget 20000/opcode）：
 
-| target | 配置数 | 规则行 | witnessed | shadowed | unexercised | asserted | U queries |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| X86 | 4 | 1,911 | 1,798 | 56 | 57 | 0 | 10,100 |
-| AArch64 | 9 | 13,240 | 11,727 | 357 | 1,156 | 0 | 29,708 |
-| RISC-V | 8 | 4,326 | 3,925 | 156 | 245 | 0 | 20,277 |
+| target | 配置数 | 规则行 | witnessed | shadowed | unexercised | asserted | raw | kept | dropped |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| X86 | 4 | 1,911 | 1,798 | 56 | 57 | 0 | 10,100 | 10,100 | 0 |
+| AArch64 | 9 | 13,240 | 11,727 | 357 | 1,156 | 0 | 29,708 | 29,359 | 349 |
+| RISC-V | 8 | 4,326 | 3,925 | 156 | 245 | 0 | 20,277 | 20,239 | 38 |
 
 按跨配置口径（任一配置 witness 过即不算 gap）：
 
@@ -156,4 +162,27 @@ RISC-V `0645f9a4…`）。
 
 这些逐条写在 `oracle/known-gaps/<target>.json`（每条 `reason` + `follow_up`）。
 
-未做：U4 端到端对拍与负控、其余 6 个 target（U5）。
+## U4 里程碑：U 侧端到端对拍与负控
+
+题面交给 `ab/run-u-end-to-end.sh`：官方 runner 与 include 后的生成 runner 读
+同一份 JSONL。2026-11-10 实测（同上 pin/树，证据与 SHA 见
+`ab/docs/EVIDENCE-U.md`）：
+
+| target | queries | disagree | unanswerable | 两侧答案文件 |
+|---|---:|---:|---:|---|
+| X86 | 10,100 | 0 | 0 | 逐字节相同 |
+| AArch64 | 29,359 | 0 | 0 | 逐字节相同 |
+| RISC-V | 20,239 | 0 | 0 | 逐字节相同 |
+
+负控把某个 opcode 的整条 builder 链换成 `.unsupported()`（单条规则的身份在
+builder 链里已经不存在），三 target 的差异全部落在被注入的 ruleset 内，
+`unknown_keys=0`、`outside_expected` 为空。
+
+这一轮还抓到一处真实的生成语义不等价：AArch64 `G_ICMP (v2s32, p0:32)` 与
+`G_FCMP (nxv4f32, s8)` 各 9 个配置，官方答 `Custom` / `Unsupported`，生成的
+inc 在 `coreMinScalarSameAs` 里先跑用户谓词、对 `p0` / `s8` 调
+`getElementType()` 而断言。上游 `minScalarEltSameAsIf` 是先比位宽、再调谓词，
+两个形状位宽相等所以上游短路。修在 core shim（`trees/explore` @ `700e551`），
+`.gisel`、语料、emitter 都没动，inc SHA 不变。修后 AArch64 29,359 → 0 差异。
+
+未做：其余 6 个 target（U5）。

@@ -112,10 +112,37 @@ else
     "${MAIN[@]}" "${SALVAGE[@]}"
 fi
 
-echo "[6/6] queries + FREEZE" >&2
-python3 -m oracle emit --out "$OUT/queries.jsonl" \
+echo "[6/6] queries + answerable filter + FREEZE" >&2
+python3 -m oracle emit --out "$OUT/queries.raw.jsonl" \
   --universe "$OUT/universe.jsonl" --sample "$SAMPLE" \
   "${MAIN[@]}" "${SALVAGE[@]}"
+
+# Split by config so each query is filtered with the configuration it names.
+# A query the pinned build cannot answer is a harness artifact, not a rule gap;
+# leaving it in would show up as a fake A/B disagreement.
+rm -rf "$OUT/split" "$OUT/filtered"
+mkdir -p "$OUT/split" "$OUT/filtered"
+python3 - "$OUT" "${CONFIGS[@]}" <<'SPLIT'
+import json, os, sys
+out, configs = sys.argv[1], sys.argv[2:]
+handles = {c: open(os.path.join(out, "split", c + ".jsonl"), "w",
+                   encoding="utf-8") for c in configs}
+with open(os.path.join(out, "queries.raw.jsonl"), encoding="utf-8") as src:
+    for line in src:
+        if line.strip():
+            handles[json.loads(line)["config"]].write(line)
+for handle in handles.values():
+    handle.close()
+SPLIT
+: > "$OUT/queries.jsonl"
+: > "$OUT/queries.dropped.jsonl"
+for cfg in "${CONFIGS[@]}"; do
+  "$BIN" --witness "$cfg" --filter-in "$OUT/split/$cfg.jsonl" \
+    --filter-out "$OUT/filtered/$cfg.jsonl" \
+    --filter-drop "$OUT/filtered/$cfg.dropped.jsonl" >/dev/null
+  cat "$OUT/filtered/$cfg.jsonl" >> "$OUT/queries.jsonl"
+  cat "$OUT/filtered/$cfg.dropped.jsonl" >> "$OUT/queries.dropped.jsonl"
+done
 
 python3 - "$OUT" "$TARGET" "$TREE" "$REPO" "$BUDGET" "$LIMIT" "$SAMPLE" <<'PY'
 import hashlib, json, os, subprocess, sys
@@ -132,14 +159,22 @@ def commit(path):
                                    text=True).strip()
 artifacts = {name: sha(os.path.join(out, name))
              for name in ("arity.jsonl", "universe.jsonl",
-                          "coverage.json", "queries.jsonl")
+                          "coverage.json", "queries.jsonl",
+                          "queries.raw.jsonl", "queries.dropped.jsonl")
              if os.path.exists(os.path.join(out, name))}
+counts = {}
+for name in ("queries.raw.jsonl", "queries.jsonl", "queries.dropped.jsonl"):
+    path = os.path.join(out, name)
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as handle:
+            counts[name] = sum(1 for line in handle if line.strip())
 freeze = {"schema": 1, "target": target,
           "pin": pin["commit"],
           "pin_patches": [p["commit"] for p in pin.get("patches", [])],
           "tree_head": commit(tree),
           "tool_commit": commit(repo), "budget": int(budget),
-          "limit": int(limit), "sample": int(sample), "artifacts": artifacts}
+          "limit": int(limit), "sample": int(sample), "counts": counts,
+          "artifacts": artifacts}
 with open(os.path.join(out, "FREEZE.json"), "w", encoding="utf-8") as handle:
     json.dump(freeze, handle, indent=2, sort_keys=True)
     handle.write("\n")
