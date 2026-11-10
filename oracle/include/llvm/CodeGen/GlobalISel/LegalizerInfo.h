@@ -1375,6 +1375,10 @@ public:
                     changeElementSizeTo(typeIdx(TypeIdx), Ty));
   }
 
+  /// The size comparison is evaluated before the free-form guard, in the same
+  /// order as `minScalarEltSameAsIf`.  This is not cosmetic: the guard may
+  /// inspect the other slot (`getElementType()` on a scalar pointer, say), and
+  /// the plain builder never runs it on a query its own comparison rejects.
   LegalizeRuleSet &coreMinScalarSameAs(LegalityPredicate P, unsigned TypeIdx,
                                        unsigned LargeTypeIdx) {
     using namespace LegalizeMutations;
@@ -1383,8 +1387,9 @@ public:
     return actionIf(
         LegalizeAction::WidenScalar,
         [=](const LegalityQuery &Query) {
-          return P(Query) && Query.Types[LargeTypeIdx].getScalarSizeInBits() >
-                                 Query.Types[TypeIdx].getScalarSizeInBits();
+          return Query.Types[LargeTypeIdx].getScalarSizeInBits() >
+                     Query.Types[TypeIdx].getScalarSizeInBits() &&
+                 P(Query);
         },
         changeElementSizeTo(TypeIdx, LargeTypeIdx));
   }
@@ -1466,6 +1471,7 @@ public:
                     changeElementSizeTo(typeIdx(TypeIdx), Ty));
   }
 
+  /// Same order as `minScalarEltSameAsIf` above and `maxScalarEltSameAsIf`.
   LegalizeRuleSet &coreMaxScalarSameAs(LegalityPredicate P, unsigned TypeIdx,
                                        unsigned NarrowTypeIdx) {
     using namespace LegalizeMutations;
@@ -1474,8 +1480,9 @@ public:
     return actionIf(
         LegalizeAction::NarrowScalar,
         [=](const LegalityQuery &Query) {
-          return P(Query) && Query.Types[NarrowTypeIdx].getScalarSizeInBits() <
-                                 Query.Types[TypeIdx].getScalarSizeInBits();
+          return Query.Types[NarrowTypeIdx].getScalarSizeInBits() <
+                     Query.Types[TypeIdx].getScalarSizeInBits() &&
+                 P(Query);
         },
         changeElementSizeTo(TypeIdx, NarrowTypeIdx));
   }
