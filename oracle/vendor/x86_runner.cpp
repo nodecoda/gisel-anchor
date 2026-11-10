@@ -17,6 +17,7 @@
 #include "llvm/ADT/StringMap.h"
 #include "llvm/ADT/StringSwitch.h"
 #include "llvm/CodeGen/GlobalISel/LegalizerInfo.h"
+#include "llvm/CodeGen/TargetInstrInfo.h"
 #include "llvm/CodeGen/TargetOpcodes.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/LLVMContext.h"
@@ -31,6 +32,7 @@
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/TargetParser/Triple.h"
 
+#include <algorithm>
 #include <fstream>
 #include <optional>
 #include <vector>
@@ -386,6 +388,34 @@ static int answerLine(StringRef Line, const StringMap<Sigma *> &Sigmas,
 
 } // namespace
 
+static const char *opcodeName(unsigned Op);
+
+// Type-slot and immediate-slot counts, computed exactly like
+// LegalizerInfo::verify(): dense indices from the generic operand kinds.
+static int dumpArity(Sigma &S, StringRef ConfigName, raw_ostream &Out) {
+  const MCInstrInfo &MII = *S.STI->getInstrInfo();
+  const unsigned First = TargetOpcode::PRE_ISEL_GENERIC_OPCODE_START;
+  const unsigned Last = TargetOpcode::PRE_ISEL_GENERIC_OPCODE_END;
+  for (unsigned Op = First; Op <= Last; ++Op) {
+    const char *Name = opcodeName(Op);
+    if (!Name)
+      continue;
+    const MCInstrDesc &MCID = MII.get(Op);
+    unsigned NumTypes = 0, NumImms = 0;
+    for (const MCOperandInfo &OI : MCID.operands()) {
+      if (OI.isGenericType())
+        NumTypes = std::max(NumTypes, OI.getGenericTypeIndex() + 1U);
+      if (OI.isGenericImm())
+        NumImms = std::max(NumImms, OI.getGenericImmIndex() + 1U);
+    }
+    Out << "{\"config\":" << jsonString(ConfigName)
+        << ",\"opcode\":" << jsonString(Name)
+        << ",\"type_slots\":" << NumTypes
+        << ",\"imm_slots\":" << NumImms << "}\n";
+  }
+  return 0;
+}
+
 static const char *opcodeName(unsigned Op) {
   switch (Op) {
 #define HANDLE_TARGET_OPCODE(OPC) case TargetOpcode::OPC: return #OPC;
@@ -431,12 +461,15 @@ static int dumpRules(Sigma &S, StringRef ConfigName, raw_ostream &Out) {
 int main(int Argc, char **Argv) {
   StringRef Queries;
   StringRef DumpPath;
+  StringRef ArityPath;
   for (int I = 1; I < Argc; ++I) {
     StringRef A(Argv[I]);
     if (A == "--queries" && I + 1 < Argc)
       Queries = Argv[++I];
     else if (A == "--dump-rules" && I + 1 < Argc)
       DumpPath = Argv[++I];
+    else if (A == "--dump-arity" && I + 1 < Argc)
+      ArityPath = Argv[++I];
     else if (A == "-h" || A == "--help") {
       outs() << "usage: query_runner --queries FILE | --dump-rules FILE\n";
       return 0;
@@ -445,7 +478,7 @@ int main(int Argc, char **Argv) {
       return 2;
     }
   }
-  if (Queries.empty() && DumpPath.empty()) {
+  if (Queries.empty() && DumpPath.empty() && ArityPath.empty()) {
     errs() << "usage: query_runner --queries FILE | --dump-rules FILE\n";
     return 2;
   }
@@ -462,6 +495,19 @@ int main(int Argc, char **Argv) {
       return 2;
     Sigmas[C.ID] = S.get();
     Storage.push_back(std::move(S));
+  }
+
+  if (!ArityPath.empty()) {
+    std::error_code EC;
+    raw_fd_ostream Out(ArityPath, EC);
+    if (EC) {
+      errs() << "cannot write " << ArityPath << ": " << EC.message() << "\n";
+      return 2;
+    }
+    for (const Config &C : Configs)
+      dumpArity(*Sigmas[C.ID], C.ID, Out);
+    Out.flush();
+    return 0;
   }
 
   if (!DumpPath.empty()) {
