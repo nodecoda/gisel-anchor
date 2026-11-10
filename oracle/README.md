@@ -115,7 +115,7 @@ RISC-V `0645f9a4…`）。
 的固定集合，命中判据是上游 `rule.match`。一条命令出全套产物：
 
 ```sh
-./scripts/gen-u.sh x86 OUT          # 也可 aarch64 / riscv
+./scripts/gen-u.sh x86 OUT   # x86|aarch64|riscv|arm|mips|ppc|m68k|wasm|spirv
 ```
 
 产物：`OUT/arity.jsonl`、`universe.jsonl`（+ `universe.safe.jsonl`）、
@@ -151,6 +151,12 @@ RISC-V `0645f9a4…`）。
 | X86 | 4 | 1,911 | 1,798 | 56 | 57 | 0 | 10,100 | 10,100 | 0 |
 | AArch64 | 9 | 13,240 | 11,727 | 357 | 1,156 | 0 | 29,708 | 29,359 | 349 |
 | RISC-V | 8 | 4,326 | 3,925 | 156 | 245 | 0 | 20,277 | 20,239 | 38 |
+| ARM | 7 | 741 | 741 | 0 | 0 | 0 | 15,639 | 15,639 | 0 |
+| Mips | 5 | 765 | 736 | 0 | 29 | 0 | 11,341 | 11,341 | 0 |
+| PPC | 1 | 49 | 49 | 0 | 0 | 0 | 2,192 | 2,176 | 16 |
+| M68k | 1 | 33 | 33 | 0 | 0 | 0 | 2,180 | 2,180 | 0 |
+| WebAssembly | 4 | 922 | 922 | 0 | 0 | 0 | 9,290 | 9,274 | 16 |
+| SPIR-V | 6 | 3,766 | 3,228 | 194 | 344 | 0 | 15,588 | 15,580 | 8 |
 
 按跨配置口径（任一配置 witness 过即不算 gap）：
 
@@ -159,6 +165,9 @@ RISC-V `0645f9a4…`）。
 | X86 | 0 | 6 |
 | AArch64 | 88 个 `(opcode, rule_index)` | 同上表内的 shadowed 部分 |
 | RISC-V | 28 个 `(opcode, rule_index)` | 同上 |
+| ARM / PPC / M68k / WebAssembly | 0 | 0 |
+| Mips | 20 个（4 条是 `.legalIf([](){return false;})` 占位，见 `known-gaps/mips.json`） | 0 |
+| SPIR-V | 0 | 194（全部 `cross_config` 命中过） |
 
 这些逐条写在 `oracle/known-gaps/<target>.json`（每条 `reason` + `follow_up`）。
 
@@ -173,6 +182,12 @@ RISC-V `0645f9a4…`）。
 | X86 | 10,100 | 0 | 0 | 逐字节相同 |
 | AArch64 | 29,359 | 0 | 0 | 逐字节相同 |
 | RISC-V | 20,239 | 0 | 0 | 逐字节相同 |
+| ARM | 15,639 | 0 | 0 | 逐字节相同 |
+| Mips | 11,341 | 0 | 0 | 逐字节相同 |
+| PPC | 2,176 | 0 | 0 | 逐字节相同 |
+| M68k | 2,180 | 0 | 0 | 逐字节相同 |
+| WebAssembly | 9,274 | 0 | 0 | 逐字节相同 |
+| SPIR-V | 15,580 | 0 | 0 | 逐字节相同 |
 
 负控把某个 opcode 的整条 builder 链换成 `.unsupported()`（单条规则的身份在
 builder 链里已经不存在），三 target 的差异全部落在被注入的 ruleset 内，
@@ -185,4 +200,7 @@ inc 在 `coreMinScalarSameAs` 里先跑用户谓词、对 `p0` / `s8` 调
 两个形状位宽相等所以上游短路。修在 core shim（`trees/explore` @ `700e551`），
 `.gisel`、语料、emitter 都没动，inc SHA 不变。修后 AArch64 29,359 → 0 差异。
 
-未做：其余 6 个 target（U5）。
+U5 把同一套流程接到 ARM / Mips / PPC / M68k / WebAssembly / SPIR-V（AMDGPU 不接）。
+负控：ARM `G_LOAD` 148、Mips `G_CTPOP` 55、PPC `G_SUB` 12、M68k `G_MUL` 35、
+WebAssembly `G_SELECT` 48、SPIR-V `G_UMIN` 798，全部 `unknown_keys=0`、
+`outside_expected` 为空。数字与 SHA 见 `ab/docs/EVIDENCE-U.md`。

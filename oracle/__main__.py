@@ -78,7 +78,8 @@ def main(argv=None) -> int:
     un.add_argument("--profile", default="full", choices=("full", "safe"),
                     help="safe = narrow salvage set for asserted opcodes")
     un.add_argument("--target", default="generic",
-                    choices=("generic", "x86", "aarch64", "riscv"),
+                    choices=("generic", "x86", "aarch64", "riscv", "arm",
+                             "mips", "ppc", "m68k", "wasm", "spirv"),
                     help="shape capability filter (x86 has no scalable vectors)")
     un.set_defaults(func=cmd_universe)
 

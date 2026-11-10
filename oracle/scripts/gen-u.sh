@@ -31,19 +31,40 @@ REPO=$(cd "$ROOT/.." && pwd)                    # .../upstream-source
 TREE=${ORACLE_TREE:-/home/ubuntu/llvm/trees/explore}
 BUILD=${ORACLE_BUILD:-/home/ubuntu/llvm/builds/explore}
 BUDGET=${ORACLE_BUDGET:-20000}
-LIMIT=${ORACLE_LIMIT:-1200}
+LIMIT_DEFAULT=1200
 SAMPLE=${ORACLE_SAMPLE:-8}
 
 case "$TARGET" in
   x86)     CONFIGS=(C0 C1 C2 C3); PREFIX=x86 ;;
   aarch64) CONFIGS=(baseline small-cm bf16 lse rcpc3 outline-atomics cssc fullfp16 sve); PREFIX=a64 ;;
   riscv)   CONFIGS=(rv64gc rv32gc rv64gcv rv32gcv rv64zbb rv64zfh ristretto rv32zilsd); PREFIX=rv ;;
+  arm)     CONFIGS=(armv7a-neon armv7a-nodiv armv7a-a5 armv6-arm1176 armv4t thumbv7m armv7-soft); PREFIX=arm ;;
+  mips)    CONFIGS=(mips32 mips32r2 mips32r6 mips32r5-msa mips32r6-msa); PREFIX=mips ;;
+  ppc)     CONFIGS=(default); PREFIX=ppc ;;
+  m68k)    CONFIGS=(default); PREFIX=m68k ;;
+  wasm)    CONFIGS=(wasm32 wasm32-signext wasm64 wasm64-signext); PREFIX=wasm ;;
+  spirv)   CONFIGS=(spirv64-kernel spirv32-kernel spirv64-shader spirv32-shader spirv64-kernel-ext spirv32-shader-ext); PREFIX=spirv; LIMIT_DEFAULT=4000 ;;
   *) echo "unsupported target: $TARGET" >&2; exit 2 ;;
 esac
 
+LIMIT=${ORACLE_LIMIT:-$LIMIT_DEFAULT}
+
 BIN=$ROOT/out/$PREFIX-dump
 if [[ ! -x $BIN ]]; then
-  "$ROOT/scripts/build-dump-$TARGET.sh" "$TREE" "$BUILD" "$BIN"
+  if [[ -x $ROOT/scripts/build-dump-$TARGET.sh ]]; then
+    "$ROOT/scripts/build-dump-$TARGET.sh" "$TREE" "$BUILD" "$BIN"
+  else
+    case "$TARGET" in
+      arm)   LLVM_TARGET=ARM ;;
+      mips)  LLVM_TARGET=Mips ;;
+      ppc)   LLVM_TARGET=PowerPC ;;
+      m68k)  LLVM_TARGET=M68k ;;
+      wasm)  LLVM_TARGET=WebAssembly ;;
+      spirv) LLVM_TARGET=SPIRV ;;
+      *) echo "no LLVM target for $TARGET" >&2; exit 2 ;;
+    esac
+    "$ROOT/scripts/build-dump-target.sh" "$LLVM_TARGET" "$TREE" "$BUILD" "$BIN"
+  fi
 fi
 
 mkdir -p "$OUT/cov"

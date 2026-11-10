@@ -1,0 +1,13 @@
+{
+  "gaps": [
+    {
+      "config": "*",
+      "follow_up": "upstream dead rule; if it ever becomes first, both the corpus and the U queries change",
+      "opcode": "G_BITCAST",
+      "reason": "the second `getActionDefinitionsBuilder(G_BITCAST)` chain appends a `legal` rule after the first chain's `custom true`, which matches every query first; the rule is reachable only as a later match",
+      "rule_index": 6
+    }
+  ],
+  "schema": 1,
+  "target": "spirv"
+}

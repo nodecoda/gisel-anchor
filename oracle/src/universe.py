@@ -32,9 +32,10 @@ FIXED_LANES = [2, 3, 4, 6, 8, 12, 16, 32, 64, 128]
 SCALABLE_LANES = [1, 2, 3, 4, 8, 16]
 VECTOR_ELEMS = [("scalar", 8), ("scalar", 16), ("scalar", 32),
                 ("scalar", 64), ("scalar", 128), ("float", 16),
-                ("float", 32), ("float", 64), ("bf16",)]
+                ("float", 32), ("float", 64), ("bf16",), ("scalar", 1)]
 
 POINTER_AS = [0, 1, 2, 3, 4]
+SPIRV_POINTER_AS = tuple(range(14))
 POINTER_BITS = [32, 64]
 
 MEM_TYPES = [("scalar", 8), ("scalar", 16), ("scalar", 32), ("scalar", 64),
@@ -97,9 +98,18 @@ def vectors(scalable: bool = True) -> list[tuple]:
     return _dedup(out)
 
 
-def pointers() -> list[tuple]:
+def pointer_ases(target: str) -> tuple[int, ...]:
+    """Address spaces the target's rules mention.
+
+    SPIR-V's legalizer keys rules on storage classes 0..13 (`p5`, `p9`, ...);
+    the other targets only ever name address space 0.
+    """
+    return SPIRV_POINTER_AS if target == "spirv" else POINTER_AS
+
+
+def pointers(target: str = "generic") -> list[tuple]:
     return [("pointer", as_, bits)
-            for as_ in POINTER_AS for bits in POINTER_BITS]
+            for as_ in pointer_ases(target) for bits in POINTER_BITS]
 
 
 def pointer_vectors() -> list[tuple]:
@@ -120,8 +130,8 @@ def type_values(target: str = "generic") -> list[tuple]:
     head = interesting_scalars() + integers() + floats()
     tail = [t for t in scalars() if t not in head]
     scalable = target != "x86"
-    return _dedup(head + vectors(scalable) + pointer_vectors() + pointers()
-                  + tail)
+    return _dedup(head + vectors(scalable) + pointer_vectors()
+                  + pointers(target) + tail)
 
 
 REPRESENTATIVES = [("scalar", 8), ("scalar", 16), ("scalar", 32),
@@ -179,7 +189,8 @@ def _mem_variants(opcode: str) -> list[tuple]:
 
 
 COHERENT_SHAPES = [
-    ("scalar", 8), ("scalar", 16), ("scalar", 32), ("scalar", 64),
+    ("scalar", 1), ("scalar", 8), ("scalar", 16), ("scalar", 32),
+    ("scalar", 64),
     ("scalar", 80), ("scalar", 128), ("float", 16), ("float", 32),
     ("float", 64), ("float", 128),
     ("vector", 2, False, ("scalar", 8)),
@@ -210,7 +221,7 @@ COHERENT_SHAPES = [
 VEC_ELEM = [(t, t[3]) for t in COHERENT_SHAPES if t[0] == "vector"]
 
 
-def _coherent_combos(type_slots: int) -> list[tuple]:
+def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
     """Pointer/value, vector pair, vector/element and mixed scalar tuples.
 
     Slot order matters: X86 load/store are `{value, ptr}`, while G_PTR_ADD is
@@ -225,6 +236,15 @@ def _coherent_combos(type_slots: int) -> list[tuple]:
             for shape in shapes:
                 out.append((shape, ptr) + (shape,) * (type_slots - 2))
                 out.append((ptr, shape) + (shape,) * (type_slots - 2))
+        # Pointer/pointer pairs: G_MEMCPY legalises `{p_i, p_j}` and G_LOAD
+        # legalises loading a pointer.  SPIR-V also names storage classes up
+        # to 13 in both slots, so those pairs are part of the same sweep.
+        for bits in (32, 64):
+            for as_a in pointer_ases(target):
+                for as_b in (0, 1, 9):
+                    out.append((("pointer", as_a, bits),
+                                ("pointer", as_b, bits))
+                               + (("pointer", as_a, bits),) * (type_slots - 2))
         # Vector pairs: {sub, full} for G_EXTRACT/G_INSERT and friends.
         for elem in (("scalar", 8), ("scalar", 16), ("scalar", 32),
                      ("scalar", 64)):
@@ -239,6 +259,13 @@ def _coherent_combos(type_slots: int) -> list[tuple]:
             for index in (("scalar", 32), ("scalar", 64)):
                 out.append((vec, elem, index) if type_slots >= 3
                            else (vec, index))
+    # Mask/scalar pairs: G_SELECT legalises `{value, i1}` and Mips lowers
+    # `{s32, s1}` overflow ops, so the condition slot has to be asked about
+    # explicitly.  Without these the only i1 queries put i1 in slot 0.
+    for value in (("scalar", 32), ("scalar", 64), ("pointer", 0, 32),
+                  ("pointer", 0, 64)):
+        out.append((value, ("scalar", 1))
+                   + (value,) * (type_slots - 2))
     # Mixed scalar pairs used by G_SELECT / G_IS_FPCLASS / G_FPEXT /
     # G_FPTRUNC / G_FPTOUI / G_UITOFP.
     for pair in ((("float", 16), ("float", 32)),
@@ -269,6 +296,14 @@ def _coherent_combos(type_slots: int) -> list[tuple]:
                 out.append((small, big) + (big,) * (type_slots - 2))
     for shape in shapes:
         out.append((shape,) * type_slots)
+    # Other address spaces, representative shapes only: SPIR-V names storage
+    # classes up to 13 in its rules.
+    for as_ in pointer_ases(target)[1:]:
+        for bits in (32, 64):
+            ptr = ("pointer", as_, bits)
+            for shape in shapes[:8]:
+                out.append((shape, ptr) + (shape,) * (type_slots - 2))
+                out.append((ptr, shape) + (shape,) * (type_slots - 2))
     return _dedup(out)
 
 
@@ -309,7 +344,7 @@ def candidates(opcode: str, type_slots: int, imm_slots: int, seed: int = 0,
         combos.extend((v,) for v in values)
         combos.extend((v,) for v in reps)
     else:
-        combos.extend(_coherent_combos(type_slots))
+        combos.extend(_coherent_combos(type_slots, target))
         # All-representative combinations.
         def product(prefix, depth):
             if depth == 0:
