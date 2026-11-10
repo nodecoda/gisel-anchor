@@ -1,0 +1,22 @@
+--- a/llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h
++++ b/llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h
+@@ -425,6 +425,9 @@
+       return Mutation(Query);
+     return std::make_pair(0, LLT{});
+   }
++
++  /// Rule-trace hook: true when the rule carries a mutation.
++  bool hasMutation() const { return static_cast<bool>(Mutation); }
+ };
+ 
+ class LegalizeRuleSet {
+@@ -593,6 +596,9 @@
+   }
+   unsigned getAlias() const { return AliasOf; }
+ 
++  /// Rule-trace hook: the rule chain, in first-match order.
++  ArrayRef<LegalizeRule> getRules() const { return Rules; }
++
+   unsigned immIdx(unsigned ImmIdx) {
+     assert(ImmIdx <= (MCOI::OPERAND_LAST_GENERIC_IMM -
+                       MCOI::OPERAND_FIRST_GENERIC_IMM) &&
