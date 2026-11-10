@@ -109,6 +109,51 @@ arity 交叉检查（与 gisel 的 `data/opcode-slots.json` 比）：
 `--queries` 输出逐字节相同（X86 `40150c54…`、A64 `e19f14c6…`、
 RISC-V `0645f9a4…`）。
 
-未做：predicate AST（计划 v2）、独立宇宙与 U 题面生成（U2/U3）、
-`rules.json`/`coverage.json` 的汇总器。oracle 目前产出的是**原料**，
-不是最终 U 题面。
+## U2/U3 里程碑：独立宇宙 → coverage → U queries
+
+题面不读 `.gisel`：槽位数来自 `--dump-arity`，形状来自 `oracle/src/universe.py`
+的固定集合，命中判据是上游 `rule.match`。一条命令出全套产物：
+
+```sh
+./scripts/gen-u.sh x86 OUT          # 也可 aarch64 / riscv
+```
+
+产物：`OUT/arity.jsonl`、`universe.jsonl`（+ `universe.safe.jsonl`）、
+`cov/<config>.main.jsonl`、`cov/<config>.safe.jsonl`、`coverage.json`、
+`queries.jsonl`、`FREEZE.json`。流程分六步：
+
+1. `--dump-arity` 取每个 opcode 的类型槽/立即数槽；
+2. `python3 -m oracle universe --target T` 造规则无关的候选宇宙；
+3. 每个配置跑一遍 `--witness`（主 pass）；
+4. 主 pass 里崩溃的 opcode 用 `--profile safe` 重造窄宇宙，再跑一遍（salvage）；
+5. `python3 -m oracle coverage --gate --known-gaps oracle/known-gaps/T.json`
+   合并两遍并按跨配置口径判门禁；
+6. `python3 -m oracle emit` 合成 U 题面：每条被 witness 的规则一条查询
+   （带 `ruleset`/`rule` 标注），再给每个 `(config, opcode)` 补固定采样。
+
+细节：
+
+- 崩溃隔离在 runner 内做二分：一条候选把上游断言打崩，就只丢这一条，其余
+  继续评估；只有整组重跑仍失败才把 opcode 记为 `asserted`。
+- `asserted` 的 opcode 不进入 U 题面（问它只会崩，不会给出可比答案）。
+- `queries.jsonl` 同 seed 两遍 SHA 相同。
+
+2026-11-10 实测（pin `9bfc850b` + 5 patches，树 `57587b0`，budget 20000/opcode）：
+
+| target | 配置数 | 规则行 | witnessed | shadowed | unexercised | asserted | U queries |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| X86 | 4 | 1,911 | 1,798 | 56 | 57 | 0 | 10,100 |
+| AArch64 | 9 | 13,240 | 11,727 | 357 | 1,156 | 0 | 29,708 |
+| RISC-V | 8 | 4,326 | 3,925 | 156 | 245 | 0 | 20,277 |
+
+按跨配置口径（任一配置 witness 过即不算 gap）：
+
+| target | 任何配置都没命中的规则 | 从未当过第一命中的规则 |
+|---|---:|---:|
+| X86 | 0 | 6 |
+| AArch64 | 88 个 `(opcode, rule_index)` | 同上表内的 shadowed 部分 |
+| RISC-V | 28 个 `(opcode, rule_index)` | 同上 |
+
+这些逐条写在 `oracle/known-gaps/<target>.json`（每条 `reason` + `follow_up`）。
+
+未做：U4 端到端对拍与负控、其余 6 个 target（U5）。

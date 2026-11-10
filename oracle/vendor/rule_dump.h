@@ -15,10 +15,18 @@
 #include "llvm/CodeGen/GlobalISel/LegalizerInfo.h"
 #include "llvm/CodeGen/TargetInstrInfo.h"
 #include "llvm/CodeGen/TargetOpcodes.h"
+#include "llvm/Support/FileSystem.h"
 #include "llvm/Support/raw_ostream.h"
 
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
+#include <fstream>
+#include <iterator>
+#include <csignal>
+#include <sys/resource.h>
+#include <sys/wait.h>
+#include <unistd.h>
 #include <map>
 #include <string>
 #include <utility>
@@ -192,6 +200,102 @@ void hitsLine(const SigmaT &S, StringRef ConfigName, const LegalityQuery &Q,
   Out << "],\"query\":" << QueryLine.rtrim() << "}\n";
 }
 
+/// Compute one opcode's coverage rows.  Runs in a child process when called
+/// from `witness`, so an upstream assertion costs one opcode, not the run.
+template <typename SigmaT>
+void witnessOpcode(
+    const SigmaT &S, StringRef ConfigName, unsigned Opcode,
+    ArrayRef<std::pair<std::string, ParsedQuery>> Group, unsigned Budget,
+    raw_ostream &Out) {
+  const unsigned First = TargetOpcode::PRE_ISEL_GENERIC_OPCODE_START;
+  const LegalizeRuleSet &RS = S.L->getActionDefinitions(Opcode);
+  const unsigned RulesetOpcode = First + S.L->getActionDefinitionsIdx(Opcode);
+  ArrayRef<LegalizeRule> Rules = RS.getRules();
+  if (Rules.empty())
+    return;
+
+  std::vector<unsigned> FirstHits(Rules.size(), 0);
+  std::vector<unsigned> MatchHits(Rules.size(), 0);
+  std::vector<std::string> WitnessLine(Rules.size());
+  std::vector<int> ShadowedBy(Rules.size(), -1);
+  std::vector<std::string> ShadowLine(Rules.size());
+  unsigned Evaluated = 0;
+  for (auto &Candidate : Group) {
+    if (Budget && Evaluated >= Budget)
+      break;
+    ++Evaluated;
+    unsigned GotRuleset = 0;
+    int FirstMatch = -1;
+    SmallVector<unsigned, 4> LaterMatches;
+    LegalityQuery Q = Candidate.second.query();
+    matchRules(S, Q, GotRuleset, FirstMatch, LaterMatches);
+    (void)GotRuleset;
+    if (FirstMatch >= 0) {
+      ++FirstHits[FirstMatch];
+      ++MatchHits[FirstMatch];
+      if (WitnessLine[FirstMatch].empty())
+        WitnessLine[FirstMatch] = Candidate.first;
+    }
+    for (unsigned I : LaterMatches) {
+      ++MatchHits[I];
+      if (ShadowedBy[I] < 0) {
+        ShadowedBy[I] = FirstMatch;
+        ShadowLine[I] = Candidate.first;
+      }
+    }
+
+    bool AllWitnessed = std::all_of(
+        FirstHits.begin(), FirstHits.end(), [](unsigned N) { return N > 0; });
+    if (AllWitnessed)
+      break;
+  }
+
+  for (unsigned I = 0, E = Rules.size(); I != E; ++I) {
+    const char *Status = FirstHits[I] ? "witnessed"
+                          : MatchHits[I] ? "shadowed"
+                                         : "unexercised";
+    Out << "{\"config\":" << jsonString(ConfigName)
+        << ",\"opcode\":" << jsonString(opcodeName(Opcode))
+        << ",\"ruleset\":" << jsonString(opcodeName(RulesetOpcode))
+        << ",\"rule_index\":" << I
+        << ",\"status\":" << jsonString(Status)
+        << ",\"first_hits\":" << FirstHits[I]
+        << ",\"match_hits\":" << MatchHits[I]
+        << ",\"evaluated\":" << Evaluated
+        << ",\"candidates\":" << Group.size()
+        << ",\"shadowed_by\":" << ShadowedBy[I]
+        << ",\"witness\":";
+    if (WitnessLine[I].empty())
+      Out << "null";
+    else
+      Out << WitnessLine[I];
+    Out << ",\"shadow_query\":";
+    if (ShadowLine[I].empty())
+      Out << "null";
+    else
+      Out << ShadowLine[I];
+    Out << "}\n";
+  }
+}
+
+template <typename SigmaT>
+void emitAsserted(const SigmaT &S, StringRef ConfigName, unsigned Opcode,
+                  size_t Candidates, raw_ostream &Out) {
+  const unsigned First = TargetOpcode::PRE_ISEL_GENERIC_OPCODE_START;
+  const LegalizeRuleSet &RS = S.L->getActionDefinitions(Opcode);
+  const unsigned RulesetOpcode = First + S.L->getActionDefinitionsIdx(Opcode);
+  ArrayRef<LegalizeRule> Rules = RS.getRules();
+  for (unsigned I = 0, E = Rules.size(); I != E; ++I) {
+    Out << "{\"config\":" << jsonString(ConfigName)
+        << ",\"opcode\":" << jsonString(opcodeName(Opcode))
+        << ",\"ruleset\":" << jsonString(opcodeName(RulesetOpcode))
+        << ",\"rule_index\":" << I
+        << ",\"status\":\"asserted\",\"first_hits\":0,\"match_hits\":0"
+        << ",\"evaluated\":0,\"candidates\":" << Candidates
+        << ",\"shadowed_by\":-1,\"witness\":null,\"shadow_query\":null}\n";
+  }
+}
+
 /// Coverage-guided witness search for one configuration.
 ///
 /// `Lines` are candidate queries (universe order is preserved); `Parse` fills a
@@ -199,19 +303,80 @@ void hitsLine(const SigmaT &S, StringRef ConfigName, const LegalityQuery &Q,
 /// a first match, or after `BudgetPerOpcode` candidates (0 = unlimited).
 ///
 /// One row per rule:
-///   status = witnessed | shadowed | unexercised
+///   status = witnessed | shadowed | unexercised | asserted
 ///   first_hits = times this rule was the first match
 ///   match_hits = times this rule matched at all (first or shadowed)
+///
+/// Each opcode runs in a forked child.  An upstream assertion (scalable size,
+/// bad LLT index) costs only the offending candidates: the child crash is
+/// bisected down to individual queries, those are dropped, and the surviving
+/// set is evaluated again.  Only when even that cannot produce rows does the
+/// opcode become `asserted`.
+/// Run one candidate range in a child.  `true` means the child exited cleanly.
+template <typename SigmaT>
+bool runWitnessChild(const SigmaT &S, StringRef ConfigName, unsigned Opcode,
+                     ArrayRef<std::pair<std::string, ParsedQuery>> Group,
+                     unsigned Budget, const char *Path) {
+  pid_t Pid = fork();
+  if (Pid == 0) {
+    // Expected crashes are reported by the parent as dropped candidates; keep
+    // the child's abort message out of the run log.  RLIMIT_CORE=0 also keeps
+    // the kernel from piping each SIGABRT through apport, which dominates the
+    // bisection cost otherwise.
+    // `abort()` runs the kernel's core_pattern pipe, and on this host that is
+    // apport: ~170 ms per crashed child.  A pipe handler ignores RLIMIT_CORE,
+    // so turn the abort into an immediate _exit instead.
+    struct rlimit NoCore = {0, 0};
+    setrlimit(RLIMIT_CORE, &NoCore);
+    std::signal(SIGABRT, [](int) { _exit(3); });
+    if (FILE *Null = fopen("/dev/null", "w"))
+      dup2(fileno(Null), STDERR_FILENO);
+    std::error_code EC;
+    raw_fd_ostream Child(Path, EC, sys::fs::OF_Text);
+    if (!EC)
+      witnessOpcode(S, ConfigName, Opcode, Group, Budget, Child);
+    Child.flush();
+    _exit(0);
+  }
+  int Status = 0;
+  waitpid(Pid, &Status, 0);
+  return WIFEXITED(Status) && WEXITSTATUS(Status) == 0;
+}
+
+/// Mark every single candidate that aborts the child.  Recursion keeps this at
+/// O(k log n) forks when k candidates are bad.
+template <typename SigmaT>
+void findCrashers(const SigmaT &S, StringRef ConfigName, unsigned Opcode,
+                  ArrayRef<std::pair<std::string, ParsedQuery>> Group,
+                  unsigned Budget, const char *Path, size_t Begin, size_t End,
+                  std::vector<char> &Bad) {
+  if (Begin >= End)
+    return;
+  // Budget 0 == evaluate the whole slice.  A probe's slice is small, and
+  // re-applying the opcode budget here would make bisection O(n^2).
+  if (runWitnessChild(S, ConfigName, Opcode, Group.slice(Begin, End - Begin),
+                      0, Path))
+    return;
+  if (End - Begin == 1) {
+    Bad[Begin] = 1;
+    return;
+  }
+  size_t Mid = Begin + (End - Begin) / 2;
+  findCrashers(S, ConfigName, Opcode, Group, Budget, Path, Begin, Mid, Bad);
+  findCrashers(S, ConfigName, Opcode, Group, Budget, Path, Mid, End, Bad);
+}
+
 template <typename SigmaT, typename ParseT>
 int witness(const SigmaT &S, StringRef ConfigName, ArrayRef<std::string> Lines,
             unsigned BudgetPerOpcode, ParseT Parse, raw_ostream &Out) {
-  const unsigned First = TargetOpcode::PRE_ISEL_GENERIC_OPCODE_START;
-
   // Group in file order; std::map keeps opcode order deterministic.
   std::map<unsigned, std::vector<std::pair<std::string, ParsedQuery>>> Groups;
   for (const std::string &Line : Lines) {
     ParsedQuery P;
-    if (!Parse(Line, P)) {
+    int Parsed = Parse(Line, P);
+    if (Parsed == 1)
+      continue;  // caller asked to skip this shape (e.g. known-unanswerable)
+    if (Parsed != 0) {
       errs() << "bad universe line: " << Line << "\n";
       return 2;
     }
@@ -220,75 +385,46 @@ int witness(const SigmaT &S, StringRef ConfigName, ArrayRef<std::string> Lines,
 
   for (auto &Group : Groups) {
     const unsigned Opcode = Group.first;
-    const LegalizeRuleSet &RS = S.L->getActionDefinitions(Opcode);
-    const unsigned RulesetOpcode =
-        First + S.L->getActionDefinitionsIdx(Opcode);
-    ArrayRef<LegalizeRule> Rules = RS.getRules();
+    ArrayRef<LegalizeRule> Rules = S.L->getActionDefinitions(Opcode).getRules();
     if (Rules.empty())
       continue;
 
-    std::vector<unsigned> FirstHits(Rules.size(), 0);
-    std::vector<unsigned> MatchHits(Rules.size(), 0);
-    std::vector<std::string> WitnessLine(Rules.size());
-    std::vector<int> ShadowedBy(Rules.size(), -1);
-    std::vector<std::string> ShadowLine(Rules.size());
-    unsigned Evaluated = 0;
-    for (auto &Candidate : Group.second) {
-      if (BudgetPerOpcode && Evaluated >= BudgetPerOpcode)
-        break;
-      ++Evaluated;
-      unsigned GotRuleset = 0;
-      int FirstMatch = -1;
-      SmallVector<unsigned, 4> LaterMatches;
-      LegalityQuery Q = Candidate.second.query();
-      matchRules(S, Q, GotRuleset, FirstMatch, LaterMatches);
-      (void)GotRuleset;
-      if (FirstMatch >= 0) {
-        ++FirstHits[FirstMatch];
-        ++MatchHits[FirstMatch];
-        if (WitnessLine[FirstMatch].empty())
-          WitnessLine[FirstMatch] = Candidate.first;
-      }
-      for (unsigned I : LaterMatches) {
-        ++MatchHits[I];
-        if (ShadowedBy[I] < 0) {
-          ShadowedBy[I] = FirstMatch;
-          ShadowLine[I] = Candidate.first;
-        }
-      }
-
-      bool AllWitnessed = std::all_of(
-          FirstHits.begin(), FirstHits.end(), [](unsigned N) { return N > 0; });
-      if (AllWitnessed)
-        break;
+    char Path[] = "/tmp/oracle-witness-XXXXXX";
+    int FD = mkstemp(Path);
+    if (FD < 0) {
+      errs() << "cannot create witness temp file\n";
+      return 2;
     }
+    close(FD);
 
-    for (unsigned I = 0, E = Rules.size(); I != E; ++I) {
-      const char *Status = FirstHits[I] ? "witnessed"
-                            : MatchHits[I] ? "shadowed"
-                                           : "unexercised";
-      Out << "{\"config\":" << jsonString(ConfigName)
-          << ",\"opcode\":" << jsonString(opcodeName(Opcode))
-          << ",\"ruleset\":" << jsonString(opcodeName(RulesetOpcode))
-          << ",\"rule_index\":" << I
-          << ",\"status\":" << jsonString(Status)
-          << ",\"first_hits\":" << FirstHits[I]
-          << ",\"match_hits\":" << MatchHits[I]
-          << ",\"evaluated\":" << Evaluated
-          << ",\"candidates\":" << Group.second.size()
-          << ",\"shadowed_by\":" << ShadowedBy[I]
-          << ",\"witness\":";
-      if (WitnessLine[I].empty())
-        Out << "null";
-      else
-        Out << WitnessLine[I];
-      Out << ",\"shadow_query\":";
-      if (ShadowLine[I].empty())
-        Out << "null";
-      else
-        Out << ShadowLine[I];
-      Out << "}\n";
+    bool Clean = runWitnessChild(S, ConfigName, Opcode, Group.second,
+                                 BudgetPerOpcode, Path);
+    if (!Clean) {
+      std::vector<char> Bad(Group.second.size(), 0);
+      findCrashers(S, ConfigName, Opcode, Group.second, BudgetPerOpcode, Path,
+                   0, Group.second.size(), Bad);
+      std::vector<std::pair<std::string, ParsedQuery>> Good;
+      Good.reserve(Group.second.size());
+      for (size_t I = 0; I != Group.second.size(); ++I)
+        if (!Bad[I])
+          Good.push_back(Group.second[I]);
+      size_t Skipped = Group.second.size() - Good.size();
+      errs() << "witness " << ConfigName << " " << opcodeName(Opcode)
+             << ": dropped " << Skipped << " crashing candidate"
+             << (Skipped == 1 ? "" : "s") << "\n";
+      Clean = !Good.empty() &&
+              runWitnessChild(S, ConfigName, Opcode, Good, BudgetPerOpcode,
+                              Path);
     }
+    if (Clean) {
+      std::ifstream In(Path);
+      std::string Content((std::istreambuf_iterator<char>(In)),
+                          std::istreambuf_iterator<char>());
+      Out << StringRef(Content);
+    } else {
+      emitAsserted(S, ConfigName, Opcode, Group.second.size(), Out);
+    }
+    unlink(Path);
   }
   return 0;
 }

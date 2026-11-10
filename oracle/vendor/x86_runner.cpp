@@ -429,12 +429,14 @@ static int runWitness(StringRef ConfigName, StringRef UniversePath,
   auto Parse = [PtrBits](StringRef Text, rule_dump::ParsedQuery &P) {
     Expected<json::Value> Parsed = json::parse(Text);
     if (!Parsed)
-      return false;
+      return 2;
     json::Object *Obj = Parsed->getAsObject();
     if (!Obj)
-      return false;
+      return 2;
     std::string Name;
-    return parseBody(*Obj, PtrBits, Name, P);
+    if (!parseBody(*Obj, PtrBits, Name, P))
+      return 2;
+    return isKnownUnanswerable(Name, P.Types) ? 1 : 0;
   };
 
   std::error_code EC;

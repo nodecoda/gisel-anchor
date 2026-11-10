@@ -114,19 +114,53 @@ schema v1，一行一个 JSON 对象：
 
 ## 5 覆盖（oracle 输出）
 
-`coverage.json`：
+`coverage.json`（多配置）：
 
 ```json
-{"schema": 1, "target": "X86", "config": "x86-64-v3",
- "counts": {"rules": 0, "witnessed": 0, "shadowed": 0, "unexercised": 0},
- "rules": [{"opcode": "G_ADD", "rule_index": 0,
-            "status": "witnessed", "witness": "<query key or null>"}]}
+{"schema": 1, "target": "x86",
+ "counts": {"rules": 1911, "witnessed": 1798, "shadowed": 56,
+            "unexercised": 57, "asserted": 0,
+            "unexercised_everywhere": 0, "shadowed_everywhere": 7},
+ "configs": [
+   {"schema": 1, "target": "x86", "config": "C1",
+    "counts": {"witnessed": 0, "shadowed": 0, "unexercised": 0, "asserted": 0},
+    "rules": [{"opcode": "G_ADD", "ruleset": "G_ADD", "rule_index": 0,
+               "status": "witnessed", "cross_config": "witnessed",
+               "witness": "<query key or null>", "shadowed_by": -1,
+               "shadow_query": null, "evaluated": 0, "candidates": 0}]}]}
 ```
 
-- `status ∈ {witnessed, shadowed, unexercised}`。
-- `unexercised` 必须为 0，或在 `known_gaps.json` 有逐条理由。
-- `shadowed` 表示规则存在但被前面的规则遮蔽；`shadowed_by` 必须给出遮蔽者，
-  `shadow_query` 给出证据查询（来自 §4.2）。
+- `status ∈ {witnessed, shadowed, unexercised, asserted}`。
+- `asserted` 不是规则状态，而是“该 opcode 在上游求值时崩溃”。witness 检索
+  会二分定位崩溃候选并丢弃它们后重跑；只有重跑也失败才整组断言。
+- `cross_config`：同一 `(opcode, rule_index)` 在所有配置里的最好状态
+  （`witnessed > shadowed > unexercised`）。feature 门控的规则只在启用该
+  feature 的配置里可能命中，所以**门禁按 `cross_config` 判定**：在任一配置
+  被 witness 过的规则，不因其它配置的 `unexercised` 而失败。
+- 规则跨配置的身份就是 `(opcode, rule_index)`。builder 在不同配置下可能发出
+  不同条数，索引会错位；因此这个并集是**覆盖下界**，不是超集声明。
+
+### 5.1 known-gaps
+
+未被任何配置 witness 的规则（`cross_config ∈ {unexercised, shadowed}`）必须
+在 `oracle/known-gaps/<target>.json` 里有条目：
+
+```json
+{"schema": 1, "target": "x86",
+ "gaps": [{"config": "*", "opcode": "G_FREEZE", "rule_index": 1,
+           "status": "shadowed",
+           "reason": "matched but never first in all 4 tested configurations; ...",
+           "follow_up": "confirm with upstream that the rule is intentionally unreachable"}]}
+```
+
+- `config` 支持 `*`；`rule_index` 支持 `*`；`status` 支持 `*`。
+- `reason` 与 `follow_up` 都非空，否则 gate 直接失败。
+- 条目没匹配到任何 gap 行 → `stale-gap-entry`，同样失败。
+
+## 6 冻结
+
+`FREEZE.json` 引用：工具 commit、`pin/PIN.json` 的 base commit 与 patch 列表、
+任务树 HEAD、各产物 sha256。由 `gen-u.sh` 生成；不接受手工编辑的数字。
 
 ## 6 冻结
 

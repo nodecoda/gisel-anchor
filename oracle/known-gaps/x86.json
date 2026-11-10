@@ -1,0 +1,85 @@
+{
+  "gaps": [
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 483,
+        "configs": 4,
+        "evaluated": 483
+      },
+      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "opcode": "G_CONSTANT_FOLD_BARRIER",
+      "reason": "matched but never first in all 4 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "rule_index": 19,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 1200,
+        "configs": 4,
+        "evaluated": 1200
+      },
+      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "opcode": "G_FPTOSI",
+      "reason": "matched but never first in all 4 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "rule_index": 7,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 1200,
+        "configs": 4,
+        "evaluated": 1200
+      },
+      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "opcode": "G_FPTRUNC",
+      "reason": "matched but never first in all 4 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "rule_index": 3,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 483,
+        "configs": 4,
+        "evaluated": 483
+      },
+      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "opcode": "G_FREEZE",
+      "reason": "matched but never first in all 4 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "rule_index": 19,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 483,
+        "configs": 4,
+        "evaluated": 483
+      },
+      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "opcode": "G_IMPLICIT_DEF",
+      "reason": "matched but never first in all 4 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "rule_index": 19,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 483,
+        "configs": 4,
+        "evaluated": 483
+      },
+      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "opcode": "G_PHI",
+      "reason": "matched but never first in all 4 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "rule_index": 19,
+      "status": "shadowed"
+    }
+  ],
+  "note": "Rule identity is (opcode, rule_index). A rule unexercised in one configuration is normally feature-gated; only rules that are unreached (or never first) in every configuration are listed here. Where a builder emits different rule counts per configuration the index alignment can shift, so this union is a lower bound on coverage.",
+  "schema": 1,
+  "target": "x86"
+}
