@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "comment": "The upstream revision every corpus rule came from. `tools/import-cxx.py --all --pin tests/corpus/PIN.json --git-repo <llvm> --check` must reproduce every .gisel file byte for byte. The commit is a plain upstream llvm-project commit: local patches in a worktree cannot change what was imported, so the corpus keeps the reviewed deviations below. `patches` lists the unmerged upstream PRs this repository carries; the official side of the A/B harness is built from a tree with them applied, which is why the corpus asks for the post-fix behaviour. When they land upstream, move `commit` past them and delete both the patches and the deviations.",
+  "repo": "llvm/llvm-project",
+  "commit": "9bfc850b9940566bef17a34601826775349ba0e6",
+  "sources": {
+    "X86": {
+      "path": "llvm/lib/Target/X86/GISel/X86LegalizerInfo.cpp",
+      "sha256": "79f2376096c3271910840a42c6270932011078df9fff343bfd96c226523336cd"
+    },
+    "AArch64": {
+      "path": "llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp",
+      "sha256": "2b5377c3eedddf82f17758e7cab763d99ce362e4c5422bb8e24bc4b7c8945d55"
+    },
+    "RISCV": {
+      "path": "llvm/lib/Target/RISCV/GISel/RISCVLegalizerInfo.cpp",
+      "sha256": "ad529e1f1a9e62fa8bbd3a7d68f2b46f41f3cf8f1e74556c709bffbd43b9e889"
+    },
+    "M68k": {
+      "path": "llvm/lib/Target/M68k/GISel/M68kLegalizerInfo.cpp",
+      "sha256": "f796bb977e0b77f56374c10243acb24e3818df7d9637eed2fc0df4c6e0295c36"
+    },
+    "WebAssembly": {
+      "path": "llvm/lib/Target/WebAssembly/GISel/WebAssemblyLegalizerInfo.cpp",
+      "sha256": "c6409b1d4eb1b44a7e8d0b9fbb4332497e4cb6d7f2c74ba42482ccb392a5edd8"
+    },
+    "PowerPC": {
+      "path": "llvm/lib/Target/PowerPC/GISel/PPCLegalizerInfo.cpp",
+      "sha256": "4ca6a62b6f435c6e3e8ce1d576458a111026bdcbd35d978c22160f840cc3aa2a"
+    },
+    "ARM": {
+      "path": "llvm/lib/Target/ARM/ARMLegalizerInfo.cpp",
+      "sha256": "b86441eb03f4e50291053f61da8a94c542224767d705933d54b2fd3761a59b02"
+    },
+    "Mips": {
+      "path": "llvm/lib/Target/Mips/MipsLegalizerInfo.cpp",
+      "sha256": "3660b66b709c5eec9431e54010d1da9e241a460aa528ff213b444ebc0e96b525"
+    },
+    "SPIRV": {
+      "path": "llvm/lib/Target/SPIRV/SPIRVLegalizerInfo.cpp",
+      "sha256": "e404ba675047cbc8eb48bf87bbc2a67d4d7c926d2ce5ad4f59e3fe0a33361208"
+    }
+  },
+  "patches": [
+    {
+      "pr": 238306,
+      "title": "[GlobalISel] Keep the lane count in maxScalarEltSameAsIf",
+      "commit": "b826bc84a415"
+    },
+    {
+      "pr": 238277,
+      "title": "[X86][GlobalISel] Don't widen G_BUILD_VECTOR to legalize it",
+      "commit": "526dababf69f"
+    },
+    {
+      "pr": 235976,
+      "title": "[X86][GlobalISel] Mark vector G_CTPOP legal when VPOPCNT is available",
+      "commit": "462829fdac83"
+    },
+    {
+      "pr": 237650,
+      "title": "[GlobalISel] Pick a sub-register result class that has the value type",
+      "commit": "d03da6ee503e"
+    },
+    {
+      "pr": 239136,
+      "title": "[TableGen] Diagnose !head/!tail of a deferred empty list",
+      "commit": "cfdc9e57a2db"
+    }
+  ]
+}

@@ -13,4 +13,10 @@
   `test_widen_multiple`
 - `tests/corpus/PIN.json` → `pin/PIN.json`
 
+测试：`python3 -m pytest -q import/tests`（79 passed）。
+
 验收：`import --all --check` 9/9 逐字节相同，0 refused。
+
+路径说明：`import-cxx.py` 用 `GISEL_SRC`（默认 `../gisel`）导入 `gisel.ast`
+做语料解析校验；默认语料目录是 `$GISEL_SRC/tests/corpus`，可由 `GISEL_CORPUS`
+覆盖。

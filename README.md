@@ -26,8 +26,21 @@ upstream-source --(.gisel)------------------> gisel
 | WP | 内容 | 状态 |
 |---|---|---|
 | WP0 | 骨架、`SCOPE.md`、`CONTRACTS.md` | 完成 |
-| WP1 | `import/` 从 gisel 迁入（`import-cxx.py` + 13 个测试文件 + `PIN.json`） | 待做 |
+| WP1 | `import/` 从 gisel 迁入（`import-cxx.py` + 13 个测试文件 + `PIN.json`） | 完成 |
 | WP3 | `oracle/`：最小 patch、dump-rules/arity/hits、独立题面、覆盖 | 待做 |
+
+## 验证
+
+```sh
+python3 -m pytest -q import/tests          # 79 passed；需要 ../gisel（或 GISEL_SRC）
+
+python3 import/import-cxx.py --all --pin pin/PIN.json \
+  --git-repo /home/ubuntu/llvm/llvm-project --check    # 9/9, 0 refused
+```
+
+`--check` 默认读 `../gisel/tests/corpus`（语料是 gisel 的输入）；`GISEL_CORPUS`
+可覆盖。测试通过 `conftest.py` 把 `../gisel` 放进 `PYTHONPATH`，供 `-m gisel`
+子进程使用。
 
 ## 布局
 
