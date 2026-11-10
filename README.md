@@ -27,7 +27,7 @@ upstream-source --(.gisel)------------------> gisel
 |---|---|---|
 | WP0 | 骨架、`SCOPE.md`、`CONTRACTS.md` | 完成 |
 | WP1 | `import/` 从 gisel 迁入（`import-cxx.py` + 13 个测试文件 + `PIN.json`） | 完成 |
-| WP3 | `oracle/`：最小 patch、dump-rules/arity/hits、独立题面、覆盖 | 待做 |
+| WP3 | `oracle/`：dump-rules/arity 三目标可用；hits/独立题面/覆盖待做 | 部分完成 |
 
 ## 验证
 
