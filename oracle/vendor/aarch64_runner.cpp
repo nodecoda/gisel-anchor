@@ -211,108 +211,198 @@ static bool makeSigma(const Config &C, Sigma &S) {
   return true;
 }
 
-static int answerLine(StringRef Line, const StringMap<Sigma *> &Sigmas,
-                      raw_ostream &Out) {
+// Parse the parts shared by query files and the witness universe.  The query
+// owns all storage, so the JSON value can go away on return.
+static bool parseBody(json::Object &Obj, unsigned PtrBits, std::string &Name,
+                      rule_dump::ParsedQuery &Out) {
+  auto NameV = Obj.getString("name");
+  json::Array *TypeArr = Obj.getArray("types");
+  if (!NameV || !TypeArr)
+    return false;
+  Name = NameV->str();
+  Out.Types.clear();
+  for (const json::Value &V : *TypeArr) {
+    auto Text = V.getAsString();
+    if (!Text)
+      return false;
+    auto Ty = parseLLT(*Text, PtrBits);
+    if (!Ty)
+      return false;
+    Out.Types.push_back(*Ty);
+  }
+
+  // Immediate operands are part of the query: a rule may read Q.Immediates
+  // (e.g. LegalizePredicates::immIs).  Dropping them makes the rule index the
+  // empty array and abort, which would look like an answer difference.
+  Out.Imms.clear();
+  if (json::Array *ImmArr = Obj.getArray("imms"))
+    for (const json::Value &V : *ImmArr) {
+      auto I = V.getAsInteger();
+      if (!I)
+        return false;
+      Out.Imms.push_back(*I);
+    }
+
+  Out.MMOs.clear();
+  Out.HasMem = false;
+  Out.OrderingText.clear();
+  Out.FailureText.clear();
+  if (json::Array *Mem = Obj.getArray("mem")) {
+    if (Mem->size() != 2 && Mem->size() != 4)
+      return false;
+    auto TyText = (*Mem)[0].getAsString();
+    auto Align = (*Mem)[1].getAsInteger();
+    if (!TyText || !Align)
+      return false;
+    auto Ty = parseLLT(*TyText, PtrBits);
+    if (!Ty)
+      return false;
+    AtomicOrdering Ordering = AtomicOrdering::NotAtomic;
+    AtomicOrdering Failure = AtomicOrdering::NotAtomic;
+    if (Mem->size() == 4) {
+      auto OrderingText = (*Mem)[2].getAsString();
+      auto FailureText = (*Mem)[3].getAsString();
+      auto ParsedOrdering = OrderingText ? parseOrdering(*OrderingText)
+                                         : std::nullopt;
+      auto ParsedFailure = FailureText ? parseOrdering(*FailureText)
+                                       : std::nullopt;
+      if (!ParsedOrdering || !ParsedFailure)
+        return false;
+      Ordering = *ParsedOrdering;
+      Failure = *ParsedFailure;
+      Out.OrderingText = OrderingText->str();
+      Out.FailureText = FailureText->str();
+    }
+    Out.MMOs.push_back(LegalityQuery::MemDesc(*Ty, *Align, Ordering, Failure));
+    Out.HasMem = true;
+  }
+
+  Out.Opcode = opcodeFor(Name);
+  return Out.Opcode != 0;
+}
+
+static int parseQuery(StringRef Line, const StringMap<Sigma *> &Sigmas,
+                      Sigma *&SOut, std::string &ConfigName,
+                      std::string &Name, rule_dump::ParsedQuery &Out) {
   Expected<json::Value> Parsed = json::parse(Line);
   if (!Parsed)
     return 2;
   json::Object *Obj = Parsed->getAsObject();
   if (!Obj)
     return 2;
-  auto ConfigName = Obj->getString("config");
-  auto Name = Obj->getString("name");
-  json::Array *TypeArr = Obj->getArray("types");
-  if (!ConfigName || !Name || !TypeArr)
+  auto Config = Obj->getString("config");
+  if (!Config)
     return 2;
-  auto It = Sigmas.find(*ConfigName);
+  auto It = Sigmas.find(*Config);
   if (It == Sigmas.end())
     return 2;
-  Sigma &S = *It->second;
-  unsigned PtrBits = S.TM->createDataLayout().getPointerSizeInBits(0);
-  SmallVector<LLT, 4> Types;
-  for (const json::Value &V : *TypeArr) {
-    auto Text = V.getAsString();
-    if (!Text)
-      return 2;
-    auto Ty = parseLLT(*Text, PtrBits);
-    if (!Ty)
-      return 2;
-    Types.push_back(*Ty);
-  }
+  SOut = It->second;
+  ConfigName = Config->str();
+  unsigned PtrBits = SOut->TM->createDataLayout().getPointerSizeInBits(0);
+  return parseBody(*Obj, PtrBits, Name, Out) ? 0 : 2;
+}
 
-  // Immediate operands are part of the query: a rule may read Q.Immediates
-  // (e.g. LegalizePredicates::immIs).  Dropping them makes the rule index the
-  // empty array and abort, which would look like an answer difference.
-  SmallVector<int64_t, 2> Imms;
-  if (json::Array *ImmArr = Obj->getArray("imms"))
-    for (const json::Value &V : *ImmArr) {
-      auto I = V.getAsInteger();
-      if (!I)
-        return 2;
-      Imms.push_back(*I);
-    }
-  std::string ImmsText = "[";
-  for (size_t I = 0; I != Imms.size(); ++I) {
+static std::string immText(const rule_dump::ParsedQuery &P) {
+  std::string Text = "[";
+  for (size_t I = 0; I != P.Imms.size(); ++I) {
     if (I)
-      ImmsText += ",";
-    ImmsText += std::to_string(Imms[I]);
+      Text += ",";
+    Text += std::to_string(P.Imms[I]);
   }
-  ImmsText += "]";
+  return Text + "]";
+}
 
-  SmallVector<LegalityQuery::MemDesc, 1> MMOs;
-  std::string MemText = "null";
-  if (json::Array *Mem = Obj->getArray("mem")) {
-    if (Mem->size() != 2 && Mem->size() != 4)
-      return 2;
-    auto TyText = (*Mem)[0].getAsString();
-    auto Align = (*Mem)[1].getAsInteger();
-    if (!TyText || !Align)
-      return 2;
-    auto Ty = parseLLT(*TyText, PtrBits);
-    if (!Ty)
-      return 2;
-    AtomicOrdering Ordering = AtomicOrdering::NotAtomic;
-    AtomicOrdering Failure = AtomicOrdering::NotAtomic;
-    std::optional<StringRef> OrderingText;
-    std::optional<StringRef> FailureText;
-    if (Mem->size() == 4) {
-      OrderingText = (*Mem)[2].getAsString();
-      FailureText = (*Mem)[3].getAsString();
-      auto ParsedOrdering = OrderingText ? parseOrdering(*OrderingText)
-                                         : std::nullopt;
-      auto ParsedFailure = FailureText ? parseOrdering(*FailureText)
-                                       : std::nullopt;
-      if (!ParsedOrdering || !ParsedFailure)
-        return 2;
-      Ordering = *ParsedOrdering;
-      Failure = *ParsedFailure;
-    }
-    MMOs.push_back(LegalityQuery::MemDesc(*Ty, *Align, Ordering, Failure));
-    MemText = "[" + jsonString(lltStr(*Ty)) + "," +
-              std::to_string(*Align);
-    if (Mem->size() == 4)
-      MemText += "," + jsonString(*OrderingText) + "," +
-                 jsonString(*FailureText);
-    MemText += "]";
-  }
+static std::string memText(const rule_dump::ParsedQuery &P) {
+  if (!P.HasMem)
+    return "null";
+  const LegalityQuery::MemDesc &M = P.MMOs.front();
+  std::string Text = "[" + jsonString(lltStr(M.MemoryTy)) + "," +
+                     std::to_string(M.AlignInBits);
+  if (!P.OrderingText.empty())
+    Text += "," + jsonString(P.OrderingText) + "," +
+            jsonString(P.FailureText);
+  return Text + "]";
+}
 
-  unsigned Opcode = opcodeFor(*Name);
-  if (!Opcode)
-    return 2;
-  LegalityQuery Q(Opcode, Types, MMOs, Imms);
-  LegalizeActionStep Step = S.L->getAction(Q);
-  Out << "{\"config\":" << jsonString(*ConfigName)
-      << ",\"name\":" << jsonString(*Name) << ",\"types\":[";
-  for (size_t I = 0; I != Types.size(); ++I) {
+static int answerLine(StringRef Line, const StringMap<Sigma *> &Sigmas,
+                      raw_ostream &Out) {
+  Sigma *S = nullptr;
+  std::string ConfigName, Name;
+  rule_dump::ParsedQuery P;
+  if (int Rc = parseQuery(Line, Sigmas, S, ConfigName, Name, P))
+    return Rc;
+
+  std::string Tj = "[";
+  for (size_t I = 0; I != P.Types.size(); ++I) {
     if (I)
-      Out << ',';
-    Out << jsonString(lltStr(Types[I]));
+      Tj += ",";
+    Tj += jsonString(lltStr(P.Types[I]));
   }
-  Out << "],\"mem\":" << MemText << ",\"imms\":" << ImmsText
+  Tj += "]";
+  std::string MemText = memText(P);
+  std::string ImmsText = immText(P);
+
+  LegalityQuery Q = P.query();
+  LegalizeActionStep Step = S->L->getAction(Q);
+  Out << "{\"config\":" << jsonString(ConfigName)
+      << ",\"name\":" << jsonString(Name) << ",\"types\":" << Tj
+      << ",\"mem\":" << MemText << ",\"imms\":" << ImmsText
       << ",\"action\":" << jsonString(actionName(Step.Action))
       << ",\"type_idx\":" << (unsigned)Step.TypeIdx
       << ",\"new_type\":" << jsonString(lltStr(Step.NewType)) << "}\n";
   return 0;
+}
+
+static int hitsLine(StringRef Line, const StringMap<Sigma *> &Sigmas,
+                    raw_ostream &Out) {
+  Sigma *S = nullptr;
+  std::string ConfigName, Name;
+  rule_dump::ParsedQuery P;
+  if (int Rc = parseQuery(Line, Sigmas, S, ConfigName, Name, P))
+    return Rc;
+  rule_dump::hitsLine(*S, ConfigName, P.query(), Line, Out);
+  return 0;
+}
+
+static int runWitness(StringRef ConfigName, StringRef UniversePath,
+                      unsigned Budget, StringRef OutPath,
+                      const StringMap<Sigma *> &Sigmas) {
+  auto It = Sigmas.find(ConfigName);
+  if (It == Sigmas.end()) {
+    errs() << "unknown config " << ConfigName << "\n";
+    return 2;
+  }
+  Sigma &S = *It->second;
+  std::ifstream In(UniversePath.str());
+  if (!In) {
+    errs() << "cannot open " << UniversePath << "\n";
+    return 2;
+  }
+  std::vector<std::string> Lines;
+  std::string Line;
+  while (std::getline(In, Line))
+    if (!Line.empty())
+      Lines.push_back(Line);
+
+  unsigned PtrBits = S.TM->createDataLayout().getPointerSizeInBits(0);
+  auto Parse = [PtrBits](StringRef Text, rule_dump::ParsedQuery &P) {
+    Expected<json::Value> Parsed = json::parse(Text);
+    if (!Parsed)
+      return false;
+    json::Object *Obj = Parsed->getAsObject();
+    if (!Obj)
+      return false;
+    std::string Name;
+    return parseBody(*Obj, PtrBits, Name, P);
+  };
+
+  std::error_code EC;
+  raw_fd_ostream Out(OutPath, EC);
+  if (EC) {
+    errs() << "cannot write " << OutPath << ": " << EC.message() << "\n";
+    return 2;
+  }
+  return rule_dump::witness(S, ConfigName, Lines, Budget, Parse, Out);
 }
 
 } // namespace
@@ -321,6 +411,11 @@ int main(int Argc, char **Argv) {
   StringRef Queries;
   StringRef DumpPath;
   StringRef ArityPath;
+  StringRef HitsPath;
+  StringRef WitnessConfig;
+  StringRef UniversePath;
+  StringRef WitnessOut;
+  unsigned Budget = 20000;
   for (int I = 1; I < Argc; ++I) {
     StringRef A(Argv[I]);
     if (A == "--queries" && I + 1 < Argc)
@@ -329,13 +424,31 @@ int main(int Argc, char **Argv) {
       DumpPath = Argv[++I];
     else if (A == "--dump-arity" && I + 1 < Argc)
       ArityPath = Argv[++I];
-    else if (A == "-h" || A == "--help")
+    else if (A == "--dump-hits" && I + 1 < Argc)
+      HitsPath = Argv[++I];
+    else if (A == "--witness" && I + 1 < Argc)
+      WitnessConfig = Argv[++I];
+    else if (A == "--universe" && I + 1 < Argc)
+      UniversePath = Argv[++I];
+    else if (A == "--out" && I + 1 < Argc)
+      WitnessOut = Argv[++I];
+    else if (A == "--budget" && I + 1 < Argc)
+      Budget = (unsigned)std::strtoul(Argv[++I], nullptr, 10);
+    else if (A == "-h" || A == "--help") {
+      outs() << "usage: runner --queries FILE | --dump-rules FILE | "
+                "--dump-arity FILE | --dump-hits FILE | "
+                "--witness CONFIG --universe FILE --out FILE [--budget N]\n";
       return 0;
-    else
+    } else {
+      errs() << "unknown argument " << A << "\n";
       return 2;
+    }
   }
-  if (Queries.empty() && DumpPath.empty() && ArityPath.empty())
+  if (Queries.empty() && DumpPath.empty() && ArityPath.empty() &&
+      HitsPath.empty() && WitnessConfig.empty()) {
+    errs() << "nothing to do\n";
     return 2;
+  }
 
   LLVMInitializeAArch64TargetInfo();
   LLVMInitializeAArch64Target();
@@ -377,15 +490,28 @@ int main(int Argc, char **Argv) {
     return 0;
   }
 
-  std::ifstream In(Queries.str());
-  if (!In)
+  if (!WitnessConfig.empty()) {
+    if (UniversePath.empty() || WitnessOut.empty()) {
+      errs() << "--witness needs --universe and --out\n";
+      return 2;
+    }
+    return runWitness(WitnessConfig, UniversePath, Budget, WitnessOut, Sigmas);
+  }
+
+  StringRef Input = !HitsPath.empty() ? HitsPath : Queries;
+  std::ifstream In(Input.str());
+  if (!In) {
+    errs() << "cannot open " << Input << "\n";
     return 2;
+  }
   std::string Line;
   unsigned N = 0;
   while (std::getline(In, Line)) {
     if (Line.empty())
       continue;
-    if (int Rc = answerLine(Line, Sigmas, outs()))
+    int Rc = HitsPath.empty() ? answerLine(Line, Sigmas, outs())
+                              : hitsLine(Line, Sigmas, outs());
+    if (Rc)
       return Rc;
     // Flush per answer: a query that makes LLVM assert aborts the process,
     // and a buffered tail would be lost.  Answers before the crash stay.

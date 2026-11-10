@@ -76,6 +76,42 @@ schema v1，一行一个 JSON 对象：
 - `rule_index` 是 `getActionDefinitions(opcode)` 规则链中的下标。
 - `alias_of` 非空表示该 opcode 解析到另一个 ruleset。
 
+## 4.1 命中（oracle 内部产物）
+
+`--dump-hits` 一行一条查询：
+
+```json
+{"config":"C1","opcode":"G_ADD","ruleset":"G_ADD","first_match":0,
+ "later_matches":[2,10],"query":{"config":"C1","name":"G_ADD",
+ "types":["s32"],"mem":null,"imms":[]}}
+```
+
+- `ruleset` 是 `getActionDefinitions(opcode)` 解析后的代表 opcode；
+  同一个 ruleset 可能被多个 alias opcode 命中。
+- `first_match` 是规则链中第一条 `match` 为真的下标，`-1` 表示没有规则命中。
+- `later_matches` 是同样命中但输给更早规则的规则（覆盖里的 `shadowed` 原料）。
+- `query` 原样嵌入输入行，保证 hits 与答案能按行对齐。
+- 语义门：`first_match == -1` 当且仅当 `getAction` 返回 `Unsupported`
+  （或 runner 的显式 `unanswerable`）。由 `oracle/scripts/check-hits.py` 校验。
+
+## 4.2 witness（oracle 内部产物）
+
+`--witness CONFIG --universe FILE --out FILE` 一行一条规则：
+
+```json
+{"config":"C1","opcode":"G_ADD","ruleset":"G_ADD","rule_index":14,
+ "status":"shadowed","first_hits":0,"match_hits":1,"evaluated":3,
+ "candidates":3,"shadowed_by":3,"witness":null,"shadow_query":{...}}
+```
+
+- `status ∈ {witnessed, shadowed, unexercised}`，定义见 §5。
+- `first_hits` / `match_hits`：当过第一命中的次数 / 命中总次数。
+- `witness`：第一条把它当第一命中的查询；`shadowed_by` + `shadow_query`：
+  遮蔽它的规则下标和第一条证据查询。
+- `evaluated` / `candidates`：该 opcode 实际评估数 / 宇宙里的候选总数，
+  用于判断“没覆盖”是宇宙不够还是预算不够。
+- 候选顺序由 universe 文件决定；同输入两遍输出字节相同。
+
 ## 5 覆盖（oracle 输出）
 
 `coverage.json`：
@@ -89,7 +125,8 @@ schema v1，一行一个 JSON 对象：
 
 - `status ∈ {witnessed, shadowed, unexercised}`。
 - `unexercised` 必须为 0，或在 `known_gaps.json` 有逐条理由。
-- `shadowed` 表示规则存在但被前面的规则遮蔽；必须给出遮蔽者。
+- `shadowed` 表示规则存在但被前面的规则遮蔽；`shadowed_by` 必须给出遮蔽者，
+  `shadow_query` 给出证据查询（来自 §4.2）。
 
 ## 6 冻结
 

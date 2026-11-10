@@ -55,6 +55,60 @@ arity 交叉检查（与 gisel 的 `data/opcode-slots.json` 比）：
 {"config":"C1","opcode":"G_ADD","type_slots":1,"imm_slots":0}
 ```
 
-未做：predicate AST（计划 v2）、独立题面与覆盖引导（WP3b）、
+## WP3b/U1 里程碑：dump-hits / witness
+
+`--dump-hits` 把每条查询的“第一条命中规则”和“被遮蔽的规则”打出来；
+`--witness` 在给定候选宇宙上为每条规则找第一条 witness。两者都用
+`rule.match`，与 `getAction` 是同一套谓词。
+
+```sh
+# 每条查询的命中链（first_match + later_matches）
+./out/x86-dump --dump-hits QUERIES > hits.jsonl
+
+# 给每条上游规则找 witness；预算按 opcode 计，0 = 不限
+./out/x86-dump --witness C1 --universe universe.jsonl \
+    --out coverage.raw.jsonl --budget 20000
+```
+
+字段：
+
+```json
+{"config":"C1","opcode":"G_ADD","ruleset":"G_ADD","first_match":0,
+ "later_matches":[2,10],"query":{...}}
+```
+
+```json
+{"config":"C1","opcode":"G_ADD","ruleset":"G_ADD","rule_index":14,
+ "status":"shadowed","first_hits":0,"match_hits":1,"evaluated":3,
+ "candidates":3,"shadowed_by":3,"witness":null,"shadow_query":{...}}
+```
+
+- `first_match == -1` 当且仅当答案动作是 `Unsupported`（或显式
+  `unanswerable`），这是 U1 的语义门。
+- `status`：`witnessed`（当过第一命中）/ `shadowed`（命中但被更早规则遮住，
+  带 `shadowed_by`）/ `unexercised`（候选宇宙里从未命中）。
+- `candidate` 的顺序由 universe 文件决定；同输入两遍输出字节相同。
+
+回归门（需要已构建的 runner）：
+
+```sh
+./scripts/check-hits.py out/x86-dump tests/fixtures/x86-queries.jsonl
+./scripts/check-hits.py out/a64-dump tests/fixtures/aarch64-queries.jsonl
+./scripts/check-hits.py out/rv-dump  tests/fixtures/riscv-queries.jsonl
+```
+
+2026-11-10 实测（`trees/explore` @ `57587b0`，pin `9bfc850b` + 5 patches）：
+
+| target | 查询数 | unanswerable | 有遮蔽命中 | mismatches |
+|---|---:|---:|---:|---:|
+| X86 | 5,632 | 16 | 854 | 0 |
+| AArch64 | 9,591 | 0 | 3,722 | 0 |
+| RISC-V | 493 | 0 | 246 | 0 |
+
+答案路径回归：三个 runner 在改 `--dump-hits` 前后，同一查询文件的
+`--queries` 输出逐字节相同（X86 `40150c54…`、A64 `e19f14c6…`、
+RISC-V `0645f9a4…`）。
+
+未做：predicate AST（计划 v2）、独立宇宙与 U 题面生成（U2/U3）、
 `rules.json`/`coverage.json` 的汇总器。oracle 目前产出的是**原料**，
 不是最终 U 题面。

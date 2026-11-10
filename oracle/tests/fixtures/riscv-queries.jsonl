@@ -1,0 +1,300 @@
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 1", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s128"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 1", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s128"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 1", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s128"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s128"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ADD", "types": ["s64"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ADD", "types": ["s32"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ADD", "types": ["s31"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ADD", "types": ["s8"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ADD", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ADD", "types": ["s128"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 63", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s63"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 64", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s64"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 65", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s65"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv3s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv5s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv7s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv9s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv15s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv17s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv31s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv33s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv63s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 64", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv64s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv65s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 32 -> 33", "rule": 2, "ruleset": "R_G_ADD", "types": ["s33"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 63", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s63"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 64", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s64"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 65", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s65"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv3s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv5s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv7s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv9s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv15s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv17s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv31s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv33s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv63s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 64", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv64s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv65s16"]}
+{"config": "rv64gc", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 32 -> 33", "rule": 2, "ruleset": "R_G_ADD", "types": ["s33"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 63", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s63"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 64", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s64"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 64 -> 65", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv16s65"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv3s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv5s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv7s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv9s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv15s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv17s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv31s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv33s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv63s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 64", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv64s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ADD", "types": ["nxv65s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 32 -> 33", "rule": 2, "ruleset": "R_G_ADD", "types": ["s33"]}
+{"config": "rv64zbb", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 32 -> 33", "rule": 2, "ruleset": "R_G_ADD", "types": ["s33"]}
+{"config": "rv64zfh", "imms": [], "kind": "boundary", "mem": null, "name": "G_ADD", "reason": "bits 32 -> 33", "rule": 2, "ruleset": "R_G_ADD", "types": ["s33"]}
+{"config": "ristretto", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv15s32"]}
+{"config": "ristretto", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv15s8"]}
+{"config": "rv32gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "rv32gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s32"]}
+{"config": "rv32gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv15s32"]}
+{"config": "rv32gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv15s8"]}
+{"config": "rv32zilsd", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "rv32zilsd", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s32"]}
+{"config": "rv64gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "rv64gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s32"]}
+{"config": "rv64gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv15s32"]}
+{"config": "rv64gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv15s8"]}
+{"config": "rv64zbb", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "rv64zbb", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s32"]}
+{"config": "rv64zfh", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s16"]}
+{"config": "rv64zfh", "imms": [], "kind": "outside", "mem": null, "name": "G_ADD", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ADD", "types": ["nxv16s32"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 1", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s32"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s128"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s32", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s128", "nxv16s16"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s32", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s8"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s64"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s8", "nxv16s16"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s64", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s32", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 1", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s8"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s64"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s8", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s64", "nxv16s16"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s32", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s8"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s64"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s8", "nxv16s16"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s64", "nxv16s16"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s64", "p0:*"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s32"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s128"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s32", "nxv16s16"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s128", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s64", "p0:*"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 1", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s32"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s128"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s32", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s128", "nxv16s16"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s64", "p0:*"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s32"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s128"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s32", "nxv16s16"]}
+{"config": "rv64zbb", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s128", "nxv16s16"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 0", "rule": 0, "ruleset": "R_G_ICMP", "types": ["s64", "p0:*"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 2", "rule": 2, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s1"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 3", "rule": 3, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s32"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 4", "rule": 4, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "s128"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 5", "rule": 5, "ruleset": "R_G_ICMP", "types": ["s32", "nxv16s16"]}
+{"config": "rv64zfh", "imms": [], "kind": "equivalence", "mem": null, "name": "G_ICMP", "reason": "first match for rule 6", "rule": 6, "ruleset": "R_G_ICMP", "types": ["s128", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv3s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv5s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv7s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv9s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv15s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv17s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv31s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv33s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv63s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv65s1", "nxv16s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s63"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 64", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s64"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s65"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv3s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv5s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv7s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv9s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv17s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv31s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv33s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv63s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 64", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv64s16"]}
+{"config": "ristretto", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv65s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv3s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv5s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv7s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv9s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv15s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv17s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv31s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv33s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv63s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv65s1", "nxv16s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s63"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 64", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s64"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s65"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv3s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv5s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv7s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv9s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv17s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv31s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv33s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv63s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 64", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv64s16"]}
+{"config": "rv32gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv65s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv3s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv5s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv7s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv9s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv15s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv17s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv31s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv33s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv63s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv65s1", "nxv16s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s63"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 64", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s64"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "bits 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s65"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 2 -> 3", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv3s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 4 -> 5", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv5s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 7", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv7s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 8 -> 9", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv9s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 15", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 16 -> 17", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv17s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 31", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv31s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 32 -> 33", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv33s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 63", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv63s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 64", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv64s16"]}
+{"config": "rv64gcv", "imms": [], "kind": "boundary", "mem": null, "name": "G_ICMP", "reason": "lanes 64 -> 65", "rule": 1, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv65s16"]}
+{"config": "ristretto", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s32"]}
+{"config": "ristretto", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s8"]}
+{"config": "rv32gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "rv32gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s32"]}
+{"config": "rv32gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s32"]}
+{"config": "rv32gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s8"]}
+{"config": "rv32zilsd", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "rv32zilsd", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s32"]}
+{"config": "rv64gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "rv64gc", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s32"]}
+{"config": "rv64gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s32"]}
+{"config": "rv64gcv", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv15s8"]}
+{"config": "rv64zbb", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "rv64zbb", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s32"]}
+{"config": "rv64zfh", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s16"]}
+{"config": "rv64zfh", "imms": [], "kind": "outside", "mem": null, "name": "G_ICMP", "reason": "no rule fires", "rule": null, "ruleset": "R_G_ICMP", "types": ["nxv16s1", "nxv16s32"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 4 (mem)", "rule": 4, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 4 (mem)", "rule": 4, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s32", 32], "name": "G_LOAD", "reason": "first match for rule 4 (mem)", "rule": 4, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s64", 64], "name": "G_LOAD", "reason": "first match for rule 4 (mem)", "rule": 4, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv2s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv2s8", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv4s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv4s8", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv8s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv8s8", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv16s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv16s8", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv1s8", 8], "name": "G_LOAD", "reason": "first match for rule 8 (mem)", "rule": 8, "ruleset": "R_G_LOAD", "types": ["nxv1s8", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv1s16", 16], "name": "G_LOAD", "reason": "first match for rule 8 (mem)", "rule": 8, "ruleset": "R_G_LOAD", "types": ["nxv1s16", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv1s32", 32], "name": "G_LOAD", "reason": "first match for rule 8 (mem)", "rule": 8, "ruleset": "R_G_LOAD", "types": ["nxv1s32", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv1s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv1s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv2s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv2s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv4s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv4s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["nxv8s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv8s64", "p0:*"]}
+{"config": "ristretto", "imms": [], "kind": "equivalence", "mem": ["s16", 8], "name": "G_LOAD", "reason": "first match for rule 16 (mem)", "rule": 16, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": ["s64", 64], "name": "G_LOAD", "reason": "first match for rule 6 (mem)", "rule": 6, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 15 (mem)", "rule": 15, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "rv32gc", "imms": [], "kind": "equivalence", "mem": ["s16", 8], "name": "G_LOAD", "reason": "first match for rule 16 (mem)", "rule": 16, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["s64", 64], "name": "G_LOAD", "reason": "first match for rule 6 (mem)", "rule": 6, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv2s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv2s8", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv4s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv4s8", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv8s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv8s8", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv16s8", 8], "name": "G_LOAD", "reason": "first match for rule 7 (mem)", "rule": 7, "ruleset": "R_G_LOAD", "types": ["nxv16s8", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv1s8", 8], "name": "G_LOAD", "reason": "first match for rule 8 (mem)", "rule": 8, "ruleset": "R_G_LOAD", "types": ["nxv1s8", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv1s16", 16], "name": "G_LOAD", "reason": "first match for rule 8 (mem)", "rule": 8, "ruleset": "R_G_LOAD", "types": ["nxv1s16", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv1s32", 32], "name": "G_LOAD", "reason": "first match for rule 8 (mem)", "rule": 8, "ruleset": "R_G_LOAD", "types": ["nxv1s32", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv1s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv1s64", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv2s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv2s64", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv4s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv4s64", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["nxv8s64", 64], "name": "G_LOAD", "reason": "first match for rule 9 (mem)", "rule": 9, "ruleset": "R_G_LOAD", "types": ["nxv8s64", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 15 (mem)", "rule": 15, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "rv32gcv", "imms": [], "kind": "equivalence", "mem": ["s16", 8], "name": "G_LOAD", "reason": "first match for rule 16 (mem)", "rule": 16, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 2 (mem)", "rule": 2, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": ["s64", 64], "name": "G_LOAD", "reason": "first match for rule 6 (mem)", "rule": 6, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 15 (mem)", "rule": 15, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "rv32zilsd", "imms": [], "kind": "equivalence", "mem": ["s16", 8], "name": "G_LOAD", "reason": "first match for rule 16 (mem)", "rule": 16, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s16", "p0:*"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 1 (mem)", "rule": 1, "ruleset": "R_G_LOAD", "types": ["s32", "p0:*"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": ["s8", 8], "name": "G_LOAD", "reason": "first match for rule 4 (mem)", "rule": 4, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
+{"config": "rv64gc", "imms": [], "kind": "equivalence", "mem": ["s16", 16], "name": "G_LOAD", "reason": "first match for rule 4 (mem)", "rule": 4, "ruleset": "R_G_LOAD", "types": ["s64", "p0:*"]}
