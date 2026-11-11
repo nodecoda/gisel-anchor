@@ -12,7 +12,7 @@ import argparse
 import json
 import sys
 
-from .src import coverage, emit, universe
+from .src import coverage, emit, expand, universe
 from .src.arity import load_arity
 
 
@@ -62,6 +62,18 @@ def cmd_emit(args) -> int:
     return 0
 
 
+def cmd_expand(args) -> int:
+    configs = [c.strip() for c in args.configs.split(",") if c.strip()]
+    if not configs:
+        raise SystemExit("--configs must name at least one configuration")
+    rows = expand.load(args.universe)
+    count = expand.write(args.out, expand.build(rows, configs))
+    print(json.dumps({"out": args.out, "universe": len(rows),
+                      "configs": len(configs), "queries": count},
+                     sort_keys=True))
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="oracle")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -100,6 +112,14 @@ def main(argv=None) -> int:
     em.add_argument("--sample", type=int, default=8,
                     help="extra evenly spaced queries per (config, opcode)")
     em.set_defaults(func=cmd_emit)
+
+    ex = sub.add_parser("expand",
+                        help="expand a universe across configurations")
+    ex.add_argument("--universe", required=True)
+    ex.add_argument("--configs", required=True,
+                    help="comma-separated configuration names")
+    ex.add_argument("--out", required=True)
+    ex.set_defaults(func=cmd_expand)
 
     args = ap.parse_args(argv)
     return args.func(args)

@@ -2,11 +2,16 @@
 # Generate the U side for one target: arity -> universe -> witnesses ->
 # coverage -> queries -> FREEZE.  One command, one output directory.
 #
-#   gen-u.sh TARGET OUT [--no-gate]
+#   gen-u.sh TARGET OUT [--no-gate] [--full]
 #
 # TARGET is x86 | aarch64 | riscv.  OUT holds every artifact; the script is
 # deterministic, so running it twice into different directories must produce
 # byte-identical queries.jsonl.
+#
+# --full additionally writes universe.full.jsonl: every universe row expanded
+# across every configuration, unfiltered.  That is the input for the
+# `--limit 0` U run in ab/docs/EVIDENCE-U.md (asserted rows stay in, because
+# the diff classifies them as unanswerable/ref_asserted by count).
 #
 # Environment:
 #   ORACLE_TREE   LLVM checkout          (default /home/ubuntu/llvm/trees/explore)
@@ -19,9 +24,11 @@ set -euo pipefail
 TARGET=${1:?usage: gen-u.sh TARGET OUT [--no-gate]}
 OUT=${2:?}
 GATE=1
+FULL=0
 for arg in "${@:3}"; do
   case "$arg" in
     --no-gate) GATE=0 ;;
+    --full) FULL=1 ;;
     *) echo "unknown argument: $arg" >&2; exit 2 ;;
   esac
 done
@@ -76,6 +83,12 @@ echo "[1/6] arity" >&2
 echo "[2/6] universe ($TARGET)" >&2
 python3 -m oracle universe --arity "$OUT/arity.jsonl" --out "$OUT/universe.jsonl" \
   --target "$TARGET" --limit "$LIMIT"
+
+if [[ $FULL -eq 1 ]]; then
+  echo "[2b/6] full universe x ${#CONFIGS[@]} configs" >&2
+  python3 -m oracle expand --universe "$OUT/universe.jsonl" \
+    --configs "$(IFS=,; echo "${CONFIGS[*]}")" --out "$OUT/universe.full.jsonl"
+fi
 
 echo "[3/6] witness: main pass" >&2
 MAIN=()
