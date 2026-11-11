@@ -72,5 +72,58 @@
       "title": "[TableGen] Diagnose !head/!tail of a deferred empty list",
       "commit": "cfdc9e57a2db"
     }
-  ]
+  ],
+  "official_base": {
+    "comment": "The official side of the A/B harness is frozen here. `files` is the sha256 of every file whose content can change a legalizer answer, taken from the exact tree the official library was built from. ab/check-pin.sh compares content, not ancestry: a tree passes only if all of these match. Changing any of them is a baseline change -- rebuild, re-run every direction of evidence, and update this map in the same commit. Do not edit the tree and leave the map behind.",
+    "frozen": {
+      "tree": "/home/ubuntu/llvm/trees/explore",
+      "head": "700e551714cc",
+      "branch": "explore/06-review-fixes",
+      "build": "/home/ubuntu/llvm/builds/explore",
+      "import_commit": "9bfc850b9940566bef17a34601826775349ba0e6",
+      "patches": [
+        237753,
+        238306,
+        238277,
+        235976,
+        237650,
+        239136
+      ],
+      "note": "The corpus is imported from `import_commit`; the rule sources below are that commit plus the declared patches plus the three declared local deviations. The pin-only tree is reproducible with pin/make-base.sh and is a cross-check, not the baseline: the generated constructor needs the `core*` builders that live only in this tree's LegalizerInfo.h."
+    },
+    "deviations": [
+      {
+        "path": "llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp",
+        "commit": "535d3873df47",
+        "kind": "behaviour",
+        "effect": "numElements() spells out the release-build answer (0) for scalar element counts instead of asserting. The rule text is unchanged; an assertions build now answers the scalar queries a release build would. This is the one local change that can change an official answer."
+      },
+      {
+        "path": "llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp",
+        "commit": "85a4da33012a",
+        "kind": "behaviour-unreachable",
+        "effect": "memSizeInBytesNotPow2() reads the known minimum of a scalable TypeSize instead of the fatal implicit conversion. No target in this tree references that predicate, so it cannot change an official answer; it still has to be declared because the file's bytes differ from the pin."
+      },
+      {
+        "path": "llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h",
+        "commit": "3f2331a1b859..700e551714cc",
+        "kind": "harness-only",
+        "effect": "Adds the core* builders (coreMinScalarSameAs, coreClampNumElements, ...) that the generated constructor calls. Methods only, no data members, and no upstream constructor calls them, so the official library's answers are unchanged; the additions exist because the generated include cannot be compiled against a pin-only header."
+      }
+    ],
+    "files": {
+      "llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h": "b6c79535ad9a1b4bb52afaf77c6c33d030d3df415ea3d0f053967ef1a0c2d847",
+      "llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp": "a632050937f159bd464e4f345a624fe3682727caa3079efb9a8f10f740747611",
+      "llvm/lib/CodeGen/GlobalISel/LegalizerInfo.cpp": "27cf91e365bc90e523a3de7fdeb44f054db673f4b816f4fa780d2616b0a6b4db",
+      "llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp": "91ef7c82b67c69829d2b5c32bfda8b51c62864cb872e26c83392915afdba86d0",
+      "llvm/lib/Target/ARM/ARMLegalizerInfo.cpp": "b86441eb03f4e50291053f61da8a94c542224767d705933d54b2fd3761a59b02",
+      "llvm/lib/Target/M68k/GISel/M68kLegalizerInfo.cpp": "f796bb977e0b77f56374c10243acb24e3818df7d9637eed2fc0df4c6e0295c36",
+      "llvm/lib/Target/Mips/MipsLegalizerInfo.cpp": "3660b66b709c5eec9431e54010d1da9e241a460aa528ff213b444ebc0e96b525",
+      "llvm/lib/Target/PowerPC/GISel/PPCLegalizerInfo.cpp": "4ca6a62b6f435c6e3e8ce1d576458a111026bdcbd35d978c22160f840cc3aa2a",
+      "llvm/lib/Target/RISCV/GISel/RISCVLegalizerInfo.cpp": "ad529e1f1a9e62fa8bbd3a7d68f2b46f41f3cf8f1e74556c709bffbd43b9e889",
+      "llvm/lib/Target/SPIRV/SPIRVLegalizerInfo.cpp": "e404ba675047cbc8eb48bf87bbc2a67d4d7c926d2ce5ad4f59e3fe0a33361208",
+      "llvm/lib/Target/WebAssembly/GISel/WebAssemblyLegalizerInfo.cpp": "c6409b1d4eb1b44a7e8d0b9fbb4332497e4cb6d7f2c74ba42482ccb392a5edd8",
+      "llvm/lib/Target/X86/GISel/X86LegalizerInfo.cpp": "3b3e8ee85189a04476eda78eb054e9d477f4929b4a24128cdbaf78b61a60aeeb"
+    }
+  }
 }
