@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "comment": "The upstream revision every corpus rule came from. `tools/import-cxx.py --all --pin tests/corpus/PIN.json --git-repo <llvm> --check` must reproduce every .gisel file byte for byte. The commit is a plain upstream llvm-project commit: local patches in a worktree cannot change what was imported, so the corpus keeps the reviewed deviations below. `patches` lists the unmerged upstream PRs this repository carries; the official side of the A/B harness is built from a tree with them applied, which is why the corpus asks for the post-fix behaviour. When they land upstream, move `commit` past them and delete both the patches and the deviations.",
+  "comment": "The upstream revision every corpus rule came from. `tools/import-cxx.py --all --pin tests/corpus/PIN.json --git-repo <llvm> --check` must reproduce every .gisel file byte for byte. The commit is a plain upstream llvm-project commit: local patches in a worktree cannot change what was imported, so the corpus keeps the reviewed deviations below. `patches` lists the upstream PRs carried on top of `commit` (unmerged, or merged after `commit`); the official side of the A/B harness is built from a tree with them applied, which is why the corpus asks for the post-fix behaviour. When they land upstream, move `commit` past them and delete both the patches and the deviations.",
   "repo": "llvm/llvm-project",
   "commit": "9bfc850b9940566bef17a34601826775349ba0e6",
   "sources": {
@@ -42,6 +42,11 @@
     }
   },
   "patches": [
+    {
+      "pr": 237753,
+      "title": "[GlobalISel] Compare element sizes in minScalarSameAs/maxScalarSameAs",
+      "commit": "f535818a92d3"
+    },
     {
       "pr": 238306,
       "title": "[GlobalISel] Keep the lane count in maxScalarEltSameAsIf",
