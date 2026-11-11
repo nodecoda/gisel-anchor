@@ -149,7 +149,7 @@ RISC-V `0645f9a4…`）。
 | target | 配置数 | 规则行 | witnessed | shadowed | unexercised | asserted | raw | kept | dropped |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | X86 | 4 | 1,911 | 1,798 | 56 | 57 | 0 | 10,100 | 10,100 | 0 |
-| AArch64 | 9 | 13,240 | 11,727 | 357 | 1,156 | 0 | 29,708 | 29,359 | 349 |
+| AArch64 | 9 | 13,240 | 12,001 | 231 | 1,008 | 0 | 30,126 | 29,561 | 565 |
 | RISC-V | 8 | 4,326 | 4,021 | 156 | 149 | 0 | 20,533 | 20,445 | 88 |
 | ARM | 7 | 741 | 741 | 0 | 0 | 0 | 15,639 | 15,639 | 0 |
 | Mips | 5 | 765 | 736 | 0 | 29 | 0 | 11,341 | 11,341 | 0 |
@@ -163,7 +163,7 @@ RISC-V `0645f9a4…`）。
 | target | 任何配置都没命中的规则 | 从未当过第一命中的规则 |
 |---|---:|---:|
 | X86 | 0 | 6 |
-| AArch64 | 88 个 `(opcode, rule_index)` | 同上表内的 shadowed 部分 |
+| AArch64 | 59 个 `(opcode, rule_index)`（41 unexercised + 18 shadowed） | 同上 |
 | RISC-V | 13 个 `(opcode, rule_index)`（全部是被更早规则永久遮住的冗余子句） | 同上 |
 | ARM / PPC / M68k / WebAssembly | 0 | 0 |
 | Mips | 20 个（4 条是 `.legalIf([](){return false;})` 占位，见 `known-gaps/mips.json`） | 0 |
@@ -179,16 +179,27 @@ witness；剩余 13 条是死规则（Zfa legal 遮蔽 libcall、`{s64,s32}` 遮
 `known-gaps/riscv.json`。本轮只重跑了 RISC-V；其他 target 的已冻结 U 题面
 仍可复放，但用新 universe 重新生成时形状集合会变大。
 
+2026-11-11 AArch64 复核：两处题面修正。其一，2400 个候选的上限
+（`gen-u.sh` 里 `LIMIT_DEFAULT=2400`）：1200 时新形状把 24 条已 witness 的旧
+规则挤出了预算，提到 2400 后全部回来。其二，原子 ordering 轴：AArch64 的
+s128 load/store 与窄标量 store 按 ordering 分支，而通用 mem 扫描只给
+NotAtomic；`candidates()` 现在为 AArch64 的 pointer 形状追加
+Monotonic/Acquire/Release/AcquireRelease/SequentiallyConsistent。结果
+witnessed 11,727 → 12,001，跨配置 gap 88 → 59。6000 候选探针只多恢复 4 条
+`G_EXTRACT_VECTOR_ELT` 退化形状，代价约 2.5 倍状态数，没有采用，写进了
+`known-gaps/aarch64.json` 的 reason。ordering 轴目前只对 AArch64 生效，其他
+target 等各自重跑 U 时再决定是否打开。
+
 ## U4 里程碑：U 侧端到端对拍与负控
 
 题面交给 `ab/run-u-end-to-end.sh`：官方 runner 与 include 后的生成 runner 读
-同一份 JSONL。2026-11-10 实测（同上 pin/树，证据与 SHA 见
-`ab/docs/EVIDENCE-U.md`）：
+同一份 JSONL。2026-11-10 实测，AArch64 / RISC-V 两行于 2026-11-11 随新题面
+刷新（同上 pin/树，证据与 SHA 见 `ab/docs/EVIDENCE-U.md`）：
 
 | target | queries | disagree | unanswerable | 两侧答案文件 |
 |---|---:|---:|---:|---|
 | X86 | 10,100 | 0 | 0 | 逐字节相同 |
-| AArch64 | 29,359 | 0 | 0 | 逐字节相同 |
+| AArch64 | 29,561 | 0 | 0 | 逐字节相同 |
 | RISC-V | 20,445 | 0 | 0 | 逐字节相同 |
 | ARM | 15,639 | 0 | 0 | 逐字节相同 |
 | Mips | 11,341 | 0 | 0 | 逐字节相同 |

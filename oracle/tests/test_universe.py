@@ -69,3 +69,13 @@ def test_s128_pairs_are_asked():
     keys = {(row["types"][0], row["types"][1]) for row in rows}
     assert ("s128", "s32") in keys
     assert ("s128", "s64") in keys
+
+
+def test_aarch64_asks_about_atomic_ordering_on_pointer_forms():
+    rows = universe.candidates("G_STORE", 2, 0, limit=1200, target="aarch64")
+    orderings = {row["mem"][2] for row in rows if row["mem"]}
+    assert "Release" in orderings and "AcquireRelease" in orderings, orderings
+    # The axis is AArch64-only until each target's U side is regenerated.
+    for target in ("x86", "riscv"):
+        rows = universe.candidates("G_STORE", 2, 0, limit=1200, target=target)
+        assert {row["mem"][2] for row in rows if row["mem"]} == {"NotAtomic"}

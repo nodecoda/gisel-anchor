@@ -1,5 +1,5 @@
 {
-  "comment": "Rules that no query can make the first match. Each entry was derived by reading RISCVLegalizerInfo.cpp and confirmed with --witness over all 8 configurations after the universe grew scalable-vector and s128 pairs. Rule indices are per configuration and shift when a builder omits a conditional clause; see docs/EVIDENCE-riscv.md.",
+  "comment": "Rules that no query can make the first match in a configuration where the clause is emitted at that index. These are conditional fallbacks: a broader, feature-gated rule wins when the feature is on, and the same clause is reachable (usually at a different index) when the feature is off. They are not missing questions and not upstream bugs. Rule indices shift when a builder omits a conditional clause; see docs/EVIDENCE-riscv.md.",
   "gaps": [
     {
       "config": "*",
@@ -8,7 +8,7 @@
         "configs": 1,
         "evaluated": 598
       },
-      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "follow_up": "conditional fallback: reachable when Zfa is off (the libcall is then rule 0 and is witnessed). No upstream action.",
       "opcode": "G_FCEIL",
       "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
@@ -21,7 +21,7 @@
         "configs": 1,
         "evaluated": 598
       },
-      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "follow_up": "conditional fallback: reachable when Zfa is off (the libcall is then rule 0 and is witnessed). No upstream action.",
       "opcode": "G_FFLOOR",
       "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
@@ -34,7 +34,7 @@
         "configs": 1,
         "evaluated": 598
       },
-      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "follow_up": "conditional fallback: reachable when Zfa is off (the libcall is then rule 0 and is witnessed). No upstream action.",
       "opcode": "G_FRINT",
       "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
@@ -47,7 +47,7 @@
         "configs": 1,
         "evaluated": 598
       },
-      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "follow_up": "conditional fallback: reachable when Zfa is off (the libcall is then rule 0 and is witnessed). No upstream action.",
       "opcode": "G_FNEARBYINT",
       "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
@@ -60,7 +60,7 @@
         "configs": 1,
         "evaluated": 598
       },
-      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "follow_up": "conditional fallback: reachable when Zfa is off (the libcall is then rule 0 and is witnessed). No upstream action.",
       "opcode": "G_INTRINSIC_TRUNC",
       "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
@@ -73,7 +73,7 @@
         "configs": 1,
         "evaluated": 598
       },
-      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "follow_up": "conditional fallback: reachable when Zfa is off (the libcall is then rule 0 and is witnessed). No upstream action.",
       "opcode": "G_INTRINSIC_ROUND",
       "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
@@ -86,7 +86,7 @@
         "configs": 1,
         "evaluated": 598
       },
-      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "follow_up": "conditional fallback: reachable when Zfa is off (the libcall is then rule 0 and is witnessed). No upstream action.",
       "opcode": "G_INTRINSIC_ROUNDEVEN",
       "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
@@ -99,7 +99,7 @@
         "configs": 8,
         "evaluated": 1200
       },
-      "follow_up": "upstream redundant clause; the legal rule always wins. Keep it out of the reachable-rule count.",
+      "follow_up": "conditional fallback if a configuration without D appears; all current configurations enable D. No upstream action.",
       "opcode": "G_FPEXT",
       "reason": "libcallFor({s64, s32}) is subsumed by the earlier legalFor(D, {{s64, s32}}); every one of the 8 configurations enables D, so this clause can never be the first match.",
       "rule_index": 3,
@@ -112,7 +112,7 @@
         "configs": 2,
         "evaluated": 1200
       },
-      "follow_up": "upstream redundant clause under Zfhmin; keep it out of the reachable-rule count.",
+      "follow_up": "conditional fallback for the Zfhmin-off case; reachable at a different index there. No upstream action.",
       "opcode": "G_FPTRUNC",
       "reason": "libcallFor({{s16,s32},{s16,s64},{s32,s64}}) is subsumed when Zfhmin is on: legalFor(Zfhmin, {s16,s32}), legalFor(Zfhmin && D, {s16,s64}) and legalFor(D, {s32,s64}) cover all three pairs earlier. Configurations without Zfhmin do not emit this clause at this index.",
       "rule_index": 3,
@@ -125,7 +125,7 @@
         "configs": 5,
         "evaluated": 1200
       },
-      "follow_up": "upstream ordering artifact; do not model it as reachable. Candidate for an upstream cleanup.",
+      "follow_up": "ordering artifact: reachable only when the earlier condition is absent (rv32), where it is witnessed at a different index. No upstream action.",
       "opcode": "G_FPTOSI",
       "reason": "two clauses share this index. Without Zfh it is narrowScalarFor({s64, f16}), but widenScalarIf(f16 && !Zfh) rewrites the source to s32 first. With Zfh the index is that widenScalarIf clause, whose predicate is false because !Zfh fails. Unreachable in either case.",
       "rule_index": 8,
@@ -138,7 +138,7 @@
         "configs": 5,
         "evaluated": 1200
       },
-      "follow_up": "upstream redundant clause; keep it out of the reachable-rule count.",
+      "follow_up": "ordering artifact: reachable only when the earlier condition is absent (rv32), where it is witnessed at a different index. No upstream action.",
       "opcode": "G_FPTOSI",
       "reason": "libcallFor({{s32,s32},{s64,s32},{s32,s64},{s64,s64}}) is fully covered by earlier legalFor(F), legalFor(D) and customFor clauses in every configuration; it can never be the first match.",
       "rule_index": 9,
@@ -151,7 +151,7 @@
         "configs": 5,
         "evaluated": 1200
       },
-      "follow_up": "upstream ordering artifact; do not model it as reachable. Candidate for an upstream cleanup.",
+      "follow_up": "ordering artifact: reachable only when the earlier condition is absent (rv32), where it is witnessed at a different index. No upstream action.",
       "opcode": "G_FPTOUI",
       "reason": "two clauses share this index. Without Zfh it is narrowScalarFor({s64, f16}), but widenScalarIf(f16 && !Zfh) rewrites the source to s32 first. With Zfh the index is that widenScalarIf clause, whose predicate is false because !Zfh fails. Unreachable in either case.",
       "rule_index": 8,
@@ -164,7 +164,7 @@
         "configs": 5,
         "evaluated": 1200
       },
-      "follow_up": "upstream redundant clause; keep it out of the reachable-rule count.",
+      "follow_up": "ordering artifact: reachable only when the earlier condition is absent (rv32), where it is witnessed at a different index. No upstream action.",
       "opcode": "G_FPTOUI",
       "reason": "libcallFor({{s32,s32},{s64,s32},{s32,s64},{s64,s64}}) is fully covered by earlier legalFor(F), legalFor(D) and customFor clauses in every configuration; it can never be the first match.",
       "rule_index": 9,

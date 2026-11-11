@@ -1,1151 +1,1460 @@
 {
+  "comment": "Rules that never become the first match across the 9 configurations after the 2400-candidate universe and the atomic-ordering axis. Status is judged cross-config: a rule witnessed in any configuration is not listed. See ab/docs/EVIDENCE-U.md and oracle/README.md.",
   "gaps": [
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ASHR",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 12,
+      "ruleset": "G_SHL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ASHR",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 14,
+      "ruleset": "G_SHL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_ASHR",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "matched but an earlier rule (index 17) always wins in every configuration that emits this clause. Example: types=['nxv1s64', 'p0:32'] mem=['nxv1s64', 64, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 19,
+      "ruleset": "G_SHL",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1200,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1200
+        "evaluated": 2398
       },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_ATOMIC_CMPXCHG_WITH_SUCCESS",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 9,
-        "evaluated": 1199
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BITCAST",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
-      "rule_index": 4,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 9,
-        "evaluated": 1199
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
-      "opcode": "G_BITCAST",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 12,
+      "ruleset": "G_BITCAST",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BITREVERSE",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 9,
+      "ruleset": "G_BITREVERSE",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BITREVERSE",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 11,
+      "ruleset": "G_BITREVERSE",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BSWAP",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 6,
+      "ruleset": "G_BSWAP",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BSWAP",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 8,
+      "ruleset": "G_BSWAP",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BUILD_VECTOR",
-      "reason": "never matched in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 3,
+      "ruleset": "G_BUILD_VECTOR",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 629
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_CONCAT_VECTORS",
-      "reason": "never matched in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_CONSTANT_FOLD_BARRIER",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
-      "rule_index": 6,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
-      "opcode": "G_CONSTANT_FOLD_BARRIER",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 7,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_CONSTANT_FOLD_BARRIER",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 9,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CONSTANT_FOLD_BARRIER",
-      "reason": "never matched in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 11,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTLS",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
-      "rule_index": 4,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 9,
-        "evaluated": 1199
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
-      "opcode": "G_CTLS",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 9,
+      "ruleset": "G_CTLZ",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTLZ",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
-      "rule_index": 4,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 9,
-        "evaluated": 1199
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
-      "opcode": "G_CTLZ",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 9,
+      "ruleset": "G_CTLZ",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTPOP",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
-      "rule_index": 6,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 9,
-        "evaluated": 1199
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
-      "opcode": "G_CTPOP",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 13,
+      "ruleset": "G_CTPOP",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTPOP",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 15,
+      "ruleset": "G_CTPOP",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1200,
+        "candidates": 2400,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1200
+        "evaluated": 2400
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_EXTRACT_SUBVECTOR",
-      "reason": "never matched in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 9,
+      "ruleset": "G_EXTRACT_SUBVECTOR",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 323,
+        "candidates": 581,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 323
+        "evaluated": 581
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but never first in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8', 'v2s8', 'p0:32'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 6,
+      "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 323,
+        "candidates": 581,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 323
+        "evaluated": 581
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "never matched in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 7,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 323,
-        "configs": 9,
-        "evaluated": 323
-      },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but never first in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 8,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 323,
-        "configs": 9,
-        "evaluated": 323
-      },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but never first in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v4s64', 'v4s64'] mem=['v4s64', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 9,
+      "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 323,
+        "candidates": 581,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 323
+        "evaluated": 581
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but never first in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v8s32', 'v8s32'] mem=['v8s32', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 10,
+      "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 323,
+        "candidates": 581,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 323
+        "evaluated": 581
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but never first in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v16s16', 'v16s16'] mem=['v16s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 11,
+      "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 323,
+        "candidates": 581,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 323
+        "evaluated": 581
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but never first in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v32s8', 'v32s8'] mem=['v32s8', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 12,
+      "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 323,
-        "configs": 9,
-        "evaluated": 323
+        "candidates": 581,
+        "config_list": [
+          "sve"
+        ],
+        "configs": 1,
+        "evaluated": 581
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but never first in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s64', 'v2s128', 'v2s128'] mem=['v2s128', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 15,
+      "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
+        "candidates": 629,
+        "config_list": [
+          "fullfp16",
+          "sve"
+        ],
+        "configs": 2,
+        "evaluated": 629
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FABS",
-      "reason": "matched but never first in all 9 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['s16'] mem=['s16', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 11,
+      "ruleset": "G_FABS",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1109,
-        "configs": 9,
-        "evaluated": 1109
+        "candidates": 629,
+        "config_list": [
+          "fullfp16",
+          "sve"
+        ],
+        "configs": 2,
+        "evaluated": 629
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FCMP",
-      "reason": "never matched in all 9 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 14,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FNEG",
-      "reason": "matched but never first in all 9 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['s16'] mem=['s16', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 11,
+      "ruleset": "G_FABS",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_FPEXT",
-      "reason": "never matched in all 9 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 1,
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_index": 6,
+      "ruleset": "G_FPEXT",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 629
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPEXT",
-      "reason": "never matched in all 9 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 6,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FREEZE",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
-      "rule_index": 6,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
-      "opcode": "G_FREEZE",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 7,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FREEZE",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 9,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_FREEZE",
-      "reason": "never matched in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 11,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1109,
+        "candidates": 2056,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1109
+        "evaluated": 2056
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_ICMP",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "matched but an earlier rule (index 9) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 14,
+      "ruleset": "G_ICMP",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1109,
+        "candidates": 2056,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1109
+        "evaluated": 2056
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ICMP",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 16,
+      "ruleset": "G_ICMP",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1109,
+        "candidates": 2056,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1109
+        "evaluated": 2056
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ICMP",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 18,
+      "ruleset": "G_ICMP",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1109,
+        "candidates": 2056,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1109
+        "evaluated": 2056
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ICMP",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 20,
+      "ruleset": "G_ICMP",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_IMPLICIT_DEF",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
-      "rule_index": 6,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
-      "opcode": "G_IMPLICIT_DEF",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 7,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_IMPLICIT_DEF",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 9,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_IMPLICIT_DEF",
-      "reason": "never matched in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 11,
+      "ruleset": "G_IMPLICIT_DEF",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1200,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1200
+        "evaluated": 2354
       },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_INDEXED_LOAD",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_INDEXED_SEXTLOAD",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_INDEXED_ZEXTLOAD",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_LOAD",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_LOAD",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_LOAD",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 4,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1197,
-        "configs": 9,
-        "evaluated": 1197
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_LSHR",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 12,
+      "ruleset": "G_SHL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_LSHR",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 14,
+      "ruleset": "G_SHL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_LSHR",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "matched but an earlier rule (index 17) always wins in every configuration that emits this clause. Example: types=['nxv1s64', 'p0:32'] mem=['nxv1s64', 64, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 19,
+      "ruleset": "G_SHL",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_MUL",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 6,
+      "ruleset": "G_MUL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_MUL",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 8,
+      "ruleset": "G_MUL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
-      "opcode": "G_MUL",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
-      "rule_index": 12,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_PHI",
-      "reason": "never matched in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 11,
+      "ruleset": "G_PHI",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 2398
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
-      "opcode": "G_PHI",
-      "reason": "matched but never first in all 9 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
-      "rule_index": 15,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 9,
-        "evaluated": 1199
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_PTR_ADD",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 3,
+      "ruleset": "G_PTR_ADD",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SDIVREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 4,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SDIVREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 6,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1200,
+        "candidates": 2028,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1200
+        "evaluated": 2028
       },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_SEXTLOAD",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1121,
-        "configs": 9,
-        "evaluated": 1121
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SEXT_INREG",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 6,
+      "ruleset": "G_SEXT_INREG",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SHL",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 12,
+      "ruleset": "G_SHL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SHL",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 14,
+      "ruleset": "G_SHL",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1197,
+        "candidates": 2354,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1197
+        "evaluated": 2354
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_SHL",
-      "reason": "matched but never first in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "matched but an earlier rule (index 17) always wins in every configuration that emits this clause. Example: types=['nxv1s64', 'p0:32'] mem=['nxv1s64', 64, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
       "rule_index": 19,
+      "ruleset": "G_SHL",
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SHUFFLE_VECTOR",
-      "reason": "never matched in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 11,
+      "ruleset": "G_SHUFFLE_VECTOR",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 629
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_SPLAT_VECTOR",
-      "reason": "never matched in all 9 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 9,
-        "evaluated": 580
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 4,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 6,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1200,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1200
+        "evaluated": 2398
       },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_STORE",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_STORE",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_STORE",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 2,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_STORE",
-      "reason": "never matched in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 4,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 9,
-        "evaluated": 1200
-      },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_STORE",
-      "reason": "matched but never first in all 9 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 7,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1177,
-        "configs": 9,
-        "evaluated": 1177
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
-      "opcode": "G_TRUNC",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
-      "rule_index": 5,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 9,
-        "evaluated": 1199
-      },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_TRUNC_SSAT_S",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 5,
+      "ruleset": "G_TRUNC_SSAT_S",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_TRUNC_SSAT_U",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 5,
+      "ruleset": "G_TRUNC_SSAT_S",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
+        "candidates": 2398,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 1199
+        "evaluated": 2398
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_TRUNC_USAT_U",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 5,
+      "ruleset": "G_TRUNC_SSAT_S",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UDIVREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 4,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UDIVREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 6,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 4,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
+        "candidates": 629,
+        "config_list": [
+          "baseline",
+          "small-cm",
+          "bf16",
+          "lse",
+          "rcpc3",
+          "outline-atomics",
+          "cssc",
+          "fullfp16",
+          "sve"
+        ],
         "configs": 9,
-        "evaluated": 580
+        "evaluated": 629
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
+      "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UREM",
-      "reason": "never matched in all 9 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
+      "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
       "rule_index": 6,
+      "ruleset": "G_SREM",
       "status": "unexercised"
     }
   ],
-  "note": "Rule identity is (opcode, rule_index). A rule unexercised in one configuration is normally feature-gated; only rules that are unreached (or never first) in every configuration are listed here. Where a builder emits different rule counts per configuration the index alignment can shift, so this union is a lower bound on coverage.",
   "schema": 1,
   "target": "aarch64"
 }

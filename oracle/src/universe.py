@@ -481,8 +481,21 @@ def candidates(opcode: str, type_slots: int, imm_slots: int, seed: int = 0,
         has_pointer = any(t[0] == "pointer" for t in types)
         if has_pointer and len(mems) > 1:
             mty = coherent[0]
-            mem_choices = _dedup([coherent, (mty, 1, "NotAtomic", "NotAtomic")]
-                                 + mems[:6])
+            extra = [coherent, (mty, 1, "NotAtomic", "NotAtomic")]
+            # Atomic ordering is its own axis.  AArch64 keys its s128
+            # load/store rules and its narrow-scalar store widening on it, and
+            # the generic mem sweep only offers NotAtomic for the coherent
+            # type.  Other targets keep the old set until their U side is
+            # regenerated with this axis enabled.
+            wants_ordering = (
+                target == "aarch64" and
+                (mty in (("scalar", 1), ("scalar", 8), ("scalar", 16),
+                         ("scalar", 128))
+                 or ("INDEXED" in opcode and index < 32)))
+            if wants_ordering:
+                extra += [(mty, coherent[1], ordering, failure)
+                          for ordering, failure in MEM_ORDERINGS[1:]]
+            mem_choices = _dedup(extra + mems[:6])
         elif index < mem_prefix and len(mems) > 1:
             mem_choices = _dedup([coherent] + mems)
         else:

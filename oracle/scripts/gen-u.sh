@@ -36,7 +36,7 @@ SAMPLE=${ORACLE_SAMPLE:-8}
 
 case "$TARGET" in
   x86)     CONFIGS=(C0 C1 C2 C3); PREFIX=x86 ;;
-  aarch64) CONFIGS=(baseline small-cm bf16 lse rcpc3 outline-atomics cssc fullfp16 sve); PREFIX=a64 ;;
+  aarch64) CONFIGS=(baseline small-cm bf16 lse rcpc3 outline-atomics cssc fullfp16 sve); PREFIX=a64; LIMIT_DEFAULT=2400 ;;
   riscv)   CONFIGS=(rv64gc rv32gc rv64gcv rv32gcv rv64zbb rv64zfh ristretto rv32zilsd); PREFIX=rv ;;
   arm)     CONFIGS=(armv7a-neon armv7a-nodiv armv7a-a5 armv6-arm1176 armv4t thumbv7m armv7-soft); PREFIX=arm ;;
   mips)    CONFIGS=(mips32 mips32r2 mips32r6 mips32r5-msa mips32r6-msa); PREFIX=mips ;;
