@@ -79,3 +79,18 @@ def test_aarch64_asks_about_atomic_ordering_on_pointer_forms():
     for target in ("x86", "riscv"):
         rows = universe.candidates("G_STORE", 2, 0, limit=1200, target=target)
         assert {row["mem"][2] for row in rows if row["mem"]} == {"NotAtomic"}
+
+
+def test_every_combo_has_one_entry_per_slot():
+    """A short query walks off `Query.Types` inside an upstream rule."""
+    for target in ("x86", "aarch64", "riscv"):
+        for slots in (1, 2, 3, 4):
+            combos = universe._coherent_combos(slots, target)
+            assert combos, (target, slots)
+            assert all(len(c) == slots for c in combos), (target, slots)
+
+
+def test_three_slot_candidates_are_three_slots_wide():
+    rows = universe.candidates("G_VECREDUCE_SEQ_FADD", 3, 0, limit=0,
+                               target="aarch64")
+    assert all(len(row["types"]) == 3 for row in rows)

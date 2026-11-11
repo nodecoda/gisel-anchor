@@ -271,13 +271,16 @@ def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
                 for shape in shapes:
                     out.append((shape,) * (type_slots - 1) + (ptr,))
         # Vector pairs: {sub, full} for G_EXTRACT/G_INSERT and friends.
+        # Every combo must have exactly `type_slots` entries: an upstream rule
+        # reads Types[k] for each slot it owns, and a short query walks off the
+        # end of the ArrayRef (ArrayRef.h:247) instead of answering.
         for elem in (("scalar", 8), ("scalar", 16), ("scalar", 32),
                      ("scalar", 64)):
             for small, large in ((16, 32), (32, 64), (8, 16), (4, 8), (2, 4)):
-                out.append((("vector", small, False, elem),
-                            ("vector", large, False, elem)))
-                out.append((("vector", large, False, elem),
-                            ("vector", small, False, elem)))
+                a = ("vector", small, False, elem)
+                b = ("vector", large, False, elem)
+                out.append((a, b) + (b,) * (type_slots - 2))
+                out.append((b, a) + (a,) * (type_slots - 2))
         # Scalable vectors.  RISC-V V and AArch64 SVE write their legality
         # predicates against nxv*; a fixed-only sweep can never reach them.
         # x86 has no scalable vector type at all, so it keeps the old shape.
@@ -286,18 +289,18 @@ def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
                          ("scalar", 64), ("float", 16), ("float", 32),
                          ("float", 64)):
                 for small, large in ((2, 4), (4, 8), (8, 16), (16, 32)):
-                    out.append((("vector", small, True, elem),
-                                ("vector", large, True, elem)))
-                    out.append((("vector", large, True, elem),
-                                ("vector", small, True, elem)))
+                    a = ("vector", small, True, elem)
+                    b = ("vector", large, True, elem)
+                    out.append((a, b) + (b,) * (type_slots - 2))
+                    out.append((b, a) + (a,) * (type_slots - 2))
             # i1 mask pairs: G_EXTRACT_SUBVECTOR bitcasts only when both
             # element counts are >= 8.
             for small in (8, 16, 32):
                 for large in (8, 16, 32, 64):
-                    out.append((("vector", small, True, ("scalar", 1)),
-                                ("vector", large, True, ("scalar", 1))))
-                    out.append((("vector", large, True, ("scalar", 1)),
-                                ("vector", small, True, ("scalar", 1))))
+                    a = ("vector", small, True, ("scalar", 1))
+                    b = ("vector", large, True, ("scalar", 1))
+                    out.append((a, b) + (b,) * (type_slots - 2))
+                    out.append((b, a) + (a,) * (type_slots - 2))
             # G_ICMP shape: i1 vector result, int/FP vector operand.
             for lanes in (2, 4, 8, 16):
                 mask = ("vector", lanes, True, ("scalar", 1))
@@ -402,7 +405,12 @@ def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
             for shape in shapes[:8]:
                 out.append((shape, ptr) + (shape,) * (type_slots - 2))
                 out.append((ptr, shape) + (shape,) * (type_slots - 2))
-    return _dedup(out)
+    # Every combo must have exactly one entry per type slot: an upstream rule
+    # indexes `Query.Types[k]` for each slot it owns, so a short array walks
+    # off the end (ArrayRef.h:247) instead of answering.  The blocks above pad
+    # to `type_slots`; this filter is the backstop for one- and four-slot
+    # opcodes, where a two-shape combo has no meaning at all.
+    return _dedup(c for c in out if len(c) == type_slots)
 
 
 def _coherent_mem(types: tuple) -> tuple:
