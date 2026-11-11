@@ -148,7 +148,7 @@ RISC-V `0645f9a4…`）。
 
 | target | 配置数 | 规则行 | witnessed | shadowed | unexercised | asserted | raw | kept | dropped |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| X86 | 4 | 1,911 | 1,798 | 56 | 57 | 0 | 10,100 | 10,100 | 0 |
+| X86 | 4 | 1,911 | 1,802 | 52 | 57 | 0 | 10,059 | 10,027 | 32 |
 | AArch64 | 9 | 13,240 | 12,001 | 231 | 1,008 | 0 | 30,126 | 29,561 | 565 |
 | RISC-V | 8 | 4,326 | 4,021 | 156 | 149 | 0 | 20,533 | 20,445 | 88 |
 | ARM | 7 | 741 | 741 | 0 | 0 | 0 | 15,639 | 15,639 | 0 |
@@ -179,6 +179,12 @@ witness；剩余 13 条是死规则（Zfa legal 遮蔽 libcall、`{s64,s32}` 遮
 `known-gaps/riscv.json`。本轮只重跑了 RISC-V；其他 target 的已冻结 U 题面
 仍可复放，但用新 universe 重新生成时形状集合会变大。
 
+2026-11-11 X86 复核：新形状（i1 标量、窄向量、`{s128, s32}` 对）让 4 个
+per-config 行从 shadowed 变成 witnessed（`G_STORE` 的 i1 / v2s8 / v16s8），
+跨配置 gap 不变（仍是 6 条 shadowed）。新增的 32 条 `G_CTLZ`/`G_CTPOP`/
+`G_CTTZ`/`G_CTTZ_ZERO_POISON` 指针形状上游自己断言，按 `known-unanswerable`
+丢弃，两边都不作答。raw 10,059 / kept 10,027 / dropped 32。
+
 2026-11-11 AArch64 复核：两处题面修正。其一，2400 个候选的上限
 （`gen-u.sh` 里 `LIMIT_DEFAULT=2400`）：1200 时新形状把 24 条已 witness 的旧
 规则挤出了预算，提到 2400 后全部回来。其二，原子 ordering 轴：AArch64 的
@@ -198,7 +204,7 @@ target 等各自重跑 U 时再决定是否打开。
 
 | target | queries | disagree | unanswerable | 两侧答案文件 |
 |---|---:|---:|---:|---|
-| X86 | 10,100 | 0 | 0 | 逐字节相同 |
+| X86 | 10,027 | 0 | 0 | 逐字节相同 |
 | AArch64 | 29,561 | 0 | 0 | 逐字节相同 |
 | RISC-V | 20,445 | 0 | 0 | 逐字节相同 |
 | ARM | 15,639 | 0 | 0 | 逐字节相同 |
