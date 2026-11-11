@@ -1289,9 +1289,21 @@ class Translator:
             mm = re.fullmatch(r"LLT::vector\(\s*(.+?)\s*,\s*LLT::integer"
                               r"\(\s*(\d+)\s*\)\s*\)", ty, re.S)
             if mm:
-                return "slot(%s), replace(vec_of(%s, ty(%s)))" % (
-                    idx, self.count_expr(mm.group(1)),
-                    self.t.name("LLT::integer(%s)" % mm.group(2)))
+                elt = "ty(%s)" % self.t.name("LLT::integer(%s)" % mm.group(2))
+                # `LLT::vector(X.getElementCount(), T)` is exactly
+                # `X.changeElementType(T)`: both keep the ElementCount,
+                # scalable flag included.  Spelling it as
+                # `vec_of(num_elems(X), T)` would rebuild a *fixed* vector
+                # and silently drop scalability (AArch64 shuffles pointer
+                # vectors this way).
+                src = re.fullmatch(
+                    r"(?:Query\.)?Types\[(\d+)\]\.getElementCount\(\)",
+                    mm.group(1).strip())
+                if src:
+                    return ("slot(%s), replace(elt_type_to(slot(%s), %s))"
+                            % (idx, src.group(1), elt))
+                return "slot(%s), replace(vec_of(%s, %s))" % (
+                    idx, self.count_expr(mm.group(1)), elt)
             mm = re.fullmatch(r"LLT::fixed_vector\(\s*(.+?)\s*,\s*(.+?)\s*\)",
                               ty, re.S)
             if mm:
