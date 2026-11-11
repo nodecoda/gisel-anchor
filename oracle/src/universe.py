@@ -220,6 +220,23 @@ COHERENT_SHAPES = [
 
 VEC_ELEM = [(t, t[3]) for t in COHERENT_SHAPES if t[0] == "vector"]
 
+# Scalable shapes that the pointer sweep must try first.  RISC-V V and AArch64
+# SVE legalize `nxv*` kinds; a fixed-only `{value, ptr}` sweep never reaches
+# their load/store/atomic rules.  Element counts cover the widths those
+# targets declare (s8 up to 64 lanes, s16 up to 32, s32 up to 16, s64 up to 8),
+# one mask vector for the i1 rules, and pointer vectors for `customIf`.
+SCALABLE_REPS = [
+    ("vector", 2, True, ("scalar", 8)),
+    ("vector", 8, True, ("scalar", 8)),
+    ("vector", 1, True, ("scalar", 8)),
+    ("vector", 8, True, ("scalar", 16)),
+    ("vector", 4, True, ("scalar", 32)),
+    ("vector", 1, True, ("scalar", 64)),
+    ("vector", 2, True, ("scalar", 1)),
+    ("vector", 2, True, ("pointer", 0, 64)),
+    ("vector", 4, True, ("pointer", 0, 32)),
+]
+
 
 def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
     """Pointer/value, vector pair, vector/element and mixed scalar tuples.
@@ -230,7 +247,7 @@ def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
     """
     out: list[tuple] = []
     pointers = (("pointer", 0, 32), ("pointer", 0, 64))
-    shapes = COHERENT_SHAPES
+    shapes = (SCALABLE_REPS if target != "x86" else []) + COHERENT_SHAPES
     if type_slots >= 2:
         for ptr in pointers:
             for shape in shapes:
@@ -245,6 +262,14 @@ def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
                     out.append((("pointer", as_a, bits),
                                 ("pointer", as_b, bits))
                                + (("pointer", as_a, bits),) * (type_slots - 2))
+        # Three-slot forms whose pointer is the last operand, e.g.
+        # G_ATOMIC_CMPXCHG_WITH_SUCCESS `{old, new, ptr}`.  The loops above
+        # only put the pointer in slots 0 and 1 and repeat a value shape in
+        # the remaining slots.
+        if type_slots >= 3:
+            for ptr in pointers:
+                for shape in shapes:
+                    out.append((shape,) * (type_slots - 1) + (ptr,))
         # Vector pairs: {sub, full} for G_EXTRACT/G_INSERT and friends.
         for elem in (("scalar", 8), ("scalar", 16), ("scalar", 32),
                      ("scalar", 64)):
@@ -253,6 +278,74 @@ def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
                             ("vector", large, False, elem)))
                 out.append((("vector", large, False, elem),
                             ("vector", small, False, elem)))
+        # Scalable vectors.  RISC-V V and AArch64 SVE write their legality
+        # predicates against nxv*; a fixed-only sweep can never reach them.
+        # x86 has no scalable vector type at all, so it keeps the old shape.
+        if target != "x86":
+            for elem in (("scalar", 8), ("scalar", 16), ("scalar", 32),
+                         ("scalar", 64), ("float", 16), ("float", 32),
+                         ("float", 64)):
+                for small, large in ((2, 4), (4, 8), (8, 16), (16, 32)):
+                    out.append((("vector", small, True, elem),
+                                ("vector", large, True, elem)))
+                    out.append((("vector", large, True, elem),
+                                ("vector", small, True, elem)))
+            # i1 mask pairs: G_EXTRACT_SUBVECTOR bitcasts only when both
+            # element counts are >= 8.
+            for small in (8, 16, 32):
+                for large in (8, 16, 32, 64):
+                    out.append((("vector", small, True, ("scalar", 1)),
+                                ("vector", large, True, ("scalar", 1))))
+                    out.append((("vector", large, True, ("scalar", 1)),
+                                ("vector", small, True, ("scalar", 1))))
+            # G_ICMP shape: i1 vector result, int/FP vector operand.
+            for lanes in (2, 4, 8, 16):
+                mask = ("vector", lanes, True, ("scalar", 1))
+                for elem in (("scalar", 8), ("scalar", 16), ("scalar", 32),
+                             ("scalar", 64), ("float", 16), ("float", 32),
+                             ("float", 64)):
+                    out.append((mask, ("vector", lanes, True, elem)))
+            # G_SELECT shape: int/FP vector value, i1 vector condition.
+            for lanes in (2, 4, 8, 16):
+                mask = ("vector", lanes, True, ("scalar", 1))
+                for elem in (("scalar", 8), ("scalar", 16), ("scalar", 32),
+                             ("scalar", 64), ("float", 16), ("float", 32),
+                             ("float", 64)):
+                    out.append((("vector", lanes, True, elem), mask))
+            # Vector/element/index and vector/scalar kinds: G_INSERT_VECTOR_ELT
+            # takes {vec, elem, sXLen}, G_SPLAT_VECTOR {vec, sXLen}, and the
+            # same-shape masks drive G_IMPLICIT_DEF / G_CONSTANT_FOLD_BARRIER.
+            scalable_vecs = [
+                ("vector", lanes, True, elem)
+                for elem in (("scalar", 1), ("scalar", 8), ("scalar", 16),
+                             ("scalar", 32), ("scalar", 64),
+                             ("float", 16), ("float", 32), ("float", 64))
+                for lanes in (1, 2, 4, 8, 16, 32, 64)]
+            for vec in scalable_vecs:
+                out.append((vec,) * type_slots)
+                if vec[3] == ("scalar", 1):
+                    # G_SPLAT_VECTOR's mask rule takes i1 lanes and an i1
+                    # scalar; G_INSERT_VECTOR_ELT's takes i1 elements.
+                    for lane_ty in (("scalar", 1), ("scalar", 32),
+                                    ("scalar", 64)):
+                        out.append((vec, lane_ty)
+                                   + (lane_ty,) * (type_slots - 2))
+                        if type_slots >= 3:
+                            out.append((vec, lane_ty, lane_ty))
+                    # G_INSERT_VECTOR_ELT `{maskvec, i1, sXLen}`: the element
+                    # type matches the vector, the index is XLen-sized.
+                    if type_slots >= 3:
+                        for index in (("scalar", 32), ("scalar", 64)):
+                            out.append((vec, ("scalar", 1), index))
+                    continue
+                elem = vec[3]
+                out.append((vec, elem) + (elem,) * (type_slots - 2))
+                for index in (("scalar", 32), ("scalar", 64)):
+                    out.append((vec, elem, index) if type_slots >= 3
+                               else (vec, index))
+                for lane_ty in (("scalar", 32), ("scalar", 64)):
+                    out.append((vec, lane_ty)
+                               + (lane_ty,) * (type_slots - 2))
         for vec, elem in VEC_ELEM:
             out.append((vec, elem) + (elem,) * (type_slots - 2))
             out.append((vec,) + (vec,) * (type_slots - 1))
@@ -284,7 +377,12 @@ def _coherent_combos(type_slots: int, target: str = "generic") -> list[tuple]:
                  (("scalar", 32), ("scalar", 16)),
                  (("scalar", 1), ("scalar", 32)),
                  (("scalar", 1), ("scalar", 64)),
-                 (("scalar", 1), ("scalar", 80))):
+                 (("scalar", 1), ("scalar", 80)),
+                 (("scalar", 128), ("scalar", 32)),
+                 (("scalar", 128), ("scalar", 64)),
+                 (("scalar", 32), ("scalar", 128)),
+                 (("scalar", 64), ("scalar", 128)),
+                 (("scalar", 128), ("scalar", 128))):
         out.append(pair + (pair[1],) * (type_slots - 2))
     # Same lane count, different element width: {f64, f32}, {f32, f64}, ...
     if type_slots >= 2:
@@ -361,6 +459,14 @@ def candidates(opcode: str, type_slots: int, imm_slots: int, seed: int = 0,
                 combos.append(tuple(row))
 
     combos = _dedup(combos)
+    # G_ATOMIC_CMPXCHG_WITH_SUCCESS's *third* type slot is the pointer; that
+    # layout is part of the opcode, not of any target's rules.  Ask it first so
+    # a small per-opcode cap still reaches `lowerIf(typeInSet(0, ..),
+    # typeIs(2, p0))`.
+    if type_slots >= 3 and "CMPXCHG" in opcode:
+        trailing = [c for c in combos
+                    if c[-1][0] == "pointer" and c[0][0] == "scalar"]
+        combos = _dedup(trailing + combos)
 
     out: list[dict] = []
     # Memory variants multiply fast (types x mem shapes).  Only the leading

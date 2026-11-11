@@ -1,342 +1,96 @@
 {
+  "comment": "Rules that no query can make the first match. Each entry was derived by reading RISCVLegalizerInfo.cpp and confirmed with --witness over all 8 configurations after the universe grew scalable-vector and s128 pairs. Rule indices are per configuration and shift when a builder omits a conditional clause; see docs/EVIDENCE-riscv.md.",
   "gaps": [
     {
       "config": "*",
       "evidence": {
-        "candidates": 1200,
-        "configs": 8,
-        "evaluated": 1200
+        "candidates": 598,
+        "configs": 1,
+        "evaluated": 598
       },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_ATOMIC_CMPXCHG_WITH_SUCCESS",
-      "reason": "never matched in all 8 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
-      "opcode": "G_CONSTANT_FOLD_BARRIER",
-      "reason": "never matched in all 8 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 8,
-        "evaluated": 1200
-      },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_EXTRACT_SUBVECTOR",
-      "reason": "never matched in all 8 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
       "opcode": "G_FCEIL",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
+        "candidates": 598,
+        "configs": 1,
+        "evaluated": 598
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
       "opcode": "G_FFLOOR",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
+        "candidates": 598,
+        "configs": 1,
+        "evaluated": 598
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FNEARBYINT",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 3,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPEXT",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 3,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPEXT",
-      "reason": "never matched in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 4,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPTOSI",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 8,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPTOSI",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 9,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPTOUI",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 8,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPTOUI",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 9,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_FPTRUNC",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 3,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
       "opcode": "G_FRINT",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
+        "candidates": 598,
+        "configs": 1,
+        "evaluated": 598
       },
-      "follow_up": "bisect the predicate by adding targeted shapes; if still unreached, record it as dead",
-      "opcode": "G_ICMP",
-      "reason": "never matched in all 8 tested configurations; no candidate in the universe reaches this rule's predicate in any tested configuration",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
-      },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
-      "opcode": "G_IMPLICIT_DEF",
-      "reason": "never matched in all 8 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 8,
-        "evaluated": 1200
-      },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_INSERT_SUBVECTOR",
-      "reason": "never matched in all 8 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 8,
-        "evaluated": 1200
-      },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_INSERT_VECTOR_ELT",
-      "reason": "never matched in all 8 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1200,
-        "configs": 8,
-        "evaluated": 1200
-      },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_INSERT_VECTOR_ELT",
-      "reason": "never matched in all 8 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_INTRINSIC_ROUND",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "opcode": "G_FNEARBYINT",
+      "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
+        "candidates": 598,
+        "configs": 1,
+        "evaluated": 598
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_INTRINSIC_ROUNDEVEN",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 3,
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 580,
-        "configs": 8,
-        "evaluated": 580
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
+      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
       "opcode": "G_INTRINSIC_TRUNC",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
+      "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
       "rule_index": 3,
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
+        "candidates": 598,
+        "configs": 1,
+        "evaluated": 598
       },
-      "follow_up": "confirm with upstream that the rule is intentionally unreachable; keep it out of the proof",
-      "opcode": "G_SELECT",
-      "reason": "never matched in all 8 tested configurations; a broader earlier rule matches every candidate before this one can become the first match",
-      "rule_index": 1,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_SITOFP",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 6,
+      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "opcode": "G_INTRINSIC_ROUND",
+      "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
+      "rule_index": 3,
       "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
+        "candidates": 598,
+        "configs": 1,
+        "evaluated": 598
       },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_SPLAT_VECTOR",
-      "reason": "never matched in all 8 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 0,
-      "status": "unexercised"
-    },
-    {
-      "config": "*",
-      "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
-      },
-      "follow_up": "extend the vector axis (subvector pairs, scalable lane counts) and re-run --witness",
-      "opcode": "G_SPLAT_VECTOR",
-      "reason": "never matched in all 8 tested configurations; needs a vector shape outside the declared universe (lane/width combination or subvector pairing) before this rule can fire",
-      "rule_index": 1,
-      "status": "unexercised"
+      "follow_up": "upstream redundant clause: the Zfa legal rules subsume this libcall when the feature is on, and it is the only fallback when it is off. Keep it out of the reachable-rule count; report upstream if a cleanup is wanted.",
+      "opcode": "G_INTRINSIC_ROUNDEVEN",
+      "reason": "shadowed in ristretto (the only Zfa configuration): legalFor(Zfa, {s32}) and legalFor(Zfa && D, {s64}) match the same result types earlier, so the libcallFor({s32, s64}) clause can never be the first match. In configurations without Zfa the clause is emitted as the first libcall rule and is witnessed.",
+      "rule_index": 3,
+      "status": "shadowed"
     },
     {
       "config": "*",
@@ -345,27 +99,78 @@
         "configs": 8,
         "evaluated": 1200
       },
-      "follow_up": "extend MEM_TYPES/MEM_ALIGNS for this opcode and re-run --witness",
-      "opcode": "G_STORE",
-      "reason": "never matched in all 8 tested configurations; the universe's mem size/align/ordering axis does not reach this rule's predicate",
-      "rule_index": 6,
-      "status": "unexercised"
+      "follow_up": "upstream redundant clause; the legal rule always wins. Keep it out of the reachable-rule count.",
+      "opcode": "G_FPEXT",
+      "reason": "libcallFor({s64, s32}) is subsumed by the earlier legalFor(D, {{s64, s32}}); every one of the 8 configurations enables D, so this clause can never be the first match.",
+      "rule_index": 3,
+      "status": "shadowed"
     },
     {
       "config": "*",
       "evidence": {
-        "candidates": 1199,
-        "configs": 8,
-        "evaluated": 1199
+        "candidates": 1200,
+        "configs": 2,
+        "evaluated": 1200
       },
-      "follow_up": "probe the FP width/feature axis, or confirm on upstream that the rule is feature-gated",
-      "opcode": "G_UITOFP",
-      "reason": "matched but never first in all 8 tested configurations; needs an FP width/subtarget feature that no tested configuration enables, or an earlier rule wins on every candidate",
-      "rule_index": 6,
+      "follow_up": "upstream redundant clause under Zfhmin; keep it out of the reachable-rule count.",
+      "opcode": "G_FPTRUNC",
+      "reason": "libcallFor({{s16,s32},{s16,s64},{s32,s64}}) is subsumed when Zfhmin is on: legalFor(Zfhmin, {s16,s32}), legalFor(Zfhmin && D, {s16,s64}) and legalFor(D, {s32,s64}) cover all three pairs earlier. Configurations without Zfhmin do not emit this clause at this index.",
+      "rule_index": 3,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 1200,
+        "configs": 5,
+        "evaluated": 1200
+      },
+      "follow_up": "upstream ordering artifact; do not model it as reachable. Candidate for an upstream cleanup.",
+      "opcode": "G_FPTOSI",
+      "reason": "two clauses share this index. Without Zfh it is narrowScalarFor({s64, f16}), but widenScalarIf(f16 && !Zfh) rewrites the source to s32 first. With Zfh the index is that widenScalarIf clause, whose predicate is false because !Zfh fails. Unreachable in either case.",
+      "rule_index": 8,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 1200,
+        "configs": 5,
+        "evaluated": 1200
+      },
+      "follow_up": "upstream redundant clause; keep it out of the reachable-rule count.",
+      "opcode": "G_FPTOSI",
+      "reason": "libcallFor({{s32,s32},{s64,s32},{s32,s64},{s64,s64}}) is fully covered by earlier legalFor(F), legalFor(D) and customFor clauses in every configuration; it can never be the first match.",
+      "rule_index": 9,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 1200,
+        "configs": 5,
+        "evaluated": 1200
+      },
+      "follow_up": "upstream ordering artifact; do not model it as reachable. Candidate for an upstream cleanup.",
+      "opcode": "G_FPTOUI",
+      "reason": "two clauses share this index. Without Zfh it is narrowScalarFor({s64, f16}), but widenScalarIf(f16 && !Zfh) rewrites the source to s32 first. With Zfh the index is that widenScalarIf clause, whose predicate is false because !Zfh fails. Unreachable in either case.",
+      "rule_index": 8,
+      "status": "shadowed"
+    },
+    {
+      "config": "*",
+      "evidence": {
+        "candidates": 1200,
+        "configs": 5,
+        "evaluated": 1200
+      },
+      "follow_up": "upstream redundant clause; keep it out of the reachable-rule count.",
+      "opcode": "G_FPTOUI",
+      "reason": "libcallFor({{s32,s32},{s64,s32},{s32,s64},{s64,s64}}) is fully covered by earlier legalFor(F), legalFor(D) and customFor clauses in every configuration; it can never be the first match.",
+      "rule_index": 9,
       "status": "shadowed"
     }
   ],
-  "note": "Rule identity is (opcode, rule_index). A rule unexercised in one configuration is normally feature-gated; only rules that are unreached (or never first) in every configuration are listed here. Where a builder emits different rule counts per configuration the index alignment can shift, so this union is a lower bound on coverage.",
   "schema": 1,
   "target": "riscv"
 }

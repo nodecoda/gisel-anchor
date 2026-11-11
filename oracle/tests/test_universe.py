@@ -43,3 +43,29 @@ def test_safe_profile_extract_keeps_a_vector_in_slot_one():
                                     ["G_EXTRACT_VECTOR_ELT"]))
     assert rows
     assert all(row["types"][1].startswith(("v", "nxv")) for row in rows)
+
+
+def test_coherent_combos_carry_scalable_shapes_for_vector_targets():
+    combos = universe._coherent_combos(2, "riscv")
+    assert any(a[0] == "vector" and a[2] and a[3][0] == "pointer"
+               for a, _ in combos), "pointer-vector/ptr shape is missing"
+    assert any(a[0] == "vector" and a[2] and a[3] == ("scalar", 1)
+               for a, _ in combos), "i1 mask vector shape is missing"
+    assert not any(a[0] == "vector" and a[2]
+                   for a, _ in universe._coherent_combos(2, "x86")), \
+        "x86 must not ask about scalable vectors"
+
+
+def test_cmpxchg_with_success_asks_the_trailing_pointer_first():
+    rows = universe.candidates("G_ATOMIC_CMPXCHG_WITH_SUCCESS", 3, 0,
+                               limit=1200, target="riscv")
+    early = [(row["types"][0], row["types"][2]) for row in rows[:40]]
+    assert any(a in ("s8", "s16", "s32", "s64") and b.startswith("p0:")
+               for a, b in early), early
+
+
+def test_s128_pairs_are_asked():
+    rows = universe.candidates("G_FPEXT", 2, 0, limit=1200, target="riscv")
+    keys = {(row["types"][0], row["types"][1]) for row in rows}
+    assert ("s128", "s32") in keys
+    assert ("s128", "s64") in keys
