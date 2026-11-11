@@ -3524,25 +3524,35 @@ def deviation_x86_build_vector(imp):
 
 
 def deviation_x86_ctpop(imp):
-    """Vector CTPOP is legal with VPOPCNTDQ (+VLX under 512 bits).
+    """PR 235976: vector CTPOP is legal with VPOPCNTDQ at every width.
 
-    Not in upstream's constructor yet: our corpus carries the vector
-    legalization, so the end-to-end A/B lists those types as Legal.
+    The pinned constructor only lists the 512-bit shapes and gates the 128/256
+    bit ones behind VLX.  With VPOPCNTDQ and without VLX that leaves
+    `G_CTPOP <4 x s32>` unable to legalize, which upstream's own
+    `CodeGen/X86/isel-ctpop-vec.ll` expects to work.  The same patch also
+    legalizes byte/halfword vectors via BITALG.
     """
     rs = next(r for r in imp.rulesets if r.opcodes == ["G_CTPOP"])
     if not rs.rules or not rs.rules[1][1].startswith("legal "):
         raise SystemExit("X86 G_CTPOP: expected two leading legal rules")
+    if not rs.rules[2][1].startswith("widen("):
+        raise SystemExit("X86 G_CTPOP: expected the first widen after the "
+                         "scalar legal rules")
     vp = imp.tr.feature_named("HasVPOPCNTDQ", "Subtarget.hasVPOPCNTDQ()")
-    vlx = imp.tr.feature("Subtarget.hasVLX()")
+    bitalg = imp.tr.feature_named("HasBITALG", "Subtarget.hasBITALG()")
     p = PREFIX
+
+    def pairs(types):
+        return "[" + ", ".join("[%s%s, %s%s]" % (p, t, p, t)
+                               for t in types) + "]"
+
     rs.rules[2:2] = [
-        (0, "legal (%s and in_pairs(slot(0), slot(1), "
-            "[[%sv16s32, %sv16s32], [%sv8s64, %sv8s64]]))"
-            % (vp, p, p, p, p)),
-        (0, "legal ((%s and %s) and in_pairs(slot(0), slot(1), "
-            "[[%sv4s32, %sv4s32], [%sv8s32, %sv8s32], "
-            "[%sv2s64, %sv2s64], [%sv4s64, %sv4s64]]))"
-            % (vp, vlx, p, p, p, p, p, p, p, p)),
+        (0, "legal (%s and in_pairs(slot(0), slot(1), %s))"
+            % (vp, pairs(["v4s32", "v8s32", "v16s32",
+                          "v2s64", "v4s64", "v8s64"]))),
+        (0, "legal (%s and in_pairs(slot(0), slot(1), %s))"
+            % (bitalg, pairs(["v16s8", "v32s8", "v64s8",
+                              "v8s16", "v16s16", "v32s16"]))),
     ]
 
 
