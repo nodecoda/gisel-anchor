@@ -1016,7 +1016,12 @@ class Translator:
             return self._count_cmp(m.group(1), m.group(2), "<=")
         m = re.fullmatch(r"numElementsNotPow2\s*\(\s*(\d+)\s*\)", text)
         if m:
-            return "not is_pow2(num_elems(slot(%s)))" % m.group(1)
+            # Upstream: isFixedVector() && !isPowerOf2(getNumElements()).
+            # Without the first half this also fires on scalable vectors,
+            # whose known-min count is not a power of two either.
+            return ("(is_fixed_vector(slot(%s)) and "
+                    "not is_pow2(num_elems(slot(%s))))"
+                    % (m.group(1), m.group(1)))
         m = re.fullmatch(r"typeInSet\s*\(\s*(\d+)\s*,\s*"
                          r"(\w+|\{[^{}]*\})\s*\)", text, re.S)
         if m:
