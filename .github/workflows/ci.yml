@@ -25,6 +25,7 @@ jobs:
         run: python3 -m pytest -q import/tests
         env:
           GISEL_SRC: ${{ github.workspace }}/gisel
+          GISEL_CORPUS: ${{ github.workspace }}/gisel/tests/corpus
 
   import-check:
     # The acceptance test for the corpus: re-read the pinned upstream sources
@@ -48,7 +49,9 @@ jobs:
           git -C /tmp/llvm remote add origin https://github.com/llvm/llvm-project
           git -C /tmp/llvm fetch -q --filter=blob:none --depth 1 origin "$commit"
       - name: reproduce every corpus file
-        run: python3 import/import-cxx.py --all --pin pin/PIN.json \
-               --git-repo /tmp/llvm --check
+        run: |
+          python3 import/import-cxx.py --all --pin pin/PIN.json \
+            --git-repo /tmp/llvm --check
         env:
           GISEL_SRC: ${{ github.workspace }}/gisel
+          GISEL_CORPUS: ${{ github.workspace }}/gisel/tests/corpus
