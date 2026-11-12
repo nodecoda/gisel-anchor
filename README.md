@@ -64,3 +64,20 @@ oracle/           上游规则表 -> rules/coverage/U（WP3）
 - 不接 AMDGPU。
 - 语料必须逐字节可复现：同一 pin、同一工具版本，`--check` 0 差异。
 - 冻结产物只经本项目的 refresh 脚本刷新，不手改 SHA。
+
+## pin 政策：只跟 pin，不自动跟上游 main
+
+`pin/PIN.json` 的 commit 是唯一事实来源。不存在“上游 main 动了就自动重导入”
+的 job，这是有意的：语料在无人复核时改变，会让 `ab` 的历史证据失去意义。
+
+pin 的更新是一次**显式迁移**，四步都要做：
+
+1. 改 `commit`（以及 `patches`：上游已合入的 PR 从这里删掉，对应的
+   `deviation_*` 条目也从语料里删掉）；
+2. `python3 import/import-cxx.py --all --pin pin/PIN.json --git-repo … --check`，
+   语料 diff 作为评审材料，不自动接受；
+3. 刷新冻结产物（`oracle freeze`、`ab/freeze-oracle.sh`）；
+4. `ab/replay-frozen.py` 对旧答案回放，确认改动被解释。
+
+CI 里的 `--check` 证明的是“当前语料 == 当前 pin”，不是“当前 pin == 上游最新”。
+后者要么人工定期做，要么永远不做；本项目选后者，需要时手工开迁移。
