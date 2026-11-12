@@ -554,23 +554,6 @@
     {
       "config": "*",
       "evidence": {
-        "candidates": 581,
-        "config_list": [
-          "sve"
-        ],
-        "configs": 1,
-        "evaluated": 581
-      },
-      "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
-      "opcode": "G_EXTRACT_VECTOR_ELT",
-      "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s64', 'v2s128', 'v2s128'] mem=['v2s128', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
-      "rule_index": 15,
-      "ruleset": "G_EXTRACT_VECTOR_ELT",
-      "status": "shadowed"
-    },
-    {
-      "config": "*",
-      "evidence": {
         "candidates": 629,
         "config_list": [
           "fullfp16",
