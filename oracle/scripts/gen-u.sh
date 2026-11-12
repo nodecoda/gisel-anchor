@@ -193,6 +193,12 @@ def sha(path):
 def commit(path):
     return subprocess.check_output(["git", "-C", path, "rev-parse", "HEAD"],
                                    text=True).strip()
+def commit_or_none(path):
+    try:
+        return commit(path)
+    except (OSError, subprocess.CalledProcessError):
+        return None
+gisel = os.environ.get("GISEL_SRC", os.path.join(repo, os.pardir, "gisel"))
 artifacts = {name: sha(os.path.join(out, name))
              for name in ("arity.jsonl", "universe.jsonl",
                           "coverage.json", "queries.jsonl",
@@ -208,6 +214,7 @@ freeze = {"schema": 1, "target": target,
           "pin": pin["commit"],
           "pin_patches": [p["commit"] for p in pin.get("patches", [])],
           "tree_head": commit(tree),
+          "gisel_commit": commit_or_none(gisel),
           "tool_commit": commit(repo), "budget": int(budget),
           "limit": int(limit), "sample": int(sample), "counts": counts,
           "artifacts": artifacts}

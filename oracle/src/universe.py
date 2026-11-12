@@ -1,8 +1,9 @@
 """A rule-independent LLT / memory / immediate universe for the U queries.
 
-Nothing here reads `.gisel` rules.  The only inputs are the opcode slot counts
-from `--dump-arity` and a fixed set of LLT shapes; the only thing borrowed from
-gisel is the *spelling* (`gisel.jsonl.llt_text`), so keys stay comparable.
+Nothing here reads `.gisel` rules.  The inputs are the opcode slot counts from
+`--dump-arity` and a fixed set of LLT shapes.  The LLT spelling is implemented
+here so the oracle does not import gisel at runtime; a unit test compares it
+with `gisel.llt.spell` so the two cannot drift quietly.
 
 Candidate order is deliberate: representatives first, then one-slot sweeps, then
 a seeded random fill.  The runner stops as soon as every rule has a witness, so
@@ -14,8 +15,6 @@ from __future__ import annotations
 import json
 import random
 from typing import Iterable, Iterator
-
-from gisel.jsonl import llt_text
 
 # --- LLT building blocks -------------------------------------------------
 
@@ -141,7 +140,16 @@ REPRESENTATIVES = [("scalar", 8), ("scalar", 16), ("scalar", 32),
 
 
 def spell(t: tuple) -> str:
-    return llt_text(t)
+    """The spelling `gisel.llt.spell` produces; kept local on purpose."""
+    if t[0] == "invalid":
+        return "LLT_invalid"
+    if t[0] == "bf16":
+        return "bf16"
+    if t[0] == "pointer":
+        return "p%d:%s" % (t[1], t[2])
+    if t[0] == "vector":
+        return ("nxv" if t[2] else "v") + str(t[1]) + spell(t[3])
+    return {"scalar": "s", "integer": "i", "float": "f"}[t[0]] + str(t[1])
 
 
 def spell_mem(mem: tuple | None) -> list | None:
