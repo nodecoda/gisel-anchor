@@ -1,0 +1,278 @@
+diff --git a/llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h b/llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h
+index d512fe607eac..debf32b02aa6 100644
+--- a/llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h
++++ b/llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h
+@@ -226,6 +226,15 @@ inline LegalityPredicate typeIsNot(unsigned TypeIdx, LLT Type) {
+          };
+ }
+ 
++/// True iff the type at TypeIdx differs from the memory type carried by the
++/// descriptor at MemIdx.  G_STORE uses this to leave a store whose value type
++/// is not the memory type to its custom handler.
++inline LegalityPredicate memTypeIsNot(unsigned TypeIdx, unsigned MemIdx) {
++  return [=](const LegalityQuery &Query) {
++           return Query.Types[TypeIdx] != Query.MMODescrs[MemIdx].MemoryTy;
++         };
++}
++
+ /// True iff the given types for the given pair of type indexes is one of the
+ /// specified type pairs.
+ LLVM_ABI LegalityPredicate
+@@ -1157,6 +1166,7 @@ public:
+   /// Widen the scalar or element to match the scalar size of another.
+   LegalizeRuleSet &minScalarSameAs(unsigned TypeIdx, unsigned LargeTypeIdx) {
+     typeIdx(TypeIdx);
++    typeIdx(LargeTypeIdx);
+     return actionIf(
+         LegalizeAction::WidenScalar,
+         [=](const LegalityQuery &Query) {
+@@ -1169,6 +1179,7 @@ public:
+   /// Narrow the scalar or element to match the scalar size of another.
+   LegalizeRuleSet &maxScalarSameAs(unsigned TypeIdx, unsigned NarrowTypeIdx) {
+     typeIdx(TypeIdx);
++    typeIdx(NarrowTypeIdx);
+     return actionIf(
+         LegalizeAction::NarrowScalar,
+         [=](const LegalityQuery &Query) {
+@@ -1319,6 +1330,241 @@ public:
+         .clampMaxNumElements(TypeIdx, EltTy, NumElts);
+   }
+ 
++  //===--------------------------------------------------------------------===//
++  // Core IR shims.
++  //
++  // One method per primitive the sort-checked core IR can lower.  The guard is
++  // always the first argument (`LegalizeRuleSet::always` when the rule has
++  // none), so guarded and unguarded rules share one call shape instead of
++  // depending on which overload the fused builder happens to declare.  Every
++  // body composes existing LegalityPredicates and LegalizeMutations; no new
++  // mutation factory is introduced.
++  //===--------------------------------------------------------------------===//
++
++  LegalizeRuleSet &coreWidenScalarToNextPow2(LegalityPredicate P,
++                                             unsigned TypeIdx,
++                                             unsigned MinSize = 0) {
++    using namespace LegalityPredicates;
++    return actionIf(
++        LegalizeAction::WidenScalar, all(P, sizeNotPow2(typeIdx(TypeIdx))),
++        LegalizeMutations::widenScalarOrEltToNextPow2(TypeIdx, MinSize));
++  }
++
++  LegalizeRuleSet &coreWidenScalarToNextMultipleOf(LegalityPredicate P,
++                                                   unsigned TypeIdx,
++                                                   unsigned Size) {
++    using namespace LegalityPredicates;
++    return actionIf(
++        LegalizeAction::WidenScalar,
++        all(P, sizeNotMultipleOf(typeIdx(TypeIdx), Size)),
++        LegalizeMutations::widenScalarOrEltToNextMultipleOf(TypeIdx, Size));
++  }
++
++  LegalizeRuleSet &coreMinScalar(LegalityPredicate P, unsigned TypeIdx,
++                                 const LLT Ty) {
++    using namespace LegalityPredicates;
++    using namespace LegalizeMutations;
++    return actionIf(LegalizeAction::WidenScalar,
++                    all(P, scalarNarrowerThan(TypeIdx, Ty.getSizeInBits())),
++                    changeElementSizeTo(typeIdx(TypeIdx), Ty));
++  }
++
++  /// The size comparison is evaluated before the free-form guard, in the same
++  /// order as `minScalarEltSameAsIf`.  This is not cosmetic: the guard may
++  /// inspect the other slot (`getElementType()` on a scalar pointer, say), and
++  /// the plain builder never runs it on a query its own comparison rejects.
++  LegalizeRuleSet &coreMinScalarSameAs(LegalityPredicate P, unsigned TypeIdx,
++                                       unsigned LargeTypeIdx) {
++    using namespace LegalizeMutations;
++    typeIdx(TypeIdx);
++    typeIdx(LargeTypeIdx);
++    return actionIf(
++        LegalizeAction::WidenScalar,
++        [=](const LegalityQuery &Query) {
++          return Query.Types[LargeTypeIdx].getScalarSizeInBits() >
++                     Query.Types[TypeIdx].getScalarSizeInBits() &&
++                 P(Query);
++        },
++        changeElementSizeTo(TypeIdx, LargeTypeIdx));
++  }
++
++  LegalizeRuleSet &coreWidenScalarOrEltToNextPow2(LegalityPredicate P,
++                                                  unsigned TypeIdx,
++                                                  unsigned MinSize = 0) {
++    using namespace LegalityPredicates;
++    return actionIf(
++        LegalizeAction::WidenScalar,
++        all(P, scalarOrEltSizeNotPow2(typeIdx(TypeIdx))),
++        LegalizeMutations::widenScalarOrEltToNextPow2(TypeIdx, MinSize));
++  }
++
++  LegalizeRuleSet &coreWidenScalarOrEltToNextMultipleOf(LegalityPredicate P,
++                                                        unsigned TypeIdx,
++                                                        unsigned Size) {
++    using namespace LegalityPredicates;
++    return actionIf(
++        LegalizeAction::WidenScalar,
++        [=](const LegalityQuery &Query) {
++          return P(Query) &&
++                 Query.Types[TypeIdx].getScalarSizeInBits() % Size != 0;
++        },
++        LegalizeMutations::widenScalarOrEltToNextMultipleOf(TypeIdx, Size));
++  }
++
++  LegalizeRuleSet &coreWidenScalarOrEltToNextPow2OrMinSize(LegalityPredicate P,
++                                                           unsigned TypeIdx,
++                                                           unsigned MinSize) {
++    using namespace LegalityPredicates;
++    return actionIf(
++        LegalizeAction::WidenScalar,
++        all(P, any(scalarOrEltNarrowerThan(TypeIdx, MinSize),
++                   scalarOrEltSizeNotPow2(typeIdx(TypeIdx)))),
++        LegalizeMutations::widenScalarOrEltToNextPow2(TypeIdx, MinSize));
++  }
++
++  /// Widen a fixed vector's element size until the vector reaches
++  /// \p VectorSize bits, keeping the lane count.  The element size is
++  /// `VectorSize / NumElts` exactly as the fused method computes it; the
++  /// division is intentionally integral.
++  LegalizeRuleSet &coreWidenVectorEltsToVectorMinSize(LegalityPredicate P,
++                                                      unsigned TypeIdx,
++                                                      unsigned VectorSize) {
++    return actionIf(
++        LegalizeAction::WidenScalar,
++        [=](const LegalityQuery &Query) {
++          const LLT VecTy = Query.Types[TypeIdx];
++          return P(Query) && VecTy.isFixedVector() &&
++                 VecTy.getSizeInBits() < VectorSize;
++        },
++        [=](const LegalityQuery &Query) {
++          const LLT VecTy = Query.Types[TypeIdx];
++          unsigned NumElts = VecTy.getNumElements();
++          unsigned MinSize = VectorSize / NumElts;
++          LLT NewTy = LLT::fixed_vector(
++              NumElts, VecTy.getElementType().changeElementSize(MinSize));
++          return std::make_pair(TypeIdx, NewTy);
++        });
++  }
++
++  LegalizeRuleSet &coreMinScalarOrElt(LegalityPredicate P, unsigned TypeIdx,
++                                      const LLT Ty) {
++    using namespace LegalityPredicates;
++    using namespace LegalizeMutations;
++    return actionIf(
++        LegalizeAction::WidenScalar,
++        all(P, scalarOrEltNarrowerThan(TypeIdx, Ty.getScalarSizeInBits())),
++        changeElementSizeTo(typeIdx(TypeIdx), Ty));
++  }
++
++  LegalizeRuleSet &coreMaxScalar(LegalityPredicate P, unsigned TypeIdx,
++                                 const LLT Ty) {
++    using namespace LegalityPredicates;
++    using namespace LegalizeMutations;
++    return actionIf(LegalizeAction::NarrowScalar,
++                    all(P, scalarWiderThan(TypeIdx, Ty.getSizeInBits())),
++                    changeElementSizeTo(typeIdx(TypeIdx), Ty));
++  }
++
++  /// Same order as `minScalarEltSameAsIf` above and `maxScalarEltSameAsIf`.
++  LegalizeRuleSet &coreMaxScalarSameAs(LegalityPredicate P, unsigned TypeIdx,
++                                       unsigned NarrowTypeIdx) {
++    using namespace LegalizeMutations;
++    typeIdx(TypeIdx);
++    typeIdx(NarrowTypeIdx);
++    return actionIf(
++        LegalizeAction::NarrowScalar,
++        [=](const LegalityQuery &Query) {
++          return Query.Types[NarrowTypeIdx].getScalarSizeInBits() <
++                     Query.Types[TypeIdx].getScalarSizeInBits() &&
++                 P(Query);
++        },
++        changeElementSizeTo(TypeIdx, NarrowTypeIdx));
++  }
++
++  LegalizeRuleSet &coreMaxScalarOrElt(LegalityPredicate P, unsigned TypeIdx,
++                                      const LLT Ty) {
++    using namespace LegalityPredicates;
++    using namespace LegalizeMutations;
++    return actionIf(
++        LegalizeAction::NarrowScalar,
++        all(P, scalarOrEltWiderThan(TypeIdx, Ty.getScalarSizeInBits())),
++        changeElementSizeTo(typeIdx(TypeIdx), Ty));
++  }
++
++  LegalizeRuleSet &coreMoreElementsToNextPow2(LegalityPredicate P,
++                                              unsigned TypeIdx) {
++    using namespace LegalityPredicates;
++    return actionIf(LegalizeAction::MoreElements,
++                    all(P, numElementsNotPow2(typeIdx(TypeIdx))),
++                    LegalizeMutations::moreElementsToNextPow2(TypeIdx));
++  }
++
++  LegalizeRuleSet &coreFewerElementsToType(LegalityPredicate P,
++                                           unsigned TypeIdx, const LLT Ty) {
++    using namespace LegalizeMutations;
++    return actionIf(
++        LegalizeAction::FewerElements,
++        [=](const LegalityQuery &Query) {
++          const LLT T = Query.Types[TypeIdx];
++          return P(Query) && T.isVector() &&
++                 T.getSizeInBits() > Ty.getSizeInBits();
++        },
++        changeElementTo(TypeIdx, Ty));
++  }
++
++  LegalizeRuleSet &coreBitcastTo(LegalityPredicate P, unsigned TypeIdx,
++                                 const LLT Ty) {
++    using namespace LegalizeMutations;
++    return bitcastIf(P, changeElementTo(TypeIdx, Ty));
++  }
++
++  /// Assign the slot a whole type the rule names, instead of resizing its
++  /// element.  The type is an arbitrary expression (`SameAs`, `VecOf`,
++  /// `DivLanes`, ...), so the shim is handed the mutation rather than a
++  /// literal; the rule's guard is the entire condition, exactly as it is for
++  /// the free-form builders these replace.
++  LegalizeRuleSet &coreWidenTo(LegalityPredicate P, unsigned TypeIdx,
++                               LegalizeMutation M) {
++    markAllIdxsAsCovered();
++    return actionIf(LegalizeAction::WidenScalar, P, M);
++  }
++  LegalizeRuleSet &coreNarrowTo(LegalityPredicate P, unsigned TypeIdx,
++                                LegalizeMutation M) {
++    markAllIdxsAsCovered();
++    return actionIf(LegalizeAction::NarrowScalar, P, M);
++  }
++  LegalizeRuleSet &coreMoreTo(LegalityPredicate P, unsigned TypeIdx,
++                              LegalizeMutation M) {
++    markAllIdxsAsCovered();
++    return actionIf(LegalizeAction::MoreElements, P, M);
++  }
++  LegalizeRuleSet &coreFewerTo(LegalityPredicate P, unsigned TypeIdx,
++                               LegalizeMutation M) {
++    markAllIdxsAsCovered();
++    return actionIf(LegalizeAction::FewerElements, P, M);
++  }
++  LegalizeRuleSet &coreBitcastToType(LegalityPredicate P, unsigned TypeIdx,
++                                     LegalizeMutation M) {
++    markAllIdxsAsCovered();
++    return actionIf(LegalizeAction::Bitcast, P, M);
++  }
++
++  /// Terminal actions.  There is nothing to mutate, so the guard is the whole
++  /// rule; the `core*` spelling keeps a core rule and a hand-written chain
++  /// reading the same way.
++  LegalizeRuleSet &coreLegalIf(LegalityPredicate P) { return legalIf(P); }
++  LegalizeRuleSet &coreCustomIf(LegalityPredicate P) { return customIf(P); }
++  LegalizeRuleSet &coreLowerIf(LegalityPredicate P) { return lowerIf(P); }
++  LegalizeRuleSet &coreUnsupportedIf(LegalityPredicate P) {
++    return unsupportedIf(P);
++  }
++  LegalizeRuleSet &coreLibcallIf(LegalityPredicate P) { return libcallIf(P); }
++  /// Scalarize, like the action it names, requires the slot to be a vector;
++  /// that is part of the action rather than of the guard.
++  LegalizeRuleSet &coreScalarizeIf(LegalityPredicate P, unsigned TypeIdx) {
++    return scalarizeIf(P, TypeIdx);
++  }
++
+   /// Check if there is no type index which is obviously not handled by the
+   /// LegalizeRuleSet in any way at all.
+   /// \pre Type indices of the opcode form a dense [0, \p NumTypeIdxs) set.

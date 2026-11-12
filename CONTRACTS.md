@@ -28,6 +28,9 @@ canonical 副本在 gisel 仓库 `spec/cases-format.md`；本项目不得单方�
 - `commit` 是纯上游 commit；本地 worktree 的 patch 不能改变导入结果。
 - `patches` 列出本项目为对拍在官方侧携带的未合并 PR；语料若要求 post-fix 行为，
   必须同时登记 `deviations`（见 `gisel/tests/corpus/*.gisel` 现状）。
+- `official_base.deviations` 的每一条都带 `patch` 与 `patch_sha256`。
+  `make-base.sh` 先应用 `patches`、再按顺序应用这些 patch，因此
+  `--verify` 能从 `PIN.json` 单独重建官方基线；patch 被改写会在应用前停止。
 - `sha256` 针对 `sources[*].path` 的原始字节。
 - 消费者只读。改动 pin 是一次显式迁移：重跑 `import --all --check`（rc=0）
   与 `pin/make-base.sh --verify`（rc=0），两者都过才算迁移完成。

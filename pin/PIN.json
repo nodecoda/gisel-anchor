@@ -99,19 +99,25 @@
         "path": "llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp",
         "commit": "535d3873df47",
         "kind": "behaviour",
-        "effect": "numElements() spells out the release-build answer (0) for scalar element counts instead of asserting. The rule text is unchanged; an assertions build now answers the scalar queries a release build would. This is the one local change that can change an official answer."
+        "effect": "numElements() spells out the release-build answer (0) for scalar element counts instead of asserting. The rule text is unchanged; an assertions build now answers the scalar queries a release build would. This is the one local change that can change an official answer.",
+        "patch": "deviations/535d3873-aarch64-numelements.patch",
+        "patch_sha256": "b9304ce1744c141ae888434c3d0873b00138caaa7fbef949b9615ec5a709c128"
       },
       {
         "path": "llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp",
         "commit": "85a4da33012a",
         "kind": "behaviour-unreachable",
-        "effect": "memSizeInBytesNotPow2() reads the known minimum of a scalable TypeSize instead of the fatal implicit conversion. No target in this tree references that predicate, so it cannot change an official answer; it still has to be declared because the file's bytes differ from the pin."
+        "effect": "memSizeInBytesNotPow2() reads the known minimum of a scalable TypeSize instead of the fatal implicit conversion. No target in this tree references that predicate, so it cannot change an official answer; it still has to be declared because the file's bytes differ from the pin.",
+        "patch": "deviations/85a4da33-legalitypredicates-memsize.patch",
+        "patch_sha256": "5a7fdc148ec15f9620ebb18bbc711053b8b08ae2e651c98ce3352dc36fa88bd0"
       },
       {
         "path": "llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h",
         "commit": "3f2331a1b859..700e551714cc",
         "kind": "harness-only",
-        "effect": "Adds the core* builders (coreMinScalarSameAs, coreClampNumElements, ...) that the generated constructor calls. Methods only, no data members, and no upstream constructor calls them, so the official library's answers are unchanged; the additions exist because the generated include cannot be compiled against a pin-only header."
+        "effect": "Adds the core* builders (coreMinScalarSameAs, coreClampNumElements, ...) that the generated constructor calls. Methods only, no data members, and no upstream constructor calls them, so the official library's answers are unchanged; the additions exist because the generated include cannot be compiled against a pin-only header.",
+        "patch": "deviations/700e5517-legalizerinfo-core-builders.patch",
+        "patch_sha256": "8665ceea2e6f0ee5643649d7536853c3f2bdd616b08f75f5e5bf69407de35efd"
       }
     ],
     "files": {
@@ -127,6 +133,7 @@
       "llvm/lib/Target/SPIRV/SPIRVLegalizerInfo.cpp": "e404ba675047cbc8eb48bf87bbc2a67d4d7c926d2ce5ad4f59e3fe0a33361208",
       "llvm/lib/Target/WebAssembly/GISel/WebAssemblyLegalizerInfo.cpp": "c6409b1d4eb1b44a7e8d0b9fbb4332497e4cb6d7f2c74ba42482ccb392a5edd8",
       "llvm/lib/Target/X86/GISel/X86LegalizerInfo.cpp": "3b3e8ee85189a04476eda78eb054e9d477f4929b4a24128cdbaf78b61a60aeeb"
-    }
+    },
+    "note": "The corpus is imported from `import_commit`; the rule sources below are that commit plus the declared patches and the three declared local deviations.  `pin/make-base.sh` rebuilds the tree by applying `patches` and then the `deviations` patch files; `--verify` compares all twelve files in `files`.  The deviation patches are generated from the fork commits and are byte-checked against `patch_sha256`, so the official baseline is reconstructible from this manifest alone."
   }
 }

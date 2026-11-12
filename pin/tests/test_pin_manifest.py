@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import unittest
 from pathlib import Path
@@ -33,6 +34,18 @@ class PinManifestTest(unittest.TestCase):
             and "informational" not in path
         ]
         self.assertEqual(leaks, [])
+
+    def test_every_deviation_has_a_checked_patch(self):
+        deviations = self.pin["official_base"]["deviations"]
+        self.assertEqual(len(deviations), 3)
+        for dev in deviations:
+            self.assertIn("patch", dev, dev["path"])
+            self.assertIn("patch_sha256", dev, dev["path"])
+            patch = PIN.parent / dev["patch"]
+            data = patch.read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(),
+                             dev["patch_sha256"], dev["path"])
+            self.assertIn(("b/" + dev["path"]).encode(), data, dev["path"])
 
     def test_the_content_map_is_still_there(self):
         files = self.pin["official_base"]["files"]
