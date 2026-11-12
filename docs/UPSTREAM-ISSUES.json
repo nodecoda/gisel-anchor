@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "note": "Upstream LLVM issues this work depends on.  `repro` names the smallest input we have; `reachable` says whether a front end can produce it.  Keep the list short: an entry here is a claim that a real build aborts, not a place to park speculation.",
+  "issues": [
+    {
+      "id": 241630,
+      "url": "https://github.com/llvm/llvm-project/issues/241630",
+      "target": "ppc",
+      "title": "PPC GlobalISel aborts on a legal <16 x i32> G_AND (bitcastIf ignores total bit width)",
+      "status": "open",
+      "filed": "2026-11-12",
+      "reachable": "ir",
+      "repro": "llc -mtriple=powerpc64le-unknown-linux-gnu -global-isel -O2 ppc-and.ll"
+    },
+    {
+      "id": 241631,
+      "url": "https://github.com/llvm/llvm-project/issues/241631",
+      "target": "aarch64",
+      "title": "AArch64 arm64_32 GlobalISel aborts on a legal <2 x ptr> shufflevector",
+      "status": "open",
+      "filed": "2026-11-12",
+      "reachable": "ir",
+      "repro": "llc -mtriple=arm64_32-apple-ios7.0 -global-isel -O2 a64-shuf2.ll"
+    },
+    {
+      "id": 241336,
+      "url": "https://github.com/llvm/llvm-project/issues/241336",
+      "target": "aarch64",
+      "title": "AArch64 arm64_32 GlobalISel rejects a legal <4 x ptr> bitcast",
+      "status": "open",
+      "filed": "2026-11-11",
+      "reachable": "ir",
+      "repro": "llc -mtriple=arm64_32-apple-ios7.0 -global-isel -O2 a64-ptr4.ll"
+    },
+    {
+      "id": 220802,
+      "url": "https://github.com/llvm/llvm-project/issues/220802",
+      "target": "x86",
+      "title": "X86 GlobalISel vector G_CTPOP aborts or loops in release builds",
+      "status": "open",
+      "filed": "2026-10-31",
+      "reachable": "ir",
+      "repro": "llc -mtriple=x86_64-unknown-linux-gnu -global-isel -O2 <16 x i8> llvm.ctpop"
+    },
+    {
+      "id": 236651,
+      "url": "https://github.com/llvm/llvm-project/issues/236651",
+      "target": "x86",
+      "title": "Pointer result reaches changeElementSize, and MachineVerifier accepts it",
+      "status": "open",
+      "filed": "2026-10-31",
+      "reachable": "mir",
+      "repro": "llc -global-isel -run-pass=legalizer pointer-ctpop.mir"
+    }
+  ]
+}
