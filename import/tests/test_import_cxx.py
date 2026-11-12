@@ -301,7 +301,8 @@ class PinnedRevision(unittest.TestCase):
         r = run("--all", "--pin", str(PIN), "--git-repo", str(LLVM_GIT),
                 "--check")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
-        self.assertEqual(r.stdout.count(": matches"), 9, r.stdout)
+        self.assertEqual(r.stdout.count(": matches"), 10, r.stdout)
+        self.assertIn("import-report.json: matches", r.stdout)
         self.assertEqual(r.stdout.count(": read "), 9, r.stdout)
 
     def test_pin_records_one_commit_for_every_target(self):

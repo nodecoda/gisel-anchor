@@ -3749,7 +3749,7 @@ def parse_problem(text):
 
 
 def transcribe(spec, source, out):
-    """Run the transcription; return (exit code, generated text)."""
+    """Run the transcription; return (exit code, generated text, report)."""
     source = Path(source)
     text = source.read_text()
     STATS["calls"].clear()
@@ -3820,6 +3820,30 @@ def transcribe(spec, source, out):
 
     rules = sum(len(rs.rules) for rs in imp.rulesets)
     rulesets = sum(1 for rs in imp.rulesets if rs.rules)
+    report = {
+        "target": spec.name,
+        "opcode_source": spec.rel,
+        "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "corpus_name": spec.corpus_name,
+        "corpus_sha256": hashlib.sha256(generated.encode()).hexdigest(),
+        "rulesets": rulesets,
+        "rules": rules,
+        "refused": [{"line": line, "why": why} for line, why in refusals],
+        "skipped": [{"line": line, "why": why} for line, why in imp.skipped],
+        "ignored": [{"line": line, "why": why} for line, why in imp.ignored],
+        "opaque": emitted_opaque,
+        "counts": {
+            "rulesets": rulesets,
+            "rules": rules,
+            "refused": len(refusals),
+            "skipped": len(imp.skipped),
+            "ignored": len(imp.ignored),
+            "opaque": len(emitted_opaque),
+        },
+    }
+    if not spec.pending:
+        report["pinned"] = {"rulesets": spec.rulesets, "rules": spec.rules}
+        report["drift"] = (rulesets, rules) != (spec.rulesets, spec.rules)
     where = str(out) if out else source.name
     print("%s: %d rulesets, %d rules, %d refused"
           % (where, rulesets, rules, len(refusals)))
@@ -3860,7 +3884,7 @@ def transcribe(spec, source, out):
         rc = 1
     elif out is not None:
         Path(out).write_text(generated)
-    return rc, generated
+    return rc, generated, report
 
 
 def show_stats():
@@ -3923,6 +3947,7 @@ def main(argv=None):
     out_dir = Path(args.out_dir) if args.out_dir else CORPUS_DIR
 
     rc = 0
+    reports = {}
     for spec in specs:
         source = find_source(spec, args)
         if args.all:
@@ -3936,21 +3961,49 @@ def main(argv=None):
             try:
                 old = dest.read_text()
             except FileNotFoundError:
+                old = None
+            code, generated, report = transcribe(spec, source, None)
+            reports[spec.name] = report
+            if old is None:
                 print("%s: missing (%s)" % (dest, digest))
                 rc = 1
-                continue
-            code, generated = transcribe(spec, source, None)
-            if generated != old:
+            elif generated != old:
                 print("%s: DIFFERS (source sha256 %s)" % (dest, digest))
                 rc = 1
             else:
                 print("%s: matches (source sha256 %s)" % (dest, digest))
             rc = rc or code
         else:
-            code, _ = transcribe(spec, source, dest)
+            code, _, report = transcribe(spec, source, dest)
+            reports[spec.name] = report
             rc = rc or code
         if args.stats:
             show_stats()
+
+    if args.all:
+        # The machine-readable denominator.  The generated file header keeps
+        # `refusals[:40]` as a comment; this file is never truncated, so a
+        # consumer can tell whether a migration added or removed a refusal.
+        report_path = out_dir / "import-report.json"
+        payload = {
+            "schema": 1,
+            "targets": {name: reports[name] for name in sorted(reports)},
+        }
+        text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+        if args.check:
+            try:
+                old = report_path.read_text()
+            except FileNotFoundError:
+                print("%s: missing" % report_path)
+                rc = 1
+            else:
+                if old != text:
+                    print("%s: DIFFERS" % report_path)
+                    rc = 1
+                else:
+                    print("%s: matches" % report_path)
+        else:
+            report_path.write_text(text)
     return rc
 
 
