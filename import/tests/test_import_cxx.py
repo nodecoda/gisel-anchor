@@ -292,10 +292,18 @@ class ReimportedCorpora(unittest.TestCase):
                     body((CORPUS / ("%sLegalizerInfo.gisel" % target)).read_text()))
 
 
+def _readable(path):
+    """`Path.exists()` raises when a parent is unreadable (CI runners)."""
+    try:
+        return path.exists()
+    except OSError:
+        return False
+
+
 class PinnedRevision(unittest.TestCase):
     """The corpus provenance is a commit, not a working tree."""
 
-    @unittest.skipUnless(PIN.exists() and LLVM_GIT.exists(),
+    @unittest.skipUnless(_readable(PIN) and _readable(LLVM_GIT),
                          "pin file or LLVM checkout not present")
     def test_pin_reproduces_every_corpus(self):
         r = run("--all", "--pin", str(PIN), "--git-repo", str(LLVM_GIT),

@@ -3734,18 +3734,41 @@ def find_source(spec, args):
 
 
 def parse_problem(text):
-    """Why `text` is not a gisel corpus, or None when it parses."""
-    if str(GISEL_SRC) not in sys.path:
-        sys.path.insert(0, str(GISEL_SRC))
+    """Why `text` is not a gisel corpus, or None when it parses.
+
+    The check goes through the stable CLI (`gisel gen --emit=core`) instead of
+    importing `gisel.ast`.  `--emit=core` is the closest published command to
+    "this text is a corpus": it rejects syntax the parser does not know but,
+    unlike `lint`, does not require every predicate to have a C++ shim (the
+    fixtures and probes are deliberately partial).
+    """
+    with tempfile.NamedTemporaryFile("w", suffix=".gisel",
+                                     delete=False) as fh:
+        fh.write(text)
+        path = fh.name
+    core = path + ".core.json"
+    env = dict(os.environ)
+    prefix = str(GISEL_SRC)
+    env["PYTHONPATH"] = (prefix + os.pathsep + env["PYTHONPATH"]
+                         if env.get("PYTHONPATH") else prefix)
     try:
-        from gisel.ast import parse_program
-    except Exception as e:                      # pragma: no cover
-        return "cannot import gisel.ast: %s" % e
-    try:
-        parse_program(text)
-    except Exception as e:
-        return str(e)
-    return None
+        proc = subprocess.run(
+            [sys.executable, "-m", "gisel.cli", "gen", path,
+             "--emit=core", "--out", core],
+            capture_output=True, text=True, env=env,
+            cwd=str(GISEL_SRC) if GISEL_SRC.is_dir() else None)
+    except OSError as exc:                      # pragma: no cover
+        return "cannot run gisel gen: %s" % exc
+    finally:
+        for leftover in (path, core):
+            try:
+                os.unlink(leftover)
+            except OSError:
+                pass
+    if proc.returncode == 0:
+        return None
+    detail = (proc.stderr or proc.stdout).strip()
+    return detail or "gisel gen exited %d" % proc.returncode
 
 
 def transcribe(spec, source, out):
