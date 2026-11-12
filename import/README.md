@@ -17,9 +17,9 @@
 
 验收：`import --all --check` 9/9 逐字节相同，0 refused。
 
-路径说明：`import-cxx.py` 用 `GISEL_SRC`（默认 `../gisel`）导入 `gisel.ast`
-做语料解析校验；默认语料目录是 `$GISEL_SRC/tests/corpus`，可由 `GISEL_CORPUS`
-覆盖。
+路径说明：`import-cxx.py` 通过 `GISEL_SRC`（默认 `../gisel`）找到 gisel，
+用稳定命令 `gisel gen --emit=core` 做语料校验（不再导入 `gisel.ast`）；
+默认语料目录是 `$GISEL_SRC/tests/corpus`，可由 `GISEL_CORPUS` 覆盖。
 
 ## import-report.json（分母的机器可读副本）
 
