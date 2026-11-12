@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  import-tests:
+    # The importer tests drive `python3 -m gisel`, so the two repositories are
+    # checked out side by side.  They do not need an LLVM build.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: nodecoda/gisel
+          path: gisel
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+      - run: python3 -m pip install -q pytest
+      - name: compile
+        run: python3 -m compileall -q import oracle
+      - name: importer tests
+        run: python3 -m pytest -q import/tests
+        env:
+          GISEL_SRC: ${{ github.workspace }}/gisel
+
+  import-check:
+    # The acceptance test for the corpus: re-read the pinned upstream sources
+    # and require every .gisel file to match byte for byte.  A partial clone of
+    # the pinned commit is 7 MB; `git show` fetches each source blob on demand.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: nodecoda/gisel
+          path: gisel
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+      - name: fetch the pinned upstream commit
+        run: |
+          set -eu
+          commit=$(python3 -c 'import json; print(json.load(open("pin/PIN.json"))["commit"])')
+          git init -q /tmp/llvm
+          git -C /tmp/llvm remote add origin https://github.com/llvm/llvm-project
+          git -C /tmp/llvm fetch -q --filter=blob:none --depth 1 origin "$commit"
+      - name: reproduce every corpus file
+        run: python3 import/import-cxx.py --all --pin pin/PIN.json \
+               --git-repo /tmp/llvm --check
+        env:
+          GISEL_SRC: ${{ github.workspace }}/gisel

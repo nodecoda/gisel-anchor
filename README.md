@@ -34,11 +34,15 @@ upstream-source --(.gisel)------------------> gisel
 ## 验证
 
 ```sh
-python3 -m pytest -q import/tests          # 79 passed；需要 ../gisel（或 GISEL_SRC）
+python3 -m pytest -q import/tests          # 80 passed；需要 ../gisel（或 GISEL_SRC）
 
 python3 import/import-cxx.py --all --pin pin/PIN.json \
   --git-repo /home/ubuntu/llvm/llvm-project --check    # 9/9, 0 refused
 ```
+
+CI（`.github/workflows/ci.yml`）跑同样两条：`pytest -q import/tests` 不需要
+LLVM 构建；`--all --check` 用 `--filter=blob:none --depth 1` 只取 pin 的提交
+（约 7 MB，`git show` 按需拉 blob），7 秒内完成九目标逐字节比对。
 
 `--check` 默认读 `../gisel/tests/corpus`（语料是 gisel 的输入）；`GISEL_CORPUS`
 可覆盖。测试通过 `conftest.py` 把 `../gisel` 放进 `PYTHONPATH`，供 `-m gisel`
