@@ -36,7 +36,8 @@ def cmd_universe(args) -> int:
 
 def cmd_coverage(args) -> int:
     rows = coverage.merge(args.cov)
-    report = coverage.build(rows, args.target)
+    rules = coverage.load_rows(args.rules) if args.rules else None
+    report = coverage.build(rows, args.target, rules=rules)
     coverage.write(report, args.out)
     counts = report["counts"]
     print(json.dumps({"out": args.out, "target": args.target,
@@ -103,6 +104,8 @@ def main(argv=None) -> int:
     cov.add_argument("--gate", action="store_true",
                      help="fail unless every gap has a known_gaps.json entry")
     cov.add_argument("--known-gaps", default=None)
+    cov.add_argument("--rules", default=None,
+                     help="--dump-rules JSONL; supplies rule_digest")
     cov.set_defaults(func=cmd_coverage)
 
     em = sub.add_parser("emit", help="write the U query file")

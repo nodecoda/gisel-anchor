@@ -22,6 +22,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ASHR",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 12,
       "ruleset": "G_SHL",
       "status": "unexercised"
@@ -47,6 +48,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ASHR",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 14,
       "ruleset": "G_SHL",
       "status": "unexercised"
@@ -72,6 +74,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_ASHR",
       "reason": "matched but an earlier rule (index 17) always wins in every configuration that emits this clause. Example: types=['nxv1s64', 'p0:32'] mem=['nxv1s64', 64, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "ee6835ba218de866",
       "rule_index": 19,
       "ruleset": "G_SHL",
       "status": "shadowed"
@@ -97,6 +100,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BITCAST",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 12,
       "ruleset": "G_BITCAST",
       "status": "unexercised"
@@ -122,6 +126,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BITREVERSE",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 9,
       "ruleset": "G_BITREVERSE",
       "status": "unexercised"
@@ -147,6 +152,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BITREVERSE",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 11,
       "ruleset": "G_BITREVERSE",
       "status": "unexercised"
@@ -172,6 +178,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BSWAP",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_BSWAP",
       "status": "unexercised"
@@ -197,6 +204,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BSWAP",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 8,
       "ruleset": "G_BSWAP",
       "status": "unexercised"
@@ -222,6 +230,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_BUILD_VECTOR",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 3,
       "ruleset": "G_BUILD_VECTOR",
       "status": "unexercised"
@@ -247,6 +256,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_CONSTANT_FOLD_BARRIER",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 7,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
@@ -272,6 +282,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_CONSTANT_FOLD_BARRIER",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 9,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
@@ -297,6 +308,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CONSTANT_FOLD_BARRIER",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 11,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "unexercised"
@@ -322,6 +334,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTLS",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 9,
       "ruleset": "G_CTLZ",
       "status": "unexercised"
@@ -347,6 +360,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTLZ",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 9,
       "ruleset": "G_CTLZ",
       "status": "unexercised"
@@ -372,6 +386,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTPOP",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 13,
       "ruleset": "G_CTPOP",
       "status": "unexercised"
@@ -397,6 +412,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_CTPOP",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 15,
       "ruleset": "G_CTPOP",
       "status": "unexercised"
@@ -422,6 +438,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_EXTRACT_SUBVECTOR",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 9,
       "ruleset": "G_EXTRACT_SUBVECTOR",
       "status": "unexercised"
@@ -447,6 +464,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8', 'v2s8', 'p0:32'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "ee6835ba218de866",
       "rule_index": 6,
       "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
@@ -472,6 +490,10 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
       "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v4s64', 'v4s64'] mem=['v4s64', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": [
+        "1abe317a62419662",
+        "6d1ee0dcb8b0593c"
+      ],
       "rule_index": 9,
       "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
@@ -497,6 +519,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
       "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v8s32', 'v8s32'] mem=['v8s32', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "1abe317a62419662",
       "rule_index": 10,
       "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
@@ -522,6 +545,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
       "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v16s16', 'v16s16'] mem=['v16s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "1abe317a62419662",
       "rule_index": 11,
       "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
@@ -547,6 +571,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_EXTRACT_VECTOR_ELT",
       "reason": "matched but an earlier rule (index 0) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v32s8', 'v32s8'] mem=['v32s8', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "1abe317a62419662",
       "rule_index": 12,
       "ruleset": "G_EXTRACT_VECTOR_ELT",
       "status": "shadowed"
@@ -565,6 +590,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FABS",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['s16'] mem=['s16', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6cce02203e042290",
       "rule_index": 11,
       "ruleset": "G_FABS",
       "status": "shadowed"
@@ -583,6 +609,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FNEG",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['s16'] mem=['s16', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6cce02203e042290",
       "rule_index": 11,
       "ruleset": "G_FABS",
       "status": "shadowed"
@@ -608,6 +635,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_FPEXT",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_FPEXT",
       "status": "unexercised"
@@ -633,6 +661,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FREEZE",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 7,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
@@ -658,6 +687,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_FREEZE",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 9,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
@@ -683,6 +713,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_FREEZE",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 11,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "unexercised"
@@ -708,6 +739,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_ICMP",
       "reason": "matched but an earlier rule (index 9) always wins in every configuration that emits this clause. Example: types=['p0:32', 'v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 14,
       "ruleset": "G_ICMP",
       "status": "shadowed"
@@ -733,6 +765,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ICMP",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 16,
       "ruleset": "G_ICMP",
       "status": "unexercised"
@@ -758,6 +791,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ICMP",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 18,
       "ruleset": "G_ICMP",
       "status": "unexercised"
@@ -783,6 +817,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_ICMP",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 20,
       "ruleset": "G_ICMP",
       "status": "unexercised"
@@ -808,6 +843,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_IMPLICIT_DEF",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s8'] mem=['v2s8', 16, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 7,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
@@ -833,6 +869,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_IMPLICIT_DEF",
       "reason": "matched but an earlier rule (index 1) always wins in every configuration that emits this clause. Example: types=['v2s16'] mem=['v2s16', 32, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 9,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "shadowed"
@@ -858,6 +895,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_IMPLICIT_DEF",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 11,
       "ruleset": "G_IMPLICIT_DEF",
       "status": "unexercised"
@@ -883,6 +921,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_LSHR",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 12,
       "ruleset": "G_SHL",
       "status": "unexercised"
@@ -908,6 +947,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_LSHR",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 14,
       "ruleset": "G_SHL",
       "status": "unexercised"
@@ -933,6 +973,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_LSHR",
       "reason": "matched but an earlier rule (index 17) always wins in every configuration that emits this clause. Example: types=['nxv1s64', 'p0:32'] mem=['nxv1s64', 64, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "ee6835ba218de866",
       "rule_index": 19,
       "ruleset": "G_SHL",
       "status": "shadowed"
@@ -958,6 +999,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_MUL",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_MUL",
       "status": "unexercised"
@@ -983,6 +1025,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_MUL",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 8,
       "ruleset": "G_MUL",
       "status": "unexercised"
@@ -1008,6 +1051,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_PHI",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 11,
       "ruleset": "G_PHI",
       "status": "unexercised"
@@ -1033,6 +1077,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_PTR_ADD",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 3,
       "ruleset": "G_PTR_ADD",
       "status": "unexercised"
@@ -1058,6 +1103,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SDIVREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 4,
       "ruleset": "G_SREM",
       "status": "unexercised"
@@ -1083,6 +1129,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SDIVREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_SREM",
       "status": "unexercised"
@@ -1108,6 +1155,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SEXT_INREG",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_SEXT_INREG",
       "status": "unexercised"
@@ -1133,6 +1181,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SHL",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 12,
       "ruleset": "G_SHL",
       "status": "unexercised"
@@ -1158,6 +1207,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SHL",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 14,
       "ruleset": "G_SHL",
       "status": "unexercised"
@@ -1183,6 +1233,7 @@
       "follow_up": "keep it as a shadowed rule; the clause is exercised only through the earlier rule. A semantic rule id would remove the index ambiguity.",
       "opcode": "G_SHL",
       "reason": "matched but an earlier rule (index 17) always wins in every configuration that emits this clause. Example: types=['nxv1s64', 'p0:32'] mem=['nxv1s64', 64, 'NotAtomic', 'NotAtomic']. Rule indices shift when a builder omits a conditional clause, so the same index can name a different clause in another configuration.",
+      "rule_digest": "ee6835ba218de866",
       "rule_index": 19,
       "ruleset": "G_SHL",
       "status": "shadowed"
@@ -1208,6 +1259,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SHUFFLE_VECTOR",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 11,
       "ruleset": "G_SHUFFLE_VECTOR",
       "status": "unexercised"
@@ -1233,6 +1285,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 4,
       "ruleset": "G_SREM",
       "status": "unexercised"
@@ -1258,6 +1311,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_SREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_SREM",
       "status": "unexercised"
@@ -1283,6 +1337,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_TRUNC_SSAT_S",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 5,
       "ruleset": "G_TRUNC_SSAT_S",
       "status": "unexercised"
@@ -1308,6 +1363,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_TRUNC_SSAT_U",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 5,
       "ruleset": "G_TRUNC_SSAT_S",
       "status": "unexercised"
@@ -1333,6 +1389,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_TRUNC_USAT_U",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 5,
       "ruleset": "G_TRUNC_SSAT_S",
       "status": "unexercised"
@@ -1358,6 +1415,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UDIVREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 4,
       "ruleset": "G_SREM",
       "status": "unexercised"
@@ -1383,6 +1441,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UDIVREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_SREM",
       "status": "unexercised"
@@ -1408,6 +1467,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 4,
       "ruleset": "G_SREM",
       "status": "unexercised"
@@ -1433,6 +1493,7 @@
       "follow_up": "keep it out of the reachable-rule count; revisit only if LLT gains a fixed one-lane vector or a new configuration enables the feature.",
       "opcode": "G_UREM",
       "reason": "not reached by the 2400-candidate structured matrix, nor by a 6000-candidate probe of the same opcode. The remaining trigger is outside LLT's representable shape domain (a fixed one-lane vector canonicalizes to a scalar) or behind a feature that no tested configuration enables.",
+      "rule_digest": "6d1ee0dcb8b0593c",
       "rule_index": 6,
       "ruleset": "G_SREM",
       "status": "unexercised"

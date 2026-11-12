@@ -131,19 +131,21 @@ fi
 
 echo "[5/6] coverage" >&2
 KNOWN=$ROOT/known-gaps/$TARGET.json
+"$BIN" --dump-rules "$OUT/rules.jsonl"
 if [[ $GATE -eq 1 ]]; then
   if [[ -f $KNOWN ]]; then
     python3 -m oracle coverage --target "$TARGET" --out "$OUT/coverage.json" \
-      "${MAIN[@]}" "${SALVAGE[@]}" --gate --known-gaps "$KNOWN"
+      "${MAIN[@]}" "${SALVAGE[@]}" --rules "$OUT/rules.jsonl" \
+      --gate --known-gaps "$KNOWN"
   else
     python3 -m oracle coverage --target "$TARGET" --out "$OUT/coverage.json" \
-      "${MAIN[@]}" "${SALVAGE[@]}"
+      "${MAIN[@]}" "${SALVAGE[@]}" --rules "$OUT/rules.jsonl"
     echo "gate: no $KNOWN; coverage written but not approved" >&2
     exit 1
   fi
 else
   python3 -m oracle coverage --target "$TARGET" --out "$OUT/coverage.json" \
-    "${MAIN[@]}" "${SALVAGE[@]}"
+    "${MAIN[@]}" "${SALVAGE[@]}" --rules "$OUT/rules.jsonl"
 fi
 
 echo "[6/6] queries + answerable filter + FREEZE" >&2

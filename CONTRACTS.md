@@ -139,6 +139,7 @@ schema v1，一行一个 JSON 对象：
    {"schema": 1, "target": "x86", "config": "C1",
     "counts": {"witnessed": 0, "shadowed": 0, "unexercised": 0, "asserted": 0},
     "rules": [{"opcode": "G_ADD", "ruleset": "G_ADD", "rule_index": 0,
+               "rule_digest": "1abe317a62419662",
                "status": "witnessed", "cross_config": "witnessed",
                "witness": "<query key or null>", "shadowed_by": -1,
                "shadow_query": null, "evaluated": 0, "candidates": 0}]}]}
@@ -151,8 +152,10 @@ schema v1，一行一个 JSON 对象：
   （`witnessed > shadowed > unexercised`）。feature 门控的规则只在启用该
   feature 的配置里可能命中，所以**门禁按 `cross_config` 判定**：在任一配置
   被 witness 过的规则，不因其它配置的 `unexercised` 而失败。
-- 规则跨配置的身份就是 `(opcode, rule_index)`。builder 在不同配置下可能发出
-  不同条数，索引会错位；因此这个并集是**覆盖下界**，不是超集声明。
+- 规则跨配置的身份是 `(opcode, rule_index)` 加 `rule_digest`。`rule_digest`
+  是 `sha256(action + "|" + has_mutation)[:16]`，来自 `--dump-rules`；它不随
+  下标移动。builder 在不同配置下可能发出不同条数，索引会错位；因此这个并集
+  是**覆盖下界**，不是超集声明。
 
 ### 5.1 known-gaps
 
@@ -162,14 +165,21 @@ schema v1，一行一个 JSON 对象：
 ```json
 {"schema": 1, "target": "x86",
  "gaps": [{"config": "*", "opcode": "G_FREEZE", "rule_index": 1,
-           "status": "shadowed",
+           "status": "shadowed", "rule_digest": "1abe317a62419662",
            "reason": "matched but never first in all 4 tested configurations; ...",
            "follow_up": "confirm with upstream that the rule is intentionally unreachable"}]}
 ```
 
 - `config` 支持 `*`；`rule_index` 支持 `*`；`status` 支持 `*`。
+- `rule_digest` **必填**，可以是字符串或字符串数组（同一规则在不同配置下
+  签名不同时，列出全部可接受的签名）。缺 digest → `gap-without-digest`。
+- 匹配时 `rule_digest` 必须等于被判定行的 digest。只在被引用的规则前插入
+  一条规则，`rule_index` 会移到一个不同的规则上，digest 不匹配，于是原条目
+  变 `stale-gap-entry`、原规则变 `unexplained-gap`，门禁失败。
 - `reason` 与 `follow_up` 都非空，否则 gate 直接失败。
 - 条目没匹配到任何 gap 行 → `stale-gap-entry`，同样失败。
+- `python3 -m oracle coverage ... --rules <runner --dump-rules output>` 是
+  产生 digest 的唯一入口；不传 `--rules` 时所有 gap 条目都会因缺 digest 失败。
 
 ## 6 冻结
 

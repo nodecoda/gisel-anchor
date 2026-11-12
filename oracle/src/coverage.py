@@ -12,6 +12,7 @@ Nothing here guesses: every non-`witnessed` rule either appears in
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -25,6 +26,21 @@ GAP_STATUSES = ("shadowed", "unexercised", "asserted")
 # (opcode, rule_index); where a builder emits a different number of rules the
 # alignment can shift, so the union is a lower bound, never an overclaim.
 _RANK = {"asserted": 0, "unexercised": 1, "shadowed": 2, "witnessed": 3}
+
+
+def rule_digest(action: str, has_mutation: bool) -> str:
+    """Identity of one rule within its ruleset, independent of its index."""
+    text = "%s|%s" % (action, "1" if has_mutation else "0")
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+
+def rule_digests(rows: list[dict]) -> dict[tuple, str]:
+    """(config, opcode, rule_index) -> rule_digest from --dump-rules rows."""
+    out: dict[tuple, str] = {}
+    for row in rows:
+        key = (row["config"], row["opcode"], int(row["rule_index"]))
+        out[key] = rule_digest(row["action"], bool(row["has_mutation"]))
+    return out
 
 
 def load_rows(path: str | Path) -> list[dict]:
@@ -61,10 +77,11 @@ def _query_key(query: dict | None) -> str | None:
     return json.dumps(query, sort_keys=True)
 
 
-def build(rows: list[dict], target: str) -> dict:
+def build(rows: list[dict], target: str, rules: list[dict] | None = None) -> dict:
     configs: dict[str, list[dict]] = {}
     for row in rows:
         configs.setdefault(row["config"], []).append(row)
+    digests = rule_digests(rules) if rules else {}
 
     best: dict[tuple, str] = {}
     for row in rows:
@@ -86,6 +103,11 @@ def build(rows: list[dict], target: str) -> dict:
                 "opcode": row["opcode"],
                 "ruleset": row.get("ruleset", row["opcode"]),
                 "rule_index": int(row["rule_index"]),
+                "rule_digest": digests.get(
+                    (config, row.get("ruleset", row["opcode"]),
+                     int(row["rule_index"])),
+                    digests.get((config, row["opcode"],
+                                 int(row["rule_index"])))),
                 "status": status,
                 "cross_config": best[(row["opcode"], int(row["rule_index"]))],
                 "witness": _query_key(row.get("witness")),
@@ -130,6 +152,14 @@ def _matches(entry: dict, row: dict, config: str, target: str) -> bool:
     rule_index = entry.get("rule_index", "*")
     if rule_index not in ("*", row["rule_index"]):
         return False
+    if entry.get("ruleset", "*") not in ("*", row.get("ruleset")):
+        return False
+    wanted = entry.get("rule_digest")
+    if wanted:
+        if isinstance(wanted, str):
+            wanted = [wanted]
+        if row.get("rule_digest") not in wanted:
+            return False
     # Judge the cross-config class, not the per-config status: a rule that is
     # shadowed in one configuration and unexercised in another is one gap.
     status = row.get("cross_config", row["status"])
@@ -149,6 +179,9 @@ def gate(report: dict, gaps: dict) -> list[dict]:
                              "entry": entry_index})
         if not str(entry.get("follow_up", "")).strip():
             problems.append({"kind": "gap-without-follow-up",
+                             "entry": entry_index})
+        if not entry.get("rule_digest"):
+            problems.append({"kind": "gap-without-digest",
                              "entry": entry_index})
 
     for section in report["configs"]:

@@ -5,6 +5,7 @@
       "follow_up": "upstream placeholder; re-check if the constructor is edited, the gap is dead code rather than a missing query",
       "opcode": "G_ANYEXT",
       "reason": "upstream writes `.legalIf([](const LegalityQuery &) { return false; })`: the rule cannot match any query, and the `maxScalar` rule that follows it does the work",
+      "rule_digest": "682c26b96014d129",
       "rule_index": 0
     },
     {
@@ -12,6 +13,7 @@
       "follow_up": "upstream placeholder; re-check if the constructor is edited, the gap is dead code rather than a missing query",
       "opcode": "G_SEXT",
       "reason": "upstream writes `.legalIf([](const LegalityQuery &) { return false; })`: the rule cannot match any query, and the `maxScalar` rule that follows it does the work",
+      "rule_digest": "682c26b96014d129",
       "rule_index": 0
     },
     {
@@ -19,6 +21,7 @@
       "follow_up": "upstream placeholder; re-check if the constructor is edited, the gap is dead code rather than a missing query",
       "opcode": "G_TRUNC",
       "reason": "upstream writes `.legalIf([](const LegalityQuery &) { return false; })`: the rule cannot match any query, and the `maxScalar` rule that follows it does the work",
+      "rule_digest": "682c26b96014d129",
       "rule_index": 0
     },
     {
@@ -26,6 +29,7 @@
       "follow_up": "upstream placeholder; re-check if the constructor is edited, the gap is dead code rather than a missing query",
       "opcode": "G_ZEXT",
       "reason": "upstream writes `.legalIf([](const LegalityQuery &) { return false; })`: the rule cannot match any query, and the `maxScalar` rule that follows it does the work",
+      "rule_digest": "682c26b96014d129",
       "rule_index": 0
     }
   ],
