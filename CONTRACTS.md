@@ -29,8 +29,8 @@ canonical 副本在 gisel 仓库 `spec/cases-format.md`；本项目不得单方�
 - `patches` 列出本项目为对拍在官方侧携带的未合并 PR；语料若要求 post-fix 行为，
   必须同时登记 `deviations`（见 `gisel/tests/corpus/*.gisel` 现状）。
 - `sha256` 针对 `sources[*].path` 的原始字节。
-- 消费者只读。改动 pin 是一次显式迁移：重跑 `import --all --check` 并更新
-  `expected_counts.json`。
+- 消费者只读。改动 pin 是一次显式迁移：重跑 `import --all --check`（rc=0）
+  与 `pin/make-base.sh --verify`（rc=0），两者都过才算迁移完成。
 
 ## 2 语料（import 输出）
 

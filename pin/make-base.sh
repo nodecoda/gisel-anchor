@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# make-base.sh <llvm-repo> <dest> [--emit-json]
+# make-base.sh <llvm-repo> <dest> [--emit-json|--verify]
 #
 # Rebuild the official side of the A/B harness: the pin commit plus every
 # unmerged patch listed in PIN.json `patches`.
@@ -12,14 +12,21 @@ set -euo pipefail
 # reported and skipped.  Each patch becomes its own commit, so the base is
 # auditable with `git log` and diffable against a hand-built tree.
 #
-# The resulting tree must hash to PIN.json `official_base.files`; the script
-# verifies that and exits non-zero if it does not.
+# Without a mode the script prints the actual hash of every file that can
+# change a legalizer answer.  `--verify` compares that map with PIN.json
+# `official_base.files` and exits non-zero on a mismatch; `--emit-json` prints
+# the map as JSON.  Both modes are implemented once, in verify-base.py, so
+# ab/check-pin.sh and this script cannot disagree.
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 PIN=$HERE/PIN.json
-REPO=${1:?usage: make-base.sh <llvm-repo> <dest> [--emit-json]}
-DEST=${2:?usage: make-base.sh <llvm-repo> <dest> [--emit-json]}
+REPO=${1:?usage: make-base.sh <llvm-repo> <dest> [--emit-json|--verify]}
+DEST=${2:?usage: make-base.sh <llvm-repo> <dest> [--emit-json|--verify]}
 MODE=${3:-}
+case "$MODE" in
+  ""|--emit-json|--verify) ;;
+  *) echo "make-base: unknown mode $MODE" >&2; exit 2 ;;
+esac
 
 COMMIT=$(python3 -c "import json;print(json.load(open('$PIN'))['commit'])")
 [ -e "$DEST" ] && { echo "make-base: $DEST already exists" >&2; exit 1; }
@@ -52,24 +59,4 @@ for p in json.load(open('$PIN'))['patches']:
       -m "pin: apply #$pr $title" -m "Applied from $commit, restricted to files that exist at $COMMIT."
 done
 
-python3 - "$DEST" "$PIN" "$MODE" <<'PY'
-import hashlib, json, pathlib, sys
-tree, pin_path, mode = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3]
-pin = json.loads(pin_path.read_text())
-paths = [v["path"] for v in pin["sources"].values()] + [
-    "llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h",
-    "llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp",
-    "llvm/lib/CodeGen/GlobalISel/LegalizerInfo.cpp",
-]
-actual = {rel: hashlib.sha256((tree / rel).read_bytes()).hexdigest()
-          for rel in sorted(paths)}
-if mode == "--emit-json":
-    print(json.dumps(actual, indent=2))
-else:
-    print("pin base built at %s" % tree)
-    for rel, sha in actual.items():
-        print("  %s  %s" % (sha[:16], rel))
-    print("This is the pin-only cross-check tree. The A/B baseline is the "
-          "frozen official side in PIN.json `official_base`; see "
-          "ab/docs/OFFICIAL-BASE.md.")
-PY
+python3 "$HERE/verify-base.py" "$DEST" "$PIN" ${MODE:+"$MODE"}

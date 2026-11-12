@@ -22,7 +22,7 @@ jobs:
       - name: compile
         run: python3 -m compileall -q import oracle
       - name: importer tests
-        run: python3 -m pytest -q import/tests
+        run: python3 -m pytest -q import/tests pin/tests
         env:
           GISEL_SRC: ${{ github.workspace }}/gisel
           GISEL_CORPUS: ${{ github.workspace }}/gisel/tests/corpus
