@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 TOOL = ROOT / "import" / "import-cxx.py"
@@ -15,43 +16,24 @@ CORPUS = Path(os.environ.get(
     "GISEL_CORPUS", ROOT.parent / "gisel" / "tests" / "corpus"))
 FIXTURE = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor.cpp"
 PIN = ROOT / "pin" / "PIN.json"
-LLVM_GIT = Path(os.environ.get("GS_LLVM_GIT", "/home/ubuntu/llvm/llvm-project"))
-RISCV_SRC = Path(os.environ.get(
-    "GS_RISCV_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/RISCV/GISel/"
-    "RISCVLegalizerInfo.cpp"))
-X86_SRC = Path(os.environ.get(
-    "GS_X86_SRC",
-    "/home/ubuntu/llvm/trees/pr-lane/llvm/lib/Target/X86/GISel/"
-    "X86LegalizerInfo.cpp"))
-AARCH64_SRC = Path(os.environ.get(
-    "GS_AARCH64_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/AArch64/GISel/"
-    "AArch64LegalizerInfo.cpp"))
-M68K_SRC = Path(os.environ.get(
-    "GS_M68K_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/M68k/GISel/"
-    "M68kLegalizerInfo.cpp"))
-PPC_SRC = Path(os.environ.get(
-    "GS_POWERPC_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/PowerPC/GISel/"
-    "PPCLegalizerInfo.cpp"))
-WASM_SRC = Path(os.environ.get(
-    "GS_WEBASSEMBLY_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/WebAssembly/GISel/"
-    "WebAssemblyLegalizerInfo.cpp"))
-ARM_SRC = Path(os.environ.get(
-    "GS_ARM_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/ARM/"
-    "ARMLegalizerInfo.cpp"))
-MIPS_SRC = Path(os.environ.get(
-    "GS_MIPS_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/Mips/"
-    "MipsLegalizerInfo.cpp"))
-SPIRV_SRC = Path(os.environ.get(
-    "GS_SPIRV_SRC",
-    "/home/ubuntu/llvm/trees/explore/llvm/lib/Target/SPIRV/"
-    "SPIRVLegalizerInfo.cpp"))
+
+
+def _env_path(name):
+    """A source tree is opt-in: never fall back to a developer's home."""
+    value = os.environ.get(name)
+    return Path(value) if value else None
+
+
+LLVM_GIT = _env_path("GS_LLVM_GIT")
+RISCV_SRC = _env_path("GS_RISCV_SRC")
+X86_SRC = _env_path("GS_X86_SRC")
+AARCH64_SRC = _env_path("GS_AARCH64_SRC")
+M68K_SRC = _env_path("GS_M68K_SRC")
+PPC_SRC = _env_path("GS_POWERPC_SRC")
+WASM_SRC = _env_path("GS_WEBASSEMBLY_SRC")
+ARM_SRC = _env_path("GS_ARM_SRC")
+MIPS_SRC = _env_path("GS_MIPS_SRC")
+SPIRV_SRC = _env_path("GS_SPIRV_SRC")
 
 
 def run(*args, env=None):
@@ -278,7 +260,7 @@ class ReimportedCorpora(unittest.TestCase):
                 ("ARM", ARM_SRC, 52, 96),
                 ("Mips", MIPS_SRC, 48, 95),
                 ("SPIRV", SPIRV_SRC, 83, 353)):
-            if not src.exists():
+            if not _readable(src):
                 continue
             with self.subTest(target=target), \
                     tempfile.TemporaryDirectory() as d:
@@ -294,10 +276,21 @@ class ReimportedCorpora(unittest.TestCase):
 
 def _readable(path):
     """`Path.exists()` raises when a parent is unreadable (CI runners)."""
+    if path is None:
+        return False
     try:
         return path.exists()
     except OSError:
         return False
+
+
+class SourceDiscovery(unittest.TestCase):
+    def test_unreadable_parent_is_skipped(self):
+        with mock.patch.object(Path, "exists", side_effect=PermissionError):
+            self.assertFalse(_readable(Path("/home/ubuntu/llvm/llvm-project")))
+
+    def test_missing_environment_variable_is_not_a_path(self):
+        self.assertFalse(_readable(None))
 
 
 class PinnedRevision(unittest.TestCase):
@@ -385,7 +378,7 @@ class RisCvCorpus(unittest.TestCase):
         self.assertIn("0 error(s)", r.stdout)
         self.assertIn("402 rule(s)", r.stdout)
 
-    @unittest.skipUnless(RISCV_SRC.exists(), "RISCVLegalizerInfo.cpp not present")
+    @unittest.skipUnless(_readable(RISCV_SRC), "RISCVLegalizerInfo.cpp not present")
     def test_reimport_reproduces_the_checked_in_corpus(self):
         with tempfile.TemporaryDirectory() as d:
             out = Path(d) / "R.gisel"
