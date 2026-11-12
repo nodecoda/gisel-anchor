@@ -16,8 +16,8 @@ jobs:
           repository: nodecoda/gisel
           path: gisel
           # Pinned on purpose: the evidence names the gisel it was built
-          # with.  Bump this and FREEZE.json together.
-          ref: a33eafdb5951468f4901eac59371ec95b6f23dd1
+          # with.  Bump this and RELEASE.json together.
+          ref: 4c7651341648e6d89434cf39cc81dcd537dae6f6
       - name: show the gisel pin
         run: git -C gisel rev-parse HEAD
       - uses: actions/setup-python@v7
@@ -44,8 +44,8 @@ jobs:
           repository: nodecoda/gisel
           path: gisel
           # Pinned on purpose: the evidence names the gisel it was built
-          # with.  Bump this and FREEZE.json together.
-          ref: a33eafdb5951468f4901eac59371ec95b6f23dd1
+          # with.  Bump this and RELEASE.json together.
+          ref: 4c7651341648e6d89434cf39cc81dcd537dae6f6
       - name: show the gisel pin
         run: git -C gisel rev-parse HEAD
       - uses: actions/setup-python@v7
