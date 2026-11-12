@@ -75,11 +75,14 @@
   ],
   "official_base": {
     "comment": "The official side of the A/B harness is frozen here. `files` is the sha256 of every file whose content can change a legalizer answer, taken from the exact tree the official library was built from. ab/check-pin.sh compares content, not ancestry: a tree passes only if all of these match. Changing any of them is a baseline change -- rebuild, re-run every direction of evidence, and update this map in the same commit. Do not edit the tree and leave the map behind.",
-    "frozen": {
+    "informational": {
+      "comment": "Where the evidence was recorded. No gate reads these paths; they are here so a reader can tell which machine snapshot the numbers came from.",
       "tree": "/home/ubuntu/llvm/trees/explore",
+      "build": "/home/ubuntu/llvm/builds/explore"
+    },
+    "frozen": {
       "head": "700e551714cc",
       "branch": "explore/06-review-fixes",
-      "build": "/home/ubuntu/llvm/builds/explore",
       "import_commit": "9bfc850b9940566bef17a34601826775349ba0e6",
       "patches": [
         237753,
