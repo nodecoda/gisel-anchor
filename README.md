@@ -37,8 +37,15 @@ gisel-anchor --(.gisel)------------------> gisel
 ```sh
 python3 -m pytest -q tests                   # 需要 ../gisel（或 GISEL_SRC）
 
-python3 scripts/import-cxx.py --all --pin pin/PIN.json \
+# 统一入口；`gisel-anchor import` 与 `gisel-import` 等价
+gisel-anchor --version
+gisel-anchor import --all --pin pin/PIN.json \
   --git-repo /home/ubuntu/llvm/llvm-project --check    # 9/9, 0 refused
+
+# 也可以直接给 URL：按 pin 的 commit 做一次 blobless clone，
+# 缓存在 ~/.cache/gisel-anchor（GISEL_ANCHOR_CACHE 可改）
+gisel-anchor import --all \
+  --git-repo https://github.com/llvm/llvm-project --check
 ```
 
 CI（`.github/workflows/ci.yml`）跑同样两条：`pytest -q tests` 不需要

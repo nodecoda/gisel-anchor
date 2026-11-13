@@ -30,6 +30,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -3685,6 +3686,68 @@ TARGETS = {
 _PINNED_SOURCES = {}
 
 
+def _pin_cache():
+    value = os.environ.get("GISEL_ANCHOR_CACHE")
+    return (Path(value).expanduser() if value
+            else Path.home() / ".cache" / "gisel-anchor")
+
+
+def _is_repo_url(value):
+    """True for an URL; a path stays a path even when it has a colon."""
+    return "://" in value or value.startswith("git@")
+
+
+def _clone_at(url, commit):
+    """A blobless, no-checkout clone of ``url`` at ``commit``.
+
+    The clone is keyed by commit, so every target in one pin run shares it and
+    a second run is a no-op.  Blobs are fetched on demand by ``git show``.
+    ``file://`` URLs work, which is what the tests use instead of the network.
+    """
+    root = _pin_cache() / commit
+    if root.exists():
+        probe = subprocess.run(["git", "-C", str(root), "rev-parse",
+                                "--git-dir"], capture_output=True, text=True)
+        if probe.returncode != 0:
+            raise SystemExit(
+                "cache entry is not a git repository: %s\n"
+                "remove it, or set GISEL_ANCHOR_CACHE to a writable dir"
+                % root)
+    else:
+        root.parent.mkdir(parents=True, exist_ok=True)
+        tmp = Path(tempfile.mkdtemp(prefix=commit[:12] + "-", dir=root.parent))
+        repo = tmp / "repo"
+        try:
+            proc = subprocess.run(
+                ["git", "clone", "--filter=blob:none", "--no-checkout",
+                 "--quiet", url, str(repo)],
+                capture_output=True, text=True)
+            if proc.returncode != 0:
+                raise SystemExit("%s: clone failed: %s"
+                                 % (url, proc.stderr.strip()))
+            try:
+                os.replace(repo, root)
+            except OSError:
+                # Another process won the race; its clone is just as good.
+                if not root.exists():
+                    raise
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    probe = subprocess.run(
+        ["git", "-C", str(root), "cat-file", "-e", commit + "^{commit}"],
+        capture_output=True, text=True)
+    if probe.returncode != 0:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "fetch", "--filter=blob:none",
+             "--quiet", "origin", commit],
+            capture_output=True, text=True)
+        if proc.returncode != 0:
+            raise SystemExit("%s: commit %s is not in the clone: %s"
+                             % (url, commit, proc.stderr.strip()))
+    return root
+
+
 def pinned_source(spec, pin_path, git_repo):
     """Materialise a target's source from the pinned commit.
 
@@ -3692,14 +3755,19 @@ def pinned_source(spec, pin_path, git_repo):
     may carry local patches (the A/B harness does), and those must not change
     what the corpus was transcribed from.  ``git show`` reads the blob the pin
     names, and the recorded sha256 is checked before the importer sees it.
+
+    ``git_repo`` is a checkout path or an URL.  An URL is cloned bloblessly
+    into ``$GISEL_ANCHOR_CACHE`` (default ``~/.cache/gisel-anchor``) once per
+    commit; the importer never needs the network after that.
     """
     key = (str(pin_path), str(git_repo), spec.name)
     if key in _PINNED_SOURCES:
         return _PINNED_SOURCES[key]
     pin = json.loads(Path(pin_path).read_text())
     entry = pin["sources"][spec.name]
+    repo = _clone_at(str(git_repo), pin["commit"]) if _is_repo_url(str(git_repo)) else git_repo
     proc = subprocess.run(
-        ["git", "-C", str(git_repo), "show",
+        ["git", "-C", str(repo), "show",
          "%s:%s" % (pin["commit"], entry["path"])],
         capture_output=True, text=True)
     if proc.returncode != 0:
@@ -3942,7 +4010,7 @@ def main(argv=None):
                          "(the corpus provenance); with --git-repo, defaults "
                          "to the pin shipped in this package")
     ap.add_argument("--git-repo",
-                    help="LLVM checkout that contains the pinned commit")
+                    help="LLVM checkout or URL that contains the pinned commit")
     ap.add_argument("--out", help="output .gisel (single target)")
     ap.add_argument("--out-dir", help="output directory in --all mode")
     ap.add_argument("--check", action="store_true",

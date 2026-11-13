@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gisel-anchor"
-version = "0.1.0"
+version = "0.2.0"
 description = "Pinned LLVM GlobalISel facts: rule import and the U-side oracle"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -28,6 +28,7 @@ Homepage = "https://github.com/nodecoda/gisel-anchor"
 Issues = "https://github.com/nodecoda/gisel-anchor/issues"
 
 [project.scripts]
+gisel-anchor = "gisel_anchor.cli:main"
 gisel-import = "gisel_anchor.importer.import_cxx:main"
 gisel-oracle = "gisel_anchor.oracle.__main__:main"
 
