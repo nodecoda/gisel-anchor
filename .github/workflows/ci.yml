@@ -97,8 +97,8 @@ jobs:
           from importlib.metadata import version, distribution
           from pathlib import Path
 
-          assert version("gisel-upstream-source") == "0.1.0"
-          root = distribution("gisel-upstream-source").locate_file("")
+          assert version("gisel-anchor") == "0.1.0"
+          root = distribution("gisel-anchor").locate_file("")
           pin = json.loads((root / "importer" / "data" / "PIN.json").read_text())
           canonical = json.loads(
               (Path(sys.argv[1]) / "pin" / "PIN.json").read_text())

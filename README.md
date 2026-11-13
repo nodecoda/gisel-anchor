@@ -1,4 +1,4 @@
-# upstream-source
+# gisel-anchor
 
 从钉死的 LLVM 树里提取“上游事实”，供 `gisel` 与 `ab` 消费。它不是 gisel 的一部分，
 也不生成 `.inc`、不跑对拍、不做归因。
@@ -13,7 +13,7 @@
 数据流（单向；箭头 = 谁产出谁的输入）：
 
 ```text
-upstream-source --(.gisel)------------------> gisel
+gisel-anchor --(.gisel)------------------> gisel
        |
        +----------------(U queries)----------> ab
 ```
@@ -62,7 +62,7 @@ oracle/           上游规则表 -> rules/coverage/U（WP3）
 ## 安装
 
 ```sh
-pip install .           # 或 pip install git+https://github.com/nodecoda/upstream-source
+pip install .           # 或 pip install git+https://github.com/nodecoda/gisel-anchor
 gisel-oracle --help     # U 侧题面：universe / coverage / emit / expand，纯 Python
 gisel-import --help     # C++ -> .gisel，需要 LLVM 源码或 checkout
 ```

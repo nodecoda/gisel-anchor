@@ -1,6 +1,6 @@
 """The installed product: two console scripts and a pin that travels with them.
 
-`upstream-source` is a producer, not a library: what a user installs must be
+`gisel-anchor` is a producer, not a library: what a user installs must be
 able to run `gisel-import` and `gisel-oracle` without a checkout.  The pin is
 the one file that makes `gisel-import --git-repo ...` self-sufficient, so it
 ships twice -- canonical under `pin/`, a checked copy under `importer/data/`.

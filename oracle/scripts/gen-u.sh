@@ -33,8 +33,8 @@ for arg in "${@:3}"; do
   esac
 done
 
-ROOT=$(cd "$(dirname "$0")/.." && pwd)          # .../upstream-source/oracle
-REPO=$(cd "$ROOT/.." && pwd)                    # .../upstream-source
+ROOT=$(cd "$(dirname "$0")/.." && pwd)          # .../gisel-anchor/oracle
+REPO=$(cd "$ROOT/.." && pwd)                    # .../gisel-anchor
 TREE=${ORACLE_TREE:-/home/ubuntu/llvm/trees/explore}
 BUILD=${ORACLE_BUILD:-/home/ubuntu/llvm/builds/explore}
 BUDGET=${ORACLE_BUDGET:-20000}

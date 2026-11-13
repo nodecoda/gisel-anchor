@@ -1,4 +1,4 @@
-# CONTRACTS：upstream-source 对外接口
+# CONTRACTS：gisel-anchor 对外接口
 
 状态：WP0 草案。所有消费者（gisel、ab）只依赖本文和
 `gisel/spec/cases-format.md`，不依赖实现细节。
