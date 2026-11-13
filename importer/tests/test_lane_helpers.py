@@ -14,8 +14,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
-FEATURES = ROOT / "import" / "tests" / "features.json"
+TOOL = ROOT / "importer" / "import-cxx.py"
+FEATURES = ROOT / "importer" / "tests" / "features.json"
 
 ONE_MORE = ("more(slot(0), replace(vec_of(add(num_elems(slot(0)), 1), "
             "elem_of(slot(0)))))")
@@ -107,7 +107,7 @@ class Emitter(unittest.TestCase):
 
 
 class Importer(unittest.TestCase):
-    SRC = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-lane-helpers.cpp"
+    SRC = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-lane-helpers.cpp"
 
     def test_helper_bodies_become_lane_expressions(self):
         with tempfile.TemporaryDirectory() as d:

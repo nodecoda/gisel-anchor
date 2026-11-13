@@ -13,8 +13,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
-FEATURES = ROOT / "import" / "tests" / "features.json"
+TOOL = ROOT / "importer" / "import-cxx.py"
+FEATURES = ROOT / "importer" / "tests" / "features.json"
 
 SOURCE = """\
 type T_s16 = LLT::scalar(16)
@@ -78,7 +78,7 @@ class Emitter(unittest.TestCase):
 
 
 class Importer(unittest.TestCase):
-    SRC = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-widen-multiple.cpp"
+    SRC = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-widen-multiple.cpp"
 
     def test_mutation_is_read_as_multiple_of(self):
         with tempfile.TemporaryDirectory() as d:

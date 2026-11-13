@@ -6,9 +6,9 @@ three constructors this repository ships a corpus for, hardcodes their quirks
 and pins the rule counts it produced last time.  A fourth target, or a
 different upstream revision, is a new tool -- not a flag on this one.
 
-    import/import-cxx.py X86 .../X86LegalizerInfo.cpp --out ...
-    import/import-cxx.py --all --llvm-src /path/to/llvm --out-dir <gisel>/tests/corpus
-    import/import-cxx.py --all --llvm-src /path/to/llvm --check
+    importer/import-cxx.py X86 .../X86LegalizerInfo.cpp --out ...
+    importer/import-cxx.py --all --llvm-src /path/to/llvm --out-dir <gisel>/tests/corpus
+    importer/import-cxx.py --all --llvm-src /path/to/llvm --check
 
 The input is not C++ in general: it is the subset these three constructors are
 written in -- `getActionDefinitionsBuilder(...)` chains, `auto &X = ...` with
@@ -3935,7 +3935,8 @@ def main(argv=None):
     ap.add_argument("--llvm-src", help="LLVM source root containing lib/Target")
     ap.add_argument("--pin",
                     help="pin file naming the upstream commit and source shas "
-                         "(the corpus provenance)")
+                         "(the corpus provenance); with --git-repo, defaults "
+                         "to the pin shipped in this package")
     ap.add_argument("--git-repo",
                     help="LLVM checkout that contains the pinned commit")
     ap.add_argument("--out", help="output .gisel (single target)")
@@ -3952,6 +3953,14 @@ def main(argv=None):
                  "use --llvm-src/--out-dir")
     if not args.all and (args.out_dir or args.check):
         ap.error("--out-dir/--check are --all options")
+    if args.git_repo and not args.pin:
+        # The wheel ships the pin it was built from, so "--git-repo" alone is
+        # enough to materialise a target: the commit and the shas travel with
+        # the code that checks them.  A checkout still passes pin/PIN.json
+        # explicitly, which wins over the bundled copy.
+        bundled = Path(__file__).resolve().parent / "data" / "PIN.json"
+        if bundled.is_file():
+            args.pin = str(bundled)
     if args.probe and args.src:
         args.source = args.src
     if args.probe and not args.source:

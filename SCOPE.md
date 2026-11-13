@@ -7,7 +7,7 @@
 
 | 功能 | 入口（规划） | 输入 → 输出 |
 |---|---|---|
-| 语料导入 | `import/import-cxx.py` | pinned `llvm/lib/Target/*/GISel/*LegalizerInfo.cpp` → `.gisel` |
+| 语料导入 | `importer/import-cxx.py` | pinned `llvm/lib/Target/*/GISel/*LegalizerInfo.cpp` → `.gisel` |
 | 语料校验 | `import --check` | 重新转录并与 checked-in `.gisel` 逐字节比对 |
 | 规则清单 | `oracle dump-rules` | pinned 构建 → `rules.json`（opcode/rule/action/mutation/alias） |
 | 题面生成 | `oracle gen-queries` | 独立 LLT 宇宙 + 规则覆盖引导 → `U` queries |

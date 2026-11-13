@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "comment": "The upstream revision every corpus rule came from. `tools/import-cxx.py --all --pin tests/corpus/PIN.json --git-repo <llvm> --check` must reproduce every .gisel file byte for byte. The commit is a plain upstream llvm-project commit: local patches in a worktree cannot change what was imported, so the corpus keeps the reviewed deviations below. `patches` lists the upstream PRs carried on top of `commit` (unmerged, or merged after `commit`); the official side of the A/B harness is built from a tree with them applied, which is why the corpus asks for the post-fix behaviour. When they land upstream, move `commit` past them and delete both the patches and the deviations. Policy: we track exactly this commit. There is no automatic sync with upstream main; moving the pin is an explicit migration (update commit, re-run `--all --check`, refresh the frozen artefacts, re-run ab/replay-frozen.py, and review the corpus diff).",
+  "repo": "llvm/llvm-project",
+  "commit": "9bfc850b9940566bef17a34601826775349ba0e6",
+  "sources": {
+    "X86": {
+      "path": "llvm/lib/Target/X86/GISel/X86LegalizerInfo.cpp",
+      "sha256": "79f2376096c3271910840a42c6270932011078df9fff343bfd96c226523336cd"
+    },
+    "AArch64": {
+      "path": "llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp",
+      "sha256": "2b5377c3eedddf82f17758e7cab763d99ce362e4c5422bb8e24bc4b7c8945d55"
+    },
+    "RISCV": {
+      "path": "llvm/lib/Target/RISCV/GISel/RISCVLegalizerInfo.cpp",
+      "sha256": "ad529e1f1a9e62fa8bbd3a7d68f2b46f41f3cf8f1e74556c709bffbd43b9e889"
+    },
+    "M68k": {
+      "path": "llvm/lib/Target/M68k/GISel/M68kLegalizerInfo.cpp",
+      "sha256": "f796bb977e0b77f56374c10243acb24e3818df7d9637eed2fc0df4c6e0295c36"
+    },
+    "WebAssembly": {
+      "path": "llvm/lib/Target/WebAssembly/GISel/WebAssemblyLegalizerInfo.cpp",
+      "sha256": "c6409b1d4eb1b44a7e8d0b9fbb4332497e4cb6d7f2c74ba42482ccb392a5edd8"
+    },
+    "PowerPC": {
+      "path": "llvm/lib/Target/PowerPC/GISel/PPCLegalizerInfo.cpp",
+      "sha256": "4ca6a62b6f435c6e3e8ce1d576458a111026bdcbd35d978c22160f840cc3aa2a"
+    },
+    "ARM": {
+      "path": "llvm/lib/Target/ARM/ARMLegalizerInfo.cpp",
+      "sha256": "b86441eb03f4e50291053f61da8a94c542224767d705933d54b2fd3761a59b02"
+    },
+    "Mips": {
+      "path": "llvm/lib/Target/Mips/MipsLegalizerInfo.cpp",
+      "sha256": "3660b66b709c5eec9431e54010d1da9e241a460aa528ff213b444ebc0e96b525"
+    },
+    "SPIRV": {
+      "path": "llvm/lib/Target/SPIRV/SPIRVLegalizerInfo.cpp",
+      "sha256": "e404ba675047cbc8eb48bf87bbc2a67d4d7c926d2ce5ad4f59e3fe0a33361208"
+    }
+  },
+  "patches": [
+    {
+      "pr": 237753,
+      "title": "[GlobalISel] Compare element sizes in minScalarSameAs/maxScalarSameAs",
+      "commit": "f535818a92d3"
+    },
+    {
+      "pr": 238306,
+      "title": "[GlobalISel] Keep the lane count in maxScalarEltSameAsIf",
+      "commit": "b826bc84a415"
+    },
+    {
+      "pr": 238277,
+      "title": "[X86][GlobalISel] Don't widen G_BUILD_VECTOR to legalize it",
+      "commit": "526dababf69f"
+    },
+    {
+      "pr": 235976,
+      "title": "[X86][GlobalISel] Mark vector G_CTPOP legal when VPOPCNT is available",
+      "commit": "462829fdac83"
+    },
+    {
+      "pr": 237650,
+      "title": "[GlobalISel] Pick a sub-register result class that has the value type",
+      "commit": "d03da6ee503e"
+    },
+    {
+      "pr": 239136,
+      "title": "[TableGen] Diagnose !head/!tail of a deferred empty list",
+      "commit": "cfdc9e57a2db"
+    }
+  ],
+  "official_base": {
+    "comment": "The official side of the A/B harness is frozen here. `files` is the sha256 of every file whose content can change a legalizer answer, taken from the exact tree the official library was built from. ab/check-pin.sh compares content, not ancestry: a tree passes only if all of these match. Changing any of them is a baseline change -- rebuild, re-run every direction of evidence, and update this map in the same commit. Do not edit the tree and leave the map behind.",
+    "informational": {
+      "comment": "Where the evidence was recorded. No gate reads these paths; they are here so a reader can tell which machine snapshot the numbers came from.",
+      "tree": "/home/ubuntu/llvm/trees/explore",
+      "build": "/home/ubuntu/llvm/builds/explore"
+    },
+    "frozen": {
+      "head": "700e551714cc",
+      "branch": "explore/06-review-fixes",
+      "import_commit": "9bfc850b9940566bef17a34601826775349ba0e6",
+      "patches": [
+        237753,
+        238306,
+        238277,
+        235976,
+        237650,
+        239136
+      ],
+      "note": "The corpus is imported from `import_commit`; the rule sources below are that commit plus the declared patches plus the three declared local deviations. The pin-only tree is reproducible with pin/make-base.sh and is a cross-check, not the baseline: the generated constructor needs the `core*` builders that live only in this tree's LegalizerInfo.h."
+    },
+    "deviations": [
+      {
+        "path": "llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp",
+        "commit": "535d3873df47",
+        "kind": "behaviour",
+        "effect": "numElements() spells out the release-build answer (0) for scalar element counts instead of asserting. The rule text is unchanged; an assertions build now answers the scalar queries a release build would. This is the one local change that can change an official answer.",
+        "patch": "deviations/535d3873-aarch64-numelements.patch",
+        "patch_sha256": "b9304ce1744c141ae888434c3d0873b00138caaa7fbef949b9615ec5a709c128"
+      },
+      {
+        "path": "llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp",
+        "commit": "85a4da33012a",
+        "kind": "behaviour-unreachable",
+        "effect": "memSizeInBytesNotPow2() reads the known minimum of a scalable TypeSize instead of the fatal implicit conversion. No target in this tree references that predicate, so it cannot change an official answer; it still has to be declared because the file's bytes differ from the pin.",
+        "patch": "deviations/85a4da33-legalitypredicates-memsize.patch",
+        "patch_sha256": "5a7fdc148ec15f9620ebb18bbc711053b8b08ae2e651c98ce3352dc36fa88bd0"
+      },
+      {
+        "path": "llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h",
+        "commit": "3f2331a1b859..700e551714cc",
+        "kind": "harness-only",
+        "effect": "Adds the core* builders (coreMinScalarSameAs, coreClampNumElements, ...) that the generated constructor calls. Methods only, no data members, and no upstream constructor calls them, so the official library's answers are unchanged; the additions exist because the generated include cannot be compiled against a pin-only header.",
+        "patch": "deviations/700e5517-legalizerinfo-core-builders.patch",
+        "patch_sha256": "8665ceea2e6f0ee5643649d7536853c3f2bdd616b08f75f5e5bf69407de35efd"
+      }
+    ],
+    "files": {
+      "llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h": "b6c79535ad9a1b4bb52afaf77c6c33d030d3df415ea3d0f053967ef1a0c2d847",
+      "llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp": "a632050937f159bd464e4f345a624fe3682727caa3079efb9a8f10f740747611",
+      "llvm/lib/CodeGen/GlobalISel/LegalizerInfo.cpp": "27cf91e365bc90e523a3de7fdeb44f054db673f4b816f4fa780d2616b0a6b4db",
+      "llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp": "91ef7c82b67c69829d2b5c32bfda8b51c62864cb872e26c83392915afdba86d0",
+      "llvm/lib/Target/ARM/ARMLegalizerInfo.cpp": "b86441eb03f4e50291053f61da8a94c542224767d705933d54b2fd3761a59b02",
+      "llvm/lib/Target/M68k/GISel/M68kLegalizerInfo.cpp": "f796bb977e0b77f56374c10243acb24e3818df7d9637eed2fc0df4c6e0295c36",
+      "llvm/lib/Target/Mips/MipsLegalizerInfo.cpp": "3660b66b709c5eec9431e54010d1da9e241a460aa528ff213b444ebc0e96b525",
+      "llvm/lib/Target/PowerPC/GISel/PPCLegalizerInfo.cpp": "4ca6a62b6f435c6e3e8ce1d576458a111026bdcbd35d978c22160f840cc3aa2a",
+      "llvm/lib/Target/RISCV/GISel/RISCVLegalizerInfo.cpp": "ad529e1f1a9e62fa8bbd3a7d68f2b46f41f3cf8f1e74556c709bffbd43b9e889",
+      "llvm/lib/Target/SPIRV/SPIRVLegalizerInfo.cpp": "e404ba675047cbc8eb48bf87bbc2a67d4d7c926d2ce5ad4f59e3fe0a33361208",
+      "llvm/lib/Target/WebAssembly/GISel/WebAssemblyLegalizerInfo.cpp": "c6409b1d4eb1b44a7e8d0b9fbb4332497e4cb6d7f2c74ba42482ccb392a5edd8",
+      "llvm/lib/Target/X86/GISel/X86LegalizerInfo.cpp": "3b3e8ee85189a04476eda78eb054e9d477f4929b4a24128cdbaf78b61a60aeeb"
+    },
+    "note": "The corpus is imported from `import_commit`; the rule sources below are that commit plus the declared patches and the three declared local deviations.  `pin/make-base.sh` rebuilds the tree by applying `patches` and then the `deviations` patch files; `--verify` compares all twelve files in `files`.  The deviation patches are generated from the fork commits and are byte-checked against `patch_sha256`, so the official baseline is reconstructible from this manifest alone."
+  }
+}

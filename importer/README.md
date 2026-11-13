@@ -13,7 +13,7 @@
   `test_widen_multiple`
 - `tests/corpus/PIN.json` → `pin/PIN.json`
 
-测试：`python3 -m pytest -q import/tests`（80 passed）。
+测试：`python3 -m pytest -q importer/tests`（80 passed）。
 
 验收：`import --all --check` 9/9 逐字节相同，0 refused。
 

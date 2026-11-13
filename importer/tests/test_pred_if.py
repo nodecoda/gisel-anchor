@@ -1,8 +1,8 @@
-"""`getScalarTypeFromMemDesc(i)`: a mutation whose target width is the mem type.
+"""`minScalarIf(P, i, T)`, and a predicate reading a file-scope integer.
 
-The helper body reads `Query.MMODescrs[0].MemoryTy`, not `Query.Types[i]`.
-The mutation is `replace(int_of_size(size_of(mem_ty(mem_slot(0)))))`; the
-predicate lambda reads the same descriptor through `mem_ty(mem_slot(0))`.
+`minScalarIf` widens the slot to `T` when `P` holds and the slot is narrower;
+it is the guarded form of `minScalar`.  A file-scope `constexpr unsigned` in a
+predicate is its value (`MaxRegisterSize` -> 1024), not an opaque name.
 """
 
 import json
@@ -13,14 +13,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
-FIXTURE = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-memdesc-scalar.cpp"
-
-MUTATION = ("narrow(slot(0), "
-            "replace(int_of_size(size_of(mem_ty(mem_slot(0)))))) when "
-            "(sort_of(mem_ty(mem_slot(0))) == scalar and "
-            "size_of(mem_ty(mem_slot(0))) > 32 and "
-            "size_of(slot(0)) > size_of(mem_ty(mem_slot(0))))")
+TOOL = ROOT / "importer" / "import-cxx.py"
+FIXTURE = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-pred-if.cpp"
 
 
 def run(*args):
@@ -29,7 +23,7 @@ def run(*args):
 
 
 class Importer(unittest.TestCase):
-    def test_the_helper_reads_the_memory_type(self):
+    def test_guarded_min_scalar_and_file_constant(self):
         with tempfile.TemporaryDirectory() as d:
             out = Path(d) / "A.gisel"
             r = run(str(TOOL), "--probe", "AMDGPU:Amdgpu",
@@ -37,7 +31,9 @@ class Importer(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
             self.assertIn("0 refused", r.stdout)
             text = out.read_text()
-        self.assertIn(MUTATION, text)
+        self.assertIn("widen(slot(0), ty(Amdgpu_I16)) when slot(1) == Amdgpu_F16",
+                      text)
+        self.assertIn("legal size_of(slot(0)) <= 1024", text)
 
 
 class Semantics(unittest.TestCase):
@@ -54,32 +50,38 @@ class Semantics(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
             features = d / "features.json"
             features.write_text(json.dumps({"baseline": {}}))
-            queries = [("s96", "s48"), ("s32", "s64")]
+            queries = [
+                ("G_FPTOSI_SAT", ["i8", "f16"]),
+                ("G_FPTOSI_SAT", ["i32", "f32"]),
+                ("G_ADD", ["s32"]),
+                ("G_ADD", ["s2048"]),
+            ]
             cases.write_text("\n".join(json.dumps(
-                {"config": "baseline", "name": "G_SEXTLOAD",
-                 "types": [t, "p0"], "mem": [m, 8, "NotAtomic", "NotAtomic"],
-                 "imms": []}) for t, m in queries) + "\n")
+                {"config": "baseline", "name": n, "types": t,
+                 "mem": None, "imms": []}) for n, t in queries) + "\n")
             r = run("-m", "gisel", "eval", "--doc", str(doc),
                     "--features", str(features), "--cases", str(cases),
                     "--answers", str(out))
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
             got = [json.loads(line) for line in out.read_text().splitlines()]
-        return {row["mem"][0]: row for row in got}
+        return {(row["name"], tuple(row["types"])): row for row in got}
 
-    def test_narrows_to_the_memory_width(self):
+    def test_min_scalar_if_widens_only_under_the_guard(self):
         got = self.answers()
-        self.assertEqual(got["s48"]["action"], "NarrowScalar")
-        self.assertEqual(got["s48"]["new_type"], "i48")
+        row = got[("G_FPTOSI_SAT", ("i8", "f16"))]
+        self.assertEqual((row["action"], row["new_type"]),
+                         ("WidenScalar", "i16"))
+        self.assertEqual(got[("G_FPTOSI_SAT", ("i32", "f32"))]["action"],
+                         "Legal")
 
-    def test_the_guard_needs_a_wide_result(self):
+    def test_the_file_constant_is_its_value(self):
         got = self.answers()
-        # 32 is not wider than the 64-bit memory type: the narrow rule is
-        # skipped and the terminal `lower` answers instead.
-        self.assertEqual(got["s64"]["action"], "Lower")
+        self.assertEqual(got[("G_ADD", ("s32",))]["action"], "Legal")
+        self.assertEqual(got[("G_ADD", ("s2048",))]["action"], "Lower")
 
 
 class Emitter(unittest.TestCase):
-    def test_inc_narrows_to_the_memory_size(self):
+    def test_inc_keeps_the_guard_and_the_literal(self):
         with tempfile.TemporaryDirectory() as d:
             d = Path(d)
             src, inc = d / "A.gisel", d / "A.inc"
@@ -90,9 +92,8 @@ class Emitter(unittest.TestCase):
                     "--out", str(inc))
             self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
             text = inc.read_text()
-        self.assertIn(".coreNarrowTo(", text)
-        self.assertIn("LLT::integer(((Query.MMODescrs[0]).MemoryTy)", text)
-        self.assertIn("MemoryTy.isScalar()", text)
+        self.assertIn(".coreMinScalar(", text)
+        self.assertIn("getSizeInBits().getKnownMinValue() <= 1024", text)
 
 
 if __name__ == "__main__":

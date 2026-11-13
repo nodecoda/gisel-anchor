@@ -13,8 +13,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
-FEATURES = ROOT / "import" / "tests" / "features.json"
+TOOL = ROOT / "importer" / "import-cxx.py"
+FEATURES = ROOT / "importer" / "tests" / "features.json"
 
 SOURCE = """\
 type T_s32 = LLT::scalar(32)
@@ -118,7 +118,7 @@ class GatedClamp(unittest.TestCase):
 
 
 class Importer(unittest.TestCase):
-    SRC = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-strict-clamp.cpp"
+    SRC = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-strict-clamp.cpp"
 
     def test_strict_clamp_becomes_two_statements(self):
         with tempfile.TemporaryDirectory() as d:

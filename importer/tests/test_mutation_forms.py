@@ -14,8 +14,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
-FEATURES = ROOT / "import" / "tests" / "features.json"
+TOOL = ROOT / "importer" / "import-cxx.py"
+FEATURES = ROOT / "importer" / "tests" / "features.json"
 
 WIDEN = ("widen(slot(0), replace(elt_size_to(slot(0), "
          "pow2_at_least(bits_of(scalar_of(slot(0))), 16)))) when "
@@ -156,7 +156,7 @@ class Emitter(unittest.TestCase):
 
 
 class Importer(unittest.TestCase):
-    SRC = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-mutation-forms.cpp"
+    SRC = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-mutation-forms.cpp"
 
     def test_variable_indices_and_mutation_bodies(self):
         with tempfile.TemporaryDirectory() as d:

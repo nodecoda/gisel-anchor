@@ -5,3 +5,5 @@ out/
 state/
 build/
 *.o
+*.egg-info/
+dist/

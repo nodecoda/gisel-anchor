@@ -14,8 +14,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
-FEATURES = ROOT / "import" / "tests" / "features.json"
+TOOL = ROOT / "importer" / "import-cxx.py"
+FEATURES = ROOT / "importer" / "tests" / "features.json"
 
 REGISTER = ("bitcast(slot(0), replace(select((size_of(slot(0)) <= 32), "
             "int_of_size(size_of(slot(0))), vec_of(udiv(size_of(slot(0)), "
@@ -104,7 +104,7 @@ class Emitter(unittest.TestCase):
 
 
 class Importer(unittest.TestCase):
-    SRC = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-bitcast-helpers.cpp"
+    SRC = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-bitcast-helpers.cpp"
 
     def test_named_and_inline_helpers_are_read(self):
         with tempfile.TemporaryDirectory() as d:

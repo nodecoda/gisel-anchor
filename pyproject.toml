@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gisel-upstream-source"
+version = "0.1.0"
+description = "Pinned LLVM GlobalISel facts: rule import and the U-side oracle"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0 WITH LLVM-exception"
+license-files = ["LICENSE"]
+dependencies = []
+
+[project.scripts]
+gisel-import = "importer.cli:main"
+gisel-oracle = "oracle.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["oracle*", "importer*"]
+
+[tool.setuptools.package-data]
+# The transcriber is a script by design; the oracle needs its gap tables,
+# the trace patch, the build scripts and the runner sources it compiles.
+importer = ["import-cxx.py", "import-inventory.py", "data/PIN.json"]
+oracle = [
+    "known-gaps/*.json",
+    "patches/*.patch",
+    "scripts/*.sh",
+    "scripts/*.py",
+    "include/**/*.h",
+    "vendor/*.cpp",
+    "vendor/*.h",
+]

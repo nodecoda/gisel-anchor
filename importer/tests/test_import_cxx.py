@@ -11,10 +11,10 @@ from pathlib import Path
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
+TOOL = ROOT / "importer" / "import-cxx.py"
 CORPUS = Path(os.environ.get(
     "GISEL_CORPUS", ROOT.parent / "gisel" / "tests" / "corpus"))
-FIXTURE = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor.cpp"
+FIXTURE = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor.cpp"
 PIN = ROOT / "pin" / "PIN.json"
 
 
@@ -90,7 +90,7 @@ class Fixture(unittest.TestCase):
 class ImporterBugsAreRefusals(unittest.TestCase):
     """A parse bug names the line; it never aborts the transcription."""
 
-    CRASH = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-crash.cpp"
+    CRASH = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-crash.cpp"
 
     def test_untranslatable_statement_is_refused_with_its_line(self):
         with tempfile.TemporaryDirectory() as d:
@@ -156,7 +156,7 @@ class ParseGuard(unittest.TestCase):
 class ConstructorContracts(unittest.TestCase):
     """`assert` is plumbing; `sameSize` is a real predicate."""
 
-    SRC = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-contracts.cpp"
+    SRC = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-contracts.cpp"
 
     def test_assert_is_plumbing_and_same_size_transcribes(self):
         with tempfile.TemporaryDirectory() as d:
@@ -190,8 +190,8 @@ class ProbeMode(unittest.TestCase):
 class LambdaPredicates(unittest.TestCase):
     """A predicate lambda is read by its body, whatever the return type."""
 
-    RETURN = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-lambda-return.cpp"
-    SHAPE = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-lambda-shape.cpp"
+    RETURN = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-lambda-return.cpp"
+    SHAPE = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-lambda-shape.cpp"
 
     def test_lambda_with_an_explicit_return_type_is_read(self):
         with tempfile.TemporaryDirectory() as d:
@@ -223,7 +223,7 @@ class PredicateValueEscape(unittest.TestCase):
     must copy the call instead.
     """
 
-    SRC = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-pred-value.cpp"
+    SRC = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-pred-value.cpp"
 
     def test_predicate_value_is_copied_with_the_query(self):
         with tempfile.TemporaryDirectory() as d:

@@ -13,8 +13,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-TOOL = ROOT / "import" / "import-cxx.py"
-FIXTURE = ROOT / "import" / "tests" / "fixtures" / "legalizer-ctor-nested-set.cpp"
+TOOL = ROOT / "importer" / "import-cxx.py"
+FIXTURE = ROOT / "importer" / "tests" / "fixtures" / "legalizer-ctor-nested-set.cpp"
 
 
 def run(*args):

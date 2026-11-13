@@ -1,0 +1,5 @@
+include LICENSE
+include SCOPE.md
+include CONTRACTS.md
+include pin/PIN.json
+recursive-include pin/deviations *

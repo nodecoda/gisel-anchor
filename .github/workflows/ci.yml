@@ -25,9 +25,11 @@ jobs:
           python-version: "3.10"
       - run: python3 -m pip install -q pytest
       - name: compile
-        run: python3 -m compileall -q import oracle
+        run: python3 -m compileall -q importer oracle
+      - name: bundled pin matches the checkout
+        run: python3 tools/sync-package-data.py --check
       - name: importer tests
-        run: python3 -m pytest -q import/tests pin/tests tests
+        run: python3 -m pytest -q importer/tests pin/tests tests
         env:
           GISEL_SRC: ${{ github.workspace }}/gisel
           GISEL_CORPUS: ${{ github.workspace }}/gisel/tests/corpus
@@ -60,8 +62,46 @@ jobs:
           git -C /tmp/llvm fetch -q --filter=blob:none --depth 1 origin "$commit"
       - name: reproduce every corpus file
         run: |
-          python3 import/import-cxx.py --all --pin pin/PIN.json \
+          python3 importer/import-cxx.py --all --pin pin/PIN.json \
             --git-repo /tmp/llvm --check
         env:
           GISEL_SRC: ${{ github.workspace }}/gisel
           GISEL_CORPUS: ${{ github.workspace }}/gisel/tests/corpus
+
+  packaging:
+    # The product is two console scripts.  If the wheel cannot be installed and
+    # run outside the checkout, nobody who only wants the U-side queries can
+    # use this repository at all.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+      - name: build
+        run: |
+          set -eu
+          python3 -m pip install -q build
+          python3 -m build --wheel -o /tmp/wheel
+      - name: install and run outside the checkout
+        run: |
+          set -eu
+          python3 -m venv /tmp/venv
+          /tmp/venv/bin/pip install -q /tmp/wheel/*.whl
+          work=$(mktemp -d)
+          cd "$work"
+          /tmp/venv/bin/gisel-import --help > /dev/null
+          /tmp/venv/bin/gisel-oracle --help > /dev/null
+          /tmp/venv/bin/python - "$GITHUB_WORKSPACE" <<'PY'
+          import json, sys
+          from importlib.metadata import version, distribution
+          from pathlib import Path
+
+          assert version("gisel-upstream-source") == "0.1.0"
+          root = distribution("gisel-upstream-source").locate_file("")
+          pin = json.loads((root / "importer" / "data" / "PIN.json").read_text())
+          canonical = json.loads(
+              (Path(sys.argv[1]) / "pin" / "PIN.json").read_text())
+          assert pin["commit"] == canonical["commit"], pin["commit"]
+          print("installed wheel carries pin", pin["commit"][:12])
+          PY
