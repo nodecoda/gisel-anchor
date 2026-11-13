@@ -1,5 +1,21 @@
 include LICENSE
+include README.md
+include CHANGELOG.md
+include CONTRIBUTING.md
 include SCOPE.md
 include CONTRACTS.md
-include pin/PIN.json
-recursive-include pin/deviations *
+include conftest.py
+
+# Canonical pin data: read by gisel-ab and by the corpus provenance.
+recursive-include pin *.json *.patch
+
+# Development inputs for scripts/: the LLVM header overlay, the rule trace
+# patch and the runner sources.  They are not runtime data for the wheel.
+recursive-include src/gisel_anchor/oracle/include *
+recursive-include src/gisel_anchor/oracle/patches *
+recursive-include src/gisel_anchor/oracle/cpp *
+
+# An sdist must be able to run its own test suite.
+recursive-include scripts *.py *.sh
+recursive-include tests *.py *.json *.jsonl *.cpp
+recursive-include docs *.md *.json

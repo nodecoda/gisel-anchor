@@ -25,11 +25,11 @@ jobs:
           python-version: "3.10"
       - run: python3 -m pip install -q pytest
       - name: compile
-        run: python3 -m compileall -q importer oracle
+        run: python3 -m compileall -q src
       - name: bundled pin matches the checkout
-        run: python3 tools/sync-package-data.py --check
-      - name: importer tests
-        run: python3 -m pytest -q importer/tests pin/tests tests
+        run: python3 scripts/sync-package-data.py --check
+      - name: tests
+        run: python3 -m pytest -q tests
         env:
           GISEL_SRC: ${{ github.workspace }}/gisel
           GISEL_CORPUS: ${{ github.workspace }}/gisel/tests/corpus
@@ -62,7 +62,7 @@ jobs:
           git -C /tmp/llvm fetch -q --filter=blob:none --depth 1 origin "$commit"
       - name: reproduce every corpus file
         run: |
-          python3 importer/import-cxx.py --all --pin pin/PIN.json \
+          python3 scripts/import-cxx.py --all --pin pin/PIN.json \
             --git-repo /tmp/llvm --check
         env:
           GISEL_SRC: ${{ github.workspace }}/gisel
@@ -99,7 +99,8 @@ jobs:
 
           assert version("gisel-anchor") == "0.1.0"
           root = distribution("gisel-anchor").locate_file("")
-          pin = json.loads((root / "importer" / "data" / "PIN.json").read_text())
+          pin = json.loads(
+              (root / "gisel_anchor" / "importer" / "data" / "PIN.json").read_text())
           canonical = json.loads(
               (Path(sys.argv[1]) / "pin" / "PIN.json").read_text())
           assert pin["commit"] == canonical["commit"], pin["commit"]

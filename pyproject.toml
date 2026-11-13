@@ -11,24 +11,37 @@ requires-python = ">=3.10"
 license = "Apache-2.0 WITH LLVM-exception"
 license-files = ["LICENSE"]
 dependencies = []
+keywords = ["llvm", "globalisel", "legalizer", "tablegen"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Compilers",
+]
+
+[project.urls]
+Homepage = "https://github.com/nodecoda/gisel-anchor"
+Issues = "https://github.com/nodecoda/gisel-anchor/issues"
 
 [project.scripts]
-gisel-import = "importer.cli:main"
-gisel-oracle = "oracle.__main__:main"
+gisel-import = "gisel_anchor.importer.import_cxx:main"
+gisel-oracle = "gisel_anchor.oracle.__main__:main"
 
 [tool.setuptools.packages.find]
-include = ["oracle*", "importer*"]
+where = ["src"]
+include = ["gisel_anchor*"]
 
 [tool.setuptools.package-data]
-# The transcriber is a script by design; the oracle needs its gap tables,
-# the trace patch, the build scripts and the runner sources it compiles.
-importer = ["import-cxx.py", "import-inventory.py", "data/PIN.json"]
-oracle = [
-    "known-gaps/*.json",
-    "patches/*.patch",
-    "scripts/*.sh",
-    "scripts/*.py",
-    "include/**/*.h",
-    "vendor/*.cpp",
-    "vendor/*.h",
-]
+# Runtime data only.  The C++ runners, the LLVM header overlay and the rule
+# trace patch are development inputs for scripts/oracle/*.sh: they travel in
+# the sdist (see MANIFEST.in), not in the wheel.
+"gisel_anchor.importer" = ["data/PIN.json", "README.md"]
+"gisel_anchor.oracle" = ["known-gaps/*.json", "README.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

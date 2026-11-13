@@ -33,7 +33,7 @@ canonical 副本在 gisel 仓库 `spec/cases-format.md`；本项目不得单方�
   `--verify` 能从 `PIN.json` 单独重建官方基线；patch 被改写会在应用前停止。
 - `sha256` 针对 `sources[*].path` 的原始字节。
 - 消费者只读。改动 pin 是一次显式迁移：重跑 `import --all --check`（rc=0）
-  与 `pin/make-base.sh --verify`（rc=0），两者都过才算迁移完成。
+  与 `scripts/pin/make-base.sh --verify`（rc=0），两者都过才算迁移完成。
 
 ## 2 语料（import 输出）
 
@@ -109,7 +109,7 @@ schema v1，一行一个 JSON 对象：
 - `later_matches` 是同样命中但输给更早规则的规则（覆盖里的 `shadowed` 原料）。
 - `query` 原样嵌入输入行，保证 hits 与答案能按行对齐。
 - 语义门：`first_match == -1` 当且仅当 `getAction` 返回 `Unsupported`
-  （或 runner 的显式 `unanswerable`）。由 `oracle/scripts/check-hits.py` 校验。
+  （或 runner 的显式 `unanswerable`）。由 `scripts/oracle/check-hits.py` 校验。
 
 ## 4.2 witness（oracle 内部产物）
 
@@ -163,7 +163,7 @@ schema v1，一行一个 JSON 对象：
 ### 5.1 known-gaps
 
 未被任何配置 witness 的规则（`cross_config ∈ {unexercised, shadowed}`）必须
-在 `oracle/known-gaps/<target>.json` 里有条目：
+在 `src/gisel_anchor/oracle/known-gaps/<target>.json` 里有条目：
 
 ```json
 {"schema": 1, "target": "x86",
@@ -181,7 +181,7 @@ schema v1，一行一个 JSON 对象：
   变 `stale-gap-entry`、原规则变 `unexplained-gap`，门禁失败。
 - `reason` 与 `follow_up` 都非空，否则 gate 直接失败。
 - 条目没匹配到任何 gap 行 → `stale-gap-entry`，同样失败。
-- `python3 -m oracle coverage ... --rules <runner --dump-rules output>` 是
+- `python3 -m gisel_anchor.oracle coverage ... --rules <runner --dump-rules output>` 是
   产生 digest 的唯一入口；不传 `--rules` 时所有 gap 条目都会因缺 digest 失败。
 
 ## 6 冻结
