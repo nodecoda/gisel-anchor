@@ -3,6 +3,11 @@
 从钉死的 LLVM 树里提取“上游事实”，供 `gisel` 与 `ab` 消费。它不是 gisel 的一部分，
 也不生成 `.inc`、不跑对拍、不做归因。
 
+三仓总览（做了什么、凭什么可信）：
+[gisel/docs/OVERVIEW-zh.md](https://github.com/nodecoda/gisel/blob/main/docs/OVERVIEW-zh.md)；
+常用任务：[COOKBOOK-zh.md](https://github.com/nodecoda/gisel/blob/main/docs/COOKBOOK-zh.md)；
+名词：[GLOSSARY-zh.md](https://github.com/nodecoda/gisel/blob/main/docs/GLOSSARY-zh.md)。
+
 两个模块，产物不同、失败模式不同、验收门不同：
 
 | 模块 | 输入 | 输出 | 证明什么 |

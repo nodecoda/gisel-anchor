@@ -17,7 +17,7 @@ jobs:
           path: gisel
           # Pinned on purpose: the evidence names the gisel it was built
           # with.  Bump this and RELEASE.json together.
-          ref: 1155560f416d805197b76e31e0724e8b028b5799
+          ref: 982eb8d21710e3f19746186480637ed0d9c62755
       - name: show the gisel pin
         run: git -C gisel rev-parse HEAD
       - uses: actions/setup-python@v7
@@ -47,7 +47,7 @@ jobs:
           path: gisel
           # Pinned on purpose: the evidence names the gisel it was built
           # with.  Bump this and RELEASE.json together.
-          ref: 1155560f416d805197b76e31e0724e8b028b5799
+          ref: 982eb8d21710e3f19746186480637ed0d9c62755
       - name: show the gisel pin
         run: git -C gisel rev-parse HEAD
       - uses: actions/setup-python@v7
@@ -97,7 +97,7 @@ jobs:
           from importlib.metadata import version, distribution
           from pathlib import Path
 
-          assert version("gisel-anchor") == "0.1.0"
+          assert version("gisel-anchor") == "0.2.0"
           root = distribution("gisel-anchor").locate_file("")
           pin = json.loads(
               (root / "gisel_anchor" / "importer" / "data" / "PIN.json").read_text())
