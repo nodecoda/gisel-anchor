@@ -10,7 +10,7 @@
 | `import/` | pinned `*LegalizerInfo.cpp` | `.gisel` 语料 | 上游规则被逐条转录进来了 |
 | `oracle/` | pinned LLVM 构建 + 最小 patch | `rules.json`、`coverage.json`、`U` queries | 上游题面没有漏规则 |
 
-依赖方向（单向）：
+数据流（单向；箭头 = 谁产出谁的输入）：
 
 ```text
 upstream-source --(.gisel)------------------> gisel
@@ -18,7 +18,8 @@ upstream-source --(.gisel)------------------> gisel
        +----------------(U queries)----------> ab
 ```
 
-本项目只调 gisel CLI（`gen` / `lint` / `domain`）验证语料，**不 import `gisel` 内部**。
+方向要读对：本项目**生产 gisel 的输入**，不是 gisel 的下游。唯一的代码接触是
+测试期调 gisel CLI（`gen` / `lint` / `domain`）验证语料，**不 import `gisel` 内部**；
 `gisel` 不得反向依赖本项目。
 
 ## 状态
