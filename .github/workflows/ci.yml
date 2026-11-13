@@ -17,7 +17,7 @@ jobs:
           path: gisel
           # Pinned on purpose: the evidence names the gisel it was built
           # with.  Bump this and RELEASE.json together.
-          ref: d194df4813197b4d50efd519a0ef0f32a454eaf8
+          ref: e5610768e86d6aac3ffad5902d44937d5286c230
       - name: show the gisel pin
         run: git -C gisel rev-parse HEAD
       - uses: actions/setup-python@v7
@@ -47,7 +47,7 @@ jobs:
           path: gisel
           # Pinned on purpose: the evidence names the gisel it was built
           # with.  Bump this and RELEASE.json together.
-          ref: d194df4813197b4d50efd519a0ef0f32a454eaf8
+          ref: e5610768e86d6aac3ffad5902d44937d5286c230
       - name: show the gisel pin
         run: git -C gisel rev-parse HEAD
       - uses: actions/setup-python@v7
