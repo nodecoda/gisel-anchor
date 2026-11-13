@@ -13,7 +13,8 @@ TREE=${1:?usage: build-dump-aarch64.sh TREE BUILD OUT}
 BUILD=${2:?}
 OUT=${3:?}
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-AB=${AB_HOME:-$ROOT/../../ab}
+AB=${AB_HOME:-$ROOT/../../gisel-ab}
+[ -d "$AB" ] || AB=$ROOT/../../ab
 CXX=${CXX:-g++}
 
 "$AB/check-pin.sh" "$TREE"

@@ -14,7 +14,8 @@ TREE=${2:?}
 BUILD=${3:?}
 OUT=${4:?}
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-AB=${AB_HOME:-$ROOT/../../ab}
+AB=${AB_HOME:-$ROOT/../../gisel-ab}
+[ -d "$AB" ] || AB=$ROOT/../../ab
 CXX=${CXX:-g++}
 
 case "$TARGET" in
