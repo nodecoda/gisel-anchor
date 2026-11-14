@@ -83,7 +83,7 @@ SCOPE.md          做什么、不做什么
 ## 安装
 
 ```sh
-pip install .           # 或 pip install git+https://github.com/nodecoda/gisel-anchor
+pip install gisel-anchor   # 或 pip install .（从 checkout）
 gisel-oracle --help     # U 侧题面：universe / coverage / emit / expand，纯 Python
 gisel-import --help     # C++ -> .gisel，需要 LLVM 源码或 checkout
 ```
