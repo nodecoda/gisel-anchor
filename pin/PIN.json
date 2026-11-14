@@ -92,7 +92,7 @@
         237650,
         239136
       ],
-      "note": "The corpus is imported from `import_commit`; the rule sources below are that commit plus the declared patches plus the three declared local deviations. The pin-only tree is reproducible with pin/make-base.sh and is a cross-check, not the baseline: the generated constructor needs the `core*` builders that live only in this tree's LegalizerInfo.h."
+      "note": "The corpus is imported from `import_commit`; the rule sources below are that commit plus the declared patches plus the three declared local deviations. The official side is frozen at `frozen.head`, which still carries the `core*` builders; the generated include does not use them and is checked against a pin-only header by gisel-ab/scripts/inc/check-pin-header.sh."
     },
     "deviations": [
       {
@@ -115,7 +115,7 @@
         "path": "llvm/include/llvm/CodeGen/GlobalISel/LegalizerInfo.h",
         "commit": "3f2331a1b859..700e551714cc",
         "kind": "harness-only",
-        "effect": "Adds the core* builders (coreMinScalarSameAs, coreClampNumElements, ...) that the generated constructor calls. Methods only, no data members, and no upstream constructor calls them, so the official library's answers are unchanged; the additions exist because the generated include cannot be compiled against a pin-only header.",
+        "effect": "Adds the core* builders that older generated includes called. Methods only, no data members, and no upstream constructor calls them, so the official library's answers are unchanged. The generated include no longer needs them: gisel emits public LegalizeRuleSet builders, and gisel-ab/scripts/inc/check-pin-header.sh compiles every artifact against a pin-only header. The deviation stays because the frozen baseline tree was built with it.",
         "patch": "deviations/700e5517-legalizerinfo-core-builders.patch",
         "patch_sha256": "8665ceea2e6f0ee5643649d7536853c3f2bdd616b08f75f5e5bf69407de35efd"
       }

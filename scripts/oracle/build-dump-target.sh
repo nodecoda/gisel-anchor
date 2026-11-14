@@ -29,7 +29,9 @@ case "$TARGET" in
   *) echo "build-dump-target: no runner for $TARGET" >&2; exit 2 ;;
 esac
 
-"$AB/check-pin.sh" "$TREE"
+CHECK_PIN=$AB/scripts/check-pin.sh
+[ -f "$CHECK_PIN" ] || CHECK_PIN=$AB/check-pin.sh
+"$CHECK_PIN" "$TREE"
 
 FLAGS=(
   -DLLVM_BUILD_STATIC -D_DEBUG -D_GLIBCXX_ASSERTIONS

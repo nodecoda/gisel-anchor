@@ -18,7 +18,9 @@ AB=${AB_HOME:-$ROOT/../gisel-ab}
 [ -d "$AB" ] || AB=$ROOT/../ab
 CXX=${CXX:-g++}
 
-"$AB/check-pin.sh" "$TREE"
+CHECK_PIN=$AB/scripts/check-pin.sh
+[ -f "$CHECK_PIN" ] || CHECK_PIN=$AB/check-pin.sh
+"$CHECK_PIN" "$TREE"
 
 FLAGS=(
   -DLLVM_BUILD_STATIC -D_DEBUG -D_GLIBCXX_ASSERTIONS
